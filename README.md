@@ -14,6 +14,7 @@ Food Finder is a platform designed to help users discover and explore local rest
 - **Menu Access**: Provide users with access to up-to-date menus for selected establishments.
 - **Rating System**: Enhance user experience through establishment scoring via a rating feature.
 - **Business Exposure**: Offer local establishments exposure through front-page advertisements.
+- **User support**: Create a feedback mechanism within the app for users to report issues or suggest improvements. Offer customer support channels to address user inquiries and concerns.
 
 ## Features: [Low-level]
 - **Database Integration**: Setting up a Database system to store restaurant information like data, menu items, user accounts, and reviews.
