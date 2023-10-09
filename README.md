@@ -10,10 +10,10 @@ Food Finder is a platform designed to help users discover and explore local rest
 
 ## User Interactions and Features: [High-level]
 
-- **Restaurant Discovery**: Assist users in discovering nearby restaurants and food places.
+- **Restaurant Discovery**: Assist users in discovering nearby restaurants and food places. Includes map views with pins and location ordering.
 - **Menu Access**: Provide users with access to up-to-date menus for selected establishments.
-- **Rating System**: Enhance user experience through establishment scoring via a rating feature.
-- **Business Exposure**: Offer local establishments exposure through front-page advertisements.
+- **Rating and Social System**: Enhance user experience through establishment scoring via a rating feature and allow users to interact with other ratings.
+- **Business Exposure**: Offer local establishments exposure through front-page and food category advertisements. 
 - **User support**: Create a feedback mechanism within the app for users to report issues or suggest improvements. Offer customer support channels to address user inquiries and concerns.
 - **Restaurant Dashboard**: Provide restaurant owners with a dashboard where they can update their menus, respond to customer reviews, and manage their business information.
 - **Reservations & Booking**: Incorporate a reservation and booking system to allow users to reserve tables or order food for pick-up or delivery directly through the app. Partner with local restaurants to facilitate online reservations.
@@ -26,4 +26,5 @@ Stripe API for secure and easy payments.
 - **Data Validation and Sanitization**: Implement input validation and data sanitization to prevent security vulnerabilities like SQL injection and cross-site scripting (XSS). Validate and sanitize user-generated content like reviews and the user's information that they put when creating an account. Ensure users do not put invalid emails or passwords to prevent spam and protect accounts.
 - **Error Handling**: Implement robust error handling to gracefully handle unexpected errors and provide meaningful error messages to users. Set up logging to track application events and monitor system health.
 - **Data Security**: Continuously monitor and update security measures to protect user data and payment information. Implement encryption for sensitive data and comply with data protection regulations.
+- **Automated Processes and Testing**: Utilize GitHub actions for CI/CD (Continuous Integration / Continuous Deployment/Delivery) to ensure that the application is stable and ready to deploy or deliver continously for stakeholders and users needing new features. Automated testing with a TDD approach to speed up development and ensure functionality in an Agile setting. Implement continuous updating of Food Finder's data through automation saving engineering hours and manual errors.
   
