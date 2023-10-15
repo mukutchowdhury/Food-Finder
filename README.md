@@ -9,7 +9,7 @@ Food Finder is a platform designed to help users discover and explore local rest
 ---
 
 ## User Interactions and Features: [High-level]
-- **Registration**: On this page, users will provide their full name: first name and last name. This pages would check if the formatting of the registration is clear so no fake name with numbers or emojis. Will give a sucessfull message in the end once the user is done filling out the information.
+- **Signup**: On this page, users will provide their full name: first name and last name. This pages would check if the formatting of the registration is clear so no fake name with numbers or emojis. Will give a sucessfull message in the end once the user is done filling out the information.
 - **Login**: The login page would reguire users to enter their email address and password. This page is user-friendly and would have another confirmation password section where the user has to re-enter their password so its the same throughout the time they are using the food-finder services. Will display a sucessfull message when its done. 
 - **Restaurant Discovery**: Assist users in discovering nearby restaurants and food places. Includes map views with pins and location ordering.
 - **Menu Access**: Provide users with access to up-to-date menus for selected establishments.
