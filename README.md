@@ -18,6 +18,7 @@ Food Finder is a platform designed to help users discover and explore local rest
 - **User support**: Create a feedback mechanism within the app for users to report issues or suggest improvements. Offer customer support channels to address user inquiries and concerns.
 - **Restaurant Dashboard**: Provide restaurant owners with a dashboard where they can update their menus, respond to customer reviews, and manage their business information.
 - **Reservations & Booking**: Incorporate a reservation and booking system to allow users to reserve tables or order food for pick-up or delivery directly through the app. Partner with local restaurants to facilitate online reservations.
+- **Timing**: Breaks down into Breakfast, Lunch, Dinner, and other special categories. User is able to select the preferred timing and the list of options in Brooklyn.
 
 ## System Features and Design: [Low-level]
 - **Database Integration**: Setting up a Database system with MongoDB to store restaurant information like data, menu items, user accounts, user sessions, and reviews.
@@ -29,8 +30,16 @@ Stripe API for secure and easy payments.
 - **Data Security**: Continuously monitor and update security measures to protect user data and payment information. Implement encryption for sensitive data and comply with data protection regulations.
 - **Automated Processes and Testing**: Utilize GitHub actions for CI/CD (Continuous Integration / Continuous Deployment/Delivery) to ensure that the application is stable and ready to deploy or deliver continously for stakeholders and users needing new features. Automated testing with a TDD approach to speed up development and ensure functionality in an Agile setting. Implement continuous updating of Food Finder's data through automation saving engineering hours and manual errors.
 
-## Workflow
+## LOGIN & REGISTRATION (Workflow)
 
 ![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/raw/master/ff_image_1.jpg)
 
   
+## CLIENT INTERFACE (Workflow)
+
+![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/blob/master/ff_client_workflow.jpeg)
+
+
+## RESTAURANT OWNER INTERFACE (Workflow)
+
+![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/blob/master/ff_owner_workflow.jpeg)
