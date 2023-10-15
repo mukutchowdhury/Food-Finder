@@ -18,6 +18,7 @@ Food Finder is a platform designed to help users discover and explore local rest
 - **User support**: Create a feedback mechanism within the app for users to report issues or suggest improvements. Offer customer support channels to address user inquiries and concerns.
 - **Restaurant Dashboard**: Provide restaurant owners with a dashboard where they can update their menus, respond to customer reviews, and manage their business information.
 - **Reservations & Booking**: Incorporate a reservation and booking system to allow users to reserve tables or order food for pick-up or delivery directly through the app. Partner with local restaurants to facilitate online reservations.
+- **Timing**: Breaks down into Breakfast, Lunch, Dinner, and other special categories. User is able to select the preferred timing and the list of options in Brooklyn.
 
 ## System Features and Design: [Low-level]
 - **Database Integration**: Setting up a Database system with MongoDB to store restaurant information like data, menu items, user accounts, user sessions, and reviews.
