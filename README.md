@@ -30,12 +30,12 @@ Stripe API for secure and easy payments.
 - **Data Security**: Continuously monitor and update security measures to protect user data and payment information. Implement encryption for sensitive data and comply with data protection regulations.
 - **Automated Processes and Testing**: Utilize GitHub actions for CI/CD (Continuous Integration / Continuous Deployment/Delivery) to ensure that the application is stable and ready to deploy or deliver continously for stakeholders and users needing new features. Automated testing with a TDD approach to speed up development and ensure functionality in an Agile setting. Implement continuous updating of Food Finder's data through automation saving engineering hours and manual errors.
 
-## LOGIN & REGISTRATION (WorkfLow)
+## LOGIN & REGISTRATION (Workflow)
 
 ![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/raw/master/ff_image_1.jpg)
 
   
-## CLIENT INTERFACE (WorkfLow)
+## CLIENT INTERFACE (Workflow)
 
 ![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/blob/master/ff_client_workflow.jpeg)
 
