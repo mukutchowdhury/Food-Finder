@@ -40,6 +40,6 @@ Stripe API for secure and easy payments.
 ![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/blob/master/ff_client_workflow.jpeg)
 
 
-## RESTAURAMT OWNER INTERFACE (Workflow)
+## RESTAURANT OWNER INTERFACE (Workflow)
 
 ![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/blob/master/ff_owner_workflow.jpeg)
