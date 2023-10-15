@@ -7,12 +7,15 @@ from flask import Flask
 from flask_restx import Resource, Api
 # import db.db as db
 
+import db.users as users
+
 app = Flask(__name__)
 api = Api(app)
 
 MAIN_MENU = 'MainMenu'
 MAIN_MENU_NM = "Welcome to Text Game!"
-USERS = 'users'
+# USERS = 'users'
+USERS = '/users'
 
 
 @api.route('/hello')
@@ -75,4 +78,6 @@ class Users(Resource):
         """
         This method returns all users.
         """
-        return 'Current Users:\nSai\nAbhishek\nKristian\n'
+        return {
+            users.get_users()
+        }
