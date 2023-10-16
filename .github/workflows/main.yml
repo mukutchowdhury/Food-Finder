@@ -47,7 +47,7 @@ jobs:
         run: make dev_env
 
       - name: Run Python tests.
-        run: make all_tests
+        run: make tests
         
           # - name: Deploy to PythonAnywhere
           # run: ./deploy.sh
