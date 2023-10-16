@@ -21,6 +21,7 @@ Food Finder is a platform designed to help users discover and explore local rest
 - **Personalization**: Personalized restaurant recommendations based on user preferences and past interactions. Machine learning algorithms to improve recommendations over time.
 - **Search & filter**: Keyword search for restaurant names or cuisines. Filter options for location, price range, ratings, and dietary preferences (e.g., vegetarian, vegan, gluten-free). Sorting options for distance, popularity, ratings, and price.
 - **Timing**: Breaks down into Breakfast, Lunch, Dinner, and other special categories. User is able to select the preferred timing and the list of options in Brooklyn.
+- **Payment Integration**: Secure payment processing for in-app purchases, reservations, and food orders.
 
 ## System Features and Design: [Low-level]
 - **Database Integration**: Setting up a Database system with MongoDB to store restaurant information like data, menu items, user accounts, user sessions, and reviews.
