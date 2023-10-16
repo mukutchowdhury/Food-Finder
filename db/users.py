@@ -3,6 +3,8 @@ This module interfaces to our user data.
 """
 
 MIN_USER_NAME_LEN = 2
+MIN_EMAIL_LEN = 5
+MIN_PASSWORD_LEN = 6
 EMAIL = 'example@example.com'
 
 
@@ -15,11 +17,13 @@ def get_users():
         -The dictionary should include at least one email in the form of a str.
     """
     users = {
-        "Apple": {
+        "Eric Brown": {
            "EMAIL": 'app123@gmail.com',
+           "PASSWORD": 'ericiscool'
         },
-        "Orange": {
+        "John Richards": {
             "EMAIL": 'ora123@gmail.com',
+            'PASSWORD': 'JOHN123'
         },
     }
     return users
