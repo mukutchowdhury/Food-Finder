@@ -15,4 +15,4 @@ def test_get_users():
         assert isinstance(user[current_users.EMAIL], str)
         assert current_users.PASSWORD in user
         assert len(current_users.PASSWORD) >= current_users.MIN_PASSWORD_LEN
-        assert isinstance(user[current_users.EMAIL], str)
+        assert isinstance(user[current_users.PASSWORD], str)
