@@ -12,10 +12,17 @@ import db.users as users
 app = Flask(__name__)
 api = Api(app)
 
-MAIN_MENU = 'MainMenu'
-MAIN_MENU_NM = "Welcome to Text Game!"
-# USERS = 'users'
+MAIN_MENU = '/MainMenu'
+MAIN_MENU_NM = "Welcome to Food Finder!"
 USERS = '/users'
+
+TYPE = 'Type'
+DATA = 'Data'
+TITLE = 'Title'
+RETURN = 'Return'
+MENU = 'menu'
+USER_MENU_EP = '/user_menu'
+MAIN_MENU_EP = '/MainMenu'
 
 
 @api.route('/hello')
@@ -46,7 +53,7 @@ class Endpoints(Resource):
         return {"Available endpoints": endpoints}
 
 
-@api.route(f'/{MAIN_MENU}')
+@api.route(f'{MAIN_MENU}')
 @api.route('/')
 class MainMenu(Resource):
     """
@@ -54,30 +61,32 @@ class MainMenu(Resource):
     """
     def get(self):
         """
-        Gets the main game menu.
+        Gets the main app menu.
         """
         return {'Title': MAIN_MENU_NM,
                 'Default': 2,
                 'Choices': {
-                    '1': {'url': '/', 'method': 'get',
-                          'text': 'List Available Characters'},
+                    '1': {'url': f'{USERS}', 'method': 'get',
+                          'text': 'Log-In'},
                     '2': {'url': '/',
-                          'method': 'get', 'text': 'List Active Games'},
-                    '3': {'url': f'/{USERS}',
-                          'method': 'get', 'text': 'List Users'},
+                          'method': 'get', 'text': 'Sign-Up'},
                     'X': {'text': 'Exit'},
                 }}
 
 
-@api.route(f'/{USERS}')
+@api.route(f'{USERS}')
 class Users(Resource):
     """
-    This class supports fetching a list of all pets.
+    This class supports fetching a list of all users.
     """
     def get(self):
         """
         This method returns all users.
         """
         return {
-            users.get_users()
+            TYPE: DATA,
+            TITLE: 'Current USER',
+            DATA: users.get_users(),
+            MENU: USER_MENU_EP,
+            RETURN: MAIN_MENU_EP,
         }

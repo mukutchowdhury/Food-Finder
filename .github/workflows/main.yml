@@ -1,6 +1,6 @@
 # This is a workflow to test and deploy our demo app.
 
-name: Demo CI/CD
+name: Food Finder
 
 # Controls when the workflow will run
 on:
