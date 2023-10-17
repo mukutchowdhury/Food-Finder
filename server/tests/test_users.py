@@ -10,7 +10,9 @@ def test_get_users():
         assert len(key) >= current_users.MIN_USER_NAME_LEN
         user = ff_users[key]
         assert isinstance(user, dict)
+        assert current_users.EMAIL in user
         assert len(current_users.EMAIL) >= current_users.MIN_EMAIL_LEN
         assert isinstance(user[current_users.EMAIL], str)
+        assert current_users.PASSWORD in user
         assert len(current_users.PASSWORD) >= current_users.MIN_PASSWORD_LEN
         assert isinstance(user[current_users.PASSWORD], str)
