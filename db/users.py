@@ -5,8 +5,8 @@ This module interfaces to our user data.
 MIN_USER_NAME_LEN = 2
 MIN_EMAIL_LEN = 5
 MIN_PASSWORD_LEN = 6
-EMAIL = 'email'
-PASSWORD = 'password'
+EMAIL = 'EMAIL'
+PASSWORD = 'PASSWORD'
 
 
 def get_users():
