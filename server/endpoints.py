@@ -142,6 +142,7 @@ class RegistrationSystem(Resource):
 
         # check username in database and if it then return True or else.
         # later on this will be changed when we have our database.
+        # checks if the data information is correct
 
         email_already_exists = False
         if email and password:
