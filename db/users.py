@@ -2,7 +2,7 @@
 This module interfaces to our user data.
 """
 
-MIN_USER_NAME_LEN = 1 
+MIN_USER_NAME_LEN = 1
 MIN_EMAIL_LEN = 1
 MIN_PASSWORD_LEN = 6
 EMAIL = 'EMAIL'

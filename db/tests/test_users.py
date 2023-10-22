@@ -1,3 +1,6 @@
+import db.users as usrs
+
+
 def test_get_users():
     users = usrs.get_users()
     assert isinstance(users, dict)
@@ -13,4 +16,3 @@ def test_get_users():
         assert isinstance(user[usrs.PASSWORD], str)
         assert len(user[usrs.EMAIL]) >= usrs.MIN_EMAIL_LEN
         assert len(user[usrs.PASSWORD]) >= usrs.MIN_PASSWORD_LEN
->>>>>>> c38ddd7b880b62b97deada17f3e69a02e4207c78
