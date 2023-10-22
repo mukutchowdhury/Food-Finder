@@ -106,7 +106,11 @@ class LoginSystem(Resource):
         if email and password:
             users_data = users.get_users()
             for username, user_data in users_data.items():
-                if (user_data.get(EMAIL) == email and user_data.get(PASSWORD) == password and (username = "Eric Brown" or username == "John Richards")):
+                if (
+                    user_data.get(users.EMAIL) == email and
+                    user_data.get(users.PASSWORD) == password and
+                    (username == "Eric Brown" or username == "John Richards")
+                ):
                     return {"message": "Login Successfull"}
                 else:
                     return {"message": "Login Failed"}
