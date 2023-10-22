@@ -12,7 +12,7 @@ def test_get_users():
         assert isinstance(user, dict)
         assert usrs.EMAIL in user
         assert usrs.PASSWORD in user
-
-
-
-        assert isinstance(user[usrs.LEVEL], int)
+        assert isinstance(user[usrs.EMAIL], str)
+        assert isinstance(user[usrs.PASSWORD], str)
+        assert len(user[usrs.EMAIL]) >= usrs.MIN_EMAIL_LEN
+        assert len(user[usrs.PASSWORD]) >= usrs.MIN_PASSWORD_LEN
