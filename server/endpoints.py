@@ -103,9 +103,10 @@ class LoginSystem(Resource):
         # Pass email and password as arguments to an operator that will
         # query the database
 
-        return {
-            "success": True,
-        }
+        if email in user.getusers() and password in user.getusers():
+            return {"message": "Login Successfull"}
+        else:
+            return {"message": "Login Fail"}
 
 
 @api.route(f'{REGISTRATION_SYSTEM}')
@@ -114,7 +115,7 @@ class RegistrationSystem(Resource):
     This class handles registration
     """
 
-    def post(self):
+    def post(self, email, password):
         """
         Takes care of login information with the entered data information
 
