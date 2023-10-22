@@ -7,7 +7,7 @@ from flask import Flask
 from flask_restx import Resource, Api
 # import db.db as db
 
-import db.users as users
+# import db.users as users
 
 app = Flask(__name__)
 api = Api(app)
@@ -63,9 +63,6 @@ class Endpoints(Resource):
         endpoints = sorted(rule.rule for rule in api.app.url_map.iter_rules())
         return {"Available endpoints": endpoints}
 
-### 
-# Project Specific Endpoitns
-###
 
 @api.route(f'{LOGIN_PAGE}')
 @api.route('/')
@@ -86,7 +83,7 @@ class LoginPage(Resource):
                           'method': 'get', 'text': 'Sign-Up'},
                     'X': {'text': 'Exit'},
                 }}
-    
+
 
 @api.route(f'{LOGIN_SYSTEM}')
 class LoginSystem(Resource):
@@ -103,12 +100,13 @@ class LoginSystem(Resource):
         :return: A login success status.
         """
 
-        # Pass email and password as arguments to an operator that will query the database
+        # Pass email and password as arguments to an operator that will
+        # query the database
 
         return {
             "success": True,
         }
-    
+
 
 @api.route(f'{REGISTRATION_SYSTEM}')
 class RegistrationSystem(Resource):
@@ -122,7 +120,7 @@ class RegistrationSystem(Resource):
         return {
 
         }
-    
+
 
 @api.route(f'{MAIN_MENU}')
 class MainMenu(Resource):
@@ -154,9 +152,8 @@ class ClientMenu(Resource):
         This method will deliver the client main menu
         """
         return {
-            
         }
-    
+
 
 @api.route(f'{RESTAURANT_MENU_EP}')
 class RestaurantMenu(Resource):
@@ -168,9 +165,8 @@ class RestaurantMenu(Resource):
         This method will deliver the Restaurant main menu
         """
         return {
-            
         }
-    
+
 
 # @api.route(f'{USERS}')
 # class Users(Resource):
