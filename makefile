@@ -1,7 +1,7 @@
 include common.mk
 
 API_DIR = server
-DB_DIR = data
+DB_DIR = db
 REQ_DIR = .
 
 PYTESTFLAGS = -vv --verbose --cov-branch --cov-report term-missing --tb=short -W ignore::FutureWarning
