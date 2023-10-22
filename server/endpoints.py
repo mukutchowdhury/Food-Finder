@@ -14,15 +14,26 @@ api = Api(app)
 
 MAIN_MENU = '/MainMenu'
 MAIN_MENU_NM = "Welcome to Food Finder!"
-USERS = '/users'
+
+USERS = ''
+
+LOGIN_PAGE = '/LoginPage'
+LOGIN_SCREEN_MSG = 'Please Login or Register'
+
+LOGIN_SYSTEM = '/LoginSystem'
+REGISTRATION_SYSTEM = '/RegistrationSystem'
 
 TYPE = 'Type'
 DATA = 'Data'
 TITLE = 'Title'
 RETURN = 'Return'
 MENU = 'menu'
+
 USER_MENU_EP = '/user_menu'
 MAIN_MENU_EP = '/MainMenu'
+
+CLIENT_MENU_EP = '/ClientMenu'
+RESTAURANT_MENU_EP = '/RestaurantMenu'
 
 
 @api.route('/hello')
@@ -52,9 +63,68 @@ class Endpoints(Resource):
         endpoints = sorted(rule.rule for rule in api.app.url_map.iter_rules())
         return {"Available endpoints": endpoints}
 
+### 
+# Project Specific Endpoitns
+###
+
+@api.route(f'{LOGIN_PAGE}')
+@api.route('/')
+class LoginPage(Resource):
+    """
+    Some Comment
+    """
+    def get(self):
+        """
+        Some Comment
+        """
+        return {'Title': LOGIN_SCREEN_MSG,
+                'Default': 1,
+                'Choices': {
+                    '1': {'url': '/', 'method': 'get',
+                          'text': 'Log-In'},
+                    '2': {'url': '/',
+                          'method': 'get', 'text': 'Sign-Up'},
+                    'X': {'text': 'Exit'},
+                }}
+    
+
+@api.route(f'{LOGIN_SYSTEM}')
+class LoginSystem(Resource):
+    """
+    This class handles user authentication
+    """
+    def post(self, email, password):
+        """
+        Handles user login by checking the provided credentials
+
+        :param email: The user's email address.
+        :param password: The user's password.
+
+        :return: A login success status.
+        """
+
+        # Pass email and password as arguments to an operator that will query the database
+
+        return {
+            "success": True,
+        }
+    
+
+@api.route(f'{REGISTRATION_SYSTEM}')
+class RegistrationSystem(Resource):
+    """
+    Some Comment
+    """
+    def post(self):
+        """
+        Some Comment
+        """
+        return {
+
+        }
+    
 
 @api.route(f'{MAIN_MENU}')
-@api.route('/')
 class MainMenu(Resource):
     """
     This will deliver our main menu.
@@ -64,29 +134,57 @@ class MainMenu(Resource):
         Gets the main app menu.
         """
         return {'Title': MAIN_MENU_NM,
-                'Default': 2,
+                'Default': 1,
                 'Choices': {
-                    '1': {'url': f'{USERS}', 'method': 'get',
-                          'text': 'Log-In'},
+                    '1': {'url': '/', 'method': 'get',
+                          'text': 'Find Food!'},
                     '2': {'url': '/',
-                          'method': 'get', 'text': 'Sign-Up'},
+                          'method': 'get', 'text': 'Open a Store!'},
                     'X': {'text': 'Exit'},
                 }}
 
 
-@api.route(f'{USERS}')
-class Users(Resource):
+@api.route(f'{CLIENT_MENU_EP}')
+class ClientMenu(Resource):
     """
-    This class supports fetching a list of all users.
+    Displays Client Main Menu
     """
     def get(self):
         """
-        This method returns all users.
+        This method will deliver the client main menu
         """
         return {
-            TYPE: DATA,
-            TITLE: 'Current USER',
-            DATA: users.get_users(),
-            MENU: USER_MENU_EP,
-            RETURN: MAIN_MENU_EP,
+            
         }
+    
+
+@api.route(f'{RESTAURANT_MENU_EP}')
+class RestaurantMenu(Resource):
+    """
+    Displays Restaurant Main Menu
+    """
+    def get(self):
+        """
+        This method will deliver the Restaurant main menu
+        """
+        return {
+            
+        }
+    
+
+# @api.route(f'{USERS}')
+# class Users(Resource):
+#     """
+#     This class supports fetching a list of all users.
+#     """
+#     def get(self):
+#         """
+#         This method returns all users.
+#         """
+#         return {
+#             TYPE: DATA,
+#             TITLE: 'Current USER',
+#             DATA: users.get_users(),
+#             MENU: USER_MENU_EP,
+#             RETURN: MAIN_MENU_EP,
+#         }
