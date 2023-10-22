@@ -12,6 +12,9 @@ import db.users as users
 app = Flask(__name__)
 api = Api(app)
 
+HELLO_EP = '/hello'
+HELLO_RESP = 'hello'
+
 MAIN_MENU = '/MainMenu'
 MAIN_MENU_NM = "Welcome to Food Finder!"
 
