@@ -140,15 +140,15 @@ class RegistrationSystem(Resource):
         # check username in database and if it then return True or else.
         # later on this will be changed when we have our database.
         
+        email_already_exist = False
         if email and password:
             users_data = users.get_users()
-            email_already_exits = False
             for user_data in users_data.values():
                 if user_data.get(users.EMAIL) == email:
                     email_already_exits = True
                     break
 
-            if not email_alreayd_exits:
+            if not email_already_exist:
                 return {"Registration is done": True}
             else:
                 return {"message": "Email already exists"}
