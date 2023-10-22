@@ -7,7 +7,7 @@ from flask import Flask
 from flask_restx import Resource, Api
 # import db.db as db
 
-# import db.users as users
+import db.users as users
 
 app = Flask(__name__)
 api = Api(app)
@@ -103,10 +103,14 @@ class LoginSystem(Resource):
         # Pass email and password as arguments to an operator that will
         # query the database
 
-        if email in user.getusers() and password in user.getusers():
-            return {"message": "Login Successfull"}
+        if email and password:
+            users_data = users.getusers()
+            for username, user_data in users_data.items():
+                if (user_data.get(EMAIL) == email and user_data.get(PASSWORD) == password and (username == "Eric Brown" or username == "John Richards")):
+                     return {"message": "Login Successfull"}
+                    return {"message": "Login Failed"}
         else:
-            return {"message": "Login Fail"}
+            return {"message": "Email and Password are both required"}
 
 
 @api.route(f'{REGISTRATION_SYSTEM}')
