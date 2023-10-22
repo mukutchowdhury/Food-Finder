@@ -109,7 +109,7 @@ class LoginSystem(Resource):
                 if (user_data.get(EMAIL) == email and user_data.get(PASSWORD) == password and (username = "Eric Brown" or username == "John Richards")):
                     return {"message": "Login Successfull"}
                 else:
-                    retur {"message": "Login Failed"}
+                    return {"message": "Login Failed"}
         else:
             return {"message": "Email and Password are both required"}
 
