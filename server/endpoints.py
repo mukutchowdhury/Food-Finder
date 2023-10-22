@@ -111,14 +111,23 @@ class LoginSystem(Resource):
 @api.route(f'{REGISTRATION_SYSTEM}')
 class RegistrationSystem(Resource):
     """
-    Some Comment
+    This class handles registration
     """
+    
     def post(self):
-        """
-        Some Comment
-        """
-        return {
+       """
+        Takes care of login information with the entered data information
 
+        :param email: The email of the user
+        :param password: The password of the user
+
+        :return: Registration Complete Message
+        """
+
+        # The information will be retreieved from the data
+        # Email and Password will be the two given parameters
+        return {
+            "Registration Complete": True,
         }
 
 
