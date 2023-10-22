@@ -139,21 +139,22 @@ class RegistrationSystem(Resource):
 
         # check username in database and if it then return True or else.
         # later on this will be changed when we have our database.
-        
-        email_already_exist = False
+
+        email_already_exists = False
         if email and password:
             users_data = users.get_users()
             for user_data in users_data.values():
                 if user_data.get(users.EMAIL) == email:
-                    email_already_exits = True
+                    email_already_exists = True
                     break
 
-            if not email_already_exist:
+            if not email_already_exists:
                 return {"Registration is done": True}
             else:
                 return {"message": "Email already exists"}
         else:
             return {"message": "Email and password are both required!"}
+
 
 @api.route(f'{MAIN_MENU}')
 class MainMenu(Resource):
