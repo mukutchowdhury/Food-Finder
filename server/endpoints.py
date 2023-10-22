@@ -136,10 +136,24 @@ class RegistrationSystem(Resource):
 
         # The information will be retreieved from the data
         # Email and Password will be the two given parameters
-        return {
-            "Registration Complete": True,
-        }
 
+        # check username in database and if it then return True or else.
+        # later on this will be changed when we have our database.
+        
+        if email and password:
+            users_data = users.get_users()
+            email_already_exits = False
+            for user_data in users_data.values():
+                if user_data.get(users.EMAIL) == email:
+                    email_already_exits = True
+                    break
+
+            if not email_alreayd_exits:
+                return {"Registration is done": True}
+            else:
+                return {"message": "Email already exists"}
+        else:
+            return {"message": "Email and password are both required!"}
 
 @api.route(f'{MAIN_MENU}')
 class MainMenu(Resource):
