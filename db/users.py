@@ -2,7 +2,7 @@
 This module interfaces to our user data.
 """
 
-MIN_USER_NAME_LEN = 2
+MIN_USER_NAME_LEN = 1 
 MIN_EMAIL_LEN = 5
 MIN_PASSWORD_LEN = 6
 EMAIL = 'EMAIL'
@@ -19,12 +19,12 @@ def get_users():
     """
     users = {
         "Eric Brown": {
-           "EMAIL": 'app123@gmail.com',
-           "PASSWORD": 'ericiscool'
+           EMAIL: 'app123@gmail.com',
+           PASSWORD: 'ericiscool'
         },
         "John Richards": {
-            "EMAIL": 'ora123@gmail.com',
-            'PASSWORD': 'JOHN123'
+            EMAIL: 'ora123@gmail.com',
+            PASSWORD: 'JOHN123'
         },
     }
     return users
