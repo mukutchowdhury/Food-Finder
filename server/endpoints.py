@@ -99,7 +99,7 @@ class LoginSystem(Resource):
 
         :return: A login success status.
         """
-        
+
         # Pass email and password as arguments to an operator that will
         # query the database
 
@@ -113,9 +113,9 @@ class RegistrationSystem(Resource):
     """
     This class handles registration
     """
-    
+
     def post(self):
-       """
+        """
         Takes care of login information with the entered data information
 
         :param email: The email of the user
