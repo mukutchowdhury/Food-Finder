@@ -103,8 +103,13 @@ class LoginSystem(Resource):
         # Pass email and password as arguments to an operator that will
         # query the database
 
-        if email in users.getusers() and password in users.getusers():
-            return {"message": "Login Successfull"}
+        if email and password:
+            users_data = users.get_users()
+            for username, user_data in users_data.items():
+                if (user_data.get(EMAIL) == email and user_data.get(PASSWORD) == password and (username = "Eric Brown" or username == "John Richards")):
+                    return {"message": "Login Successfull"}
+                else:
+                    retur {"message": "Login Failed"}
         else:
             return {"message": "Email and Password are both required"}
 
