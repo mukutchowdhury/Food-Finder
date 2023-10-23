@@ -3,7 +3,7 @@ import pytest
 import db.restaurants as restnts
 
 
-def test_get_games():
+def test_get_restaurants():
     restaurants = restnts.get_restaurants()
     assert isinstance(restaurants, dict)
     assert len(restaurants) > 0
