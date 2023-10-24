@@ -35,14 +35,14 @@ Stripe API for secure and easy payments.
 
 ## LOGIN & REGISTRATION (Workflow)
 
-![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/raw/master/ff_image_1.jpg)
+![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/blob/master/assets/ff_image_1.jpg)
 
   
 ## CLIENT INTERFACE (Workflow)
 
-![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/blob/master/ff_client_workflow.jpeg)
+![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/blob/master/assets/ff_client_workflow.jpeg)
 
 
 ## RESTAURANT OWNER INTERFACE (Workflow)
 
-![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/blob/master/ff_owner_workflow.jpeg)
+![Food Finder Image](https://github.com/mukutchowdhury/Food-Finder/blob/master/assets/ff_owner_workflow.jpeg)
