@@ -4,6 +4,7 @@ The endpoint called `endpoints` will return all available endpoints.
 """
 
 from flask import Flask
+from flask import request
 from flask_restx import Resource, Api
 # import db.db as db
 
@@ -12,10 +13,11 @@ import db.users as users
 app = Flask(__name__)
 api = Api(app)
 
+HELLO_EP = '/hello'
+HELLO_RESP = 'hello'
+
 MAIN_MENU = '/MainMenu'
 MAIN_MENU_NM = "Welcome to Food Finder!"
-
-USERS = ''
 
 LOGIN_PAGE = '/LoginPage'
 LOGIN_SCREEN_MSG = 'Please Login or Register'
@@ -64,6 +66,9 @@ class Endpoints(Resource):
         return {"Available endpoints": endpoints}
 
 
+# START OF PROJECT #
+
+
 @api.route(f'{LOGIN_PAGE}')
 @api.route('/')
 class LoginPage(Resource):
@@ -88,34 +93,43 @@ class LoginPage(Resource):
 @api.route(f'{LOGIN_SYSTEM}')
 class LoginSystem(Resource):
     """
-    This class handles user authentication
+    This class handles user authentication using database
     """
-    def post(self, email, password):
+    def post(self):
         """
         Handles user login by checking the provided credentials
-
-        :param email: The user's email address.
-        :param password: The user's password.
-
-        :return: A login success status.
         """
 
-        # Pass email and password as arguments to an operator that will
-        # query the database
+        data = request.get_json()
+        user_email = data.get("user_email")
+        user_password = data.get("user_password")
 
-        if email and password:
-            users_data = users.get_users()
-            for username, user_data in users_data.items():
-                if (
-                    user_data.get(users.EMAIL) == email and
-                    user_data.get(users.PASSWORD) == password and
-                    (username == "Eric Brown" or username == "John Richards")
-                ):
-                    return {"message": "Login Successfull"}
-                else:
-                    return {"message": "Login Failed"}
-        else:
-            return {"message": "Email and Password are both required"}
+        try:
+            if (not isinstance(user_email, str) and
+               not isinstance(user_password, str)):
+                # no feedback will do until we start working with the front-end
+                raise Exception
+
+            # Hardcoded User Database #
+            db_users = users.get_users()
+            # use bcrypt to hash user_password #
+            # hash_password = bcrpyt(user_password, salt) #
+            for users_key in db_users:
+                user_info = db_users[users_key]
+                if (user_info[users.EMAIL] == user_email and
+                   user_info[users.PASSWORD] == user_password):
+                    return {
+                        "SYSTEM_STATUS": "PASSED"
+                    }, 200
+
+            return {
+                "SYSTEM_STATUS": "FAILED"
+            }, 200
+
+        except Exception:
+            return {
+                "SYSTEM_STATUS": "FAILED"
+            }, 406
 
 
 @api.route(f'{REGISTRATION_SYSTEM}')
@@ -136,9 +150,25 @@ class RegistrationSystem(Resource):
 
         # The information will be retreieved from the data
         # Email and Password will be the two given parameters
-        return {
-            "Registration Complete": True,
-        }
+
+        # check username in database and if it then return True or else.
+        # later on this will be changed when we have our database.
+        # checks if the data information is correct
+
+        email_already_exists = False
+        if email and password:
+            users_data = users.get_users()
+            for user_data in users_data.values():
+                if user_data.get(users.EMAIL) == email:
+                    email_already_exists = True
+                    break
+
+            if not email_already_exists:
+                return {"Registration is done": True}
+            else:
+                return {"message": "Email already exists"}
+        else:
+            return {"message": "Email and password are both required!"}
 
 
 @api.route(f'{MAIN_MENU}')
@@ -161,30 +191,30 @@ class MainMenu(Resource):
                 }}
 
 
-@api.route(f'{CLIENT_MENU_EP}')
-class ClientMenu(Resource):
-    """
-    Displays Client Main Menu
-    """
-    def get(self):
-        """
-        This method will deliver the client main menu
-        """
-        return {
-        }
+# @api.route(f'{CLIENT_MENU_EP}')
+# class ClientMenu(Resource):
+#     """
+#     Displays Client Main Menu
+#     """
+#     def get(self):
+#         """
+#         This method will deliver the client main menu
+#         """
+#         return {
+#         }
 
 
-@api.route(f'{RESTAURANT_MENU_EP}')
-class RestaurantMenu(Resource):
-    """
-    Displays Restaurant Main Menu
-    """
-    def get(self):
-        """
-        This method will deliver the Restaurant main menu
-        """
-        return {
-        }
+# @api.route(f'{RESTAURANT_MENU_EP}')
+# class RestaurantMenu(Resource):
+#     """
+#     Displays Restaurant Main Menu
+#     """
+#     def get(self):
+#         """
+#         This method will deliver the Restaurant main menu
+#         """
+#         return {
+#         }
 
 
 # @api.route(f'{USERS}')
