@@ -18,8 +18,6 @@ HELLO_RESP = 'hello'
 MAIN_MENU = '/MainMenu'
 MAIN_MENU_NM = "Welcome to Food Finder!"
 
-USERS = ''
-
 LOGIN_PAGE = '/LoginPage'
 LOGIN_SCREEN_MSG = 'Please Login or Register'
 
@@ -67,6 +65,9 @@ class Endpoints(Resource):
         return {"Available endpoints": endpoints}
 
 
+# START OF PROJECT #
+
+
 @api.route(f'{LOGIN_PAGE}')
 @api.route('/')
 class LoginPage(Resource):
@@ -91,34 +92,37 @@ class LoginPage(Resource):
 @api.route(f'{LOGIN_SYSTEM}')
 class LoginSystem(Resource):
     """
-    This class handles user authentication
+    This class handles user authentication using database
     """
-    def post(self, email, password):
+    def post(self, user_email: str, user_password: str) -> dict[str, str]:
         """
         Handles user login by checking the provided credentials
-
-        :param email: The user's email address.
-        :param password: The user's password.
-
-        :return: A login success status.
         """
+        try:
+            if (not isinstance(user_email, str) and
+               not isinstance(user_password, str)):
+                # no feedback will do until we start working with the front-end
+                raise Exception
 
-        # Pass email and password as arguments to an operator that will
-        # query the database
+            # Hardcoded User Database #
+            db_users = users.get_users()
 
-        if email and password:
-            users_data = users.get_users()
-            for username, user_data in users_data.items():
-                if (
-                    user_data.get(users.EMAIL) == email and
-                    user_data.get(users.PASSWORD) == password and
-                    (username == "Eric Brown" or username == "John Richards")
-                ):
-                    return {"message": "Login Successfull"}
-                else:
-                    return {"message": "Login Failed"}
-        else:
-            return {"message": "Email and Password are both required"}
+            for users_key in db_users:
+                user_info = db_users[users_key]
+                if (user_info[users.EMAIL] == user_email and
+                   user_info[users.PASSWORD] == user_password):
+                    return {
+                        "SYSTEM_STATUS": "PASSED"
+                    }
+
+            return {
+                "SYSTEM_STATUS": "FAILED"
+            }
+
+        except Exception:
+            return {
+                "SYSTEM_STATUS": "FAILED"
+            }
 
 
 @api.route(f'{REGISTRATION_SYSTEM}')
