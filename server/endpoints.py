@@ -95,7 +95,7 @@ class LoginSystem(Resource):
     """
     This class handles user authentication using database
     """
-    def post(self) -> dict[str, str]:
+    def post(self):
         """
         Handles user login by checking the provided credentials
         """
@@ -120,16 +120,16 @@ class LoginSystem(Resource):
                    user_info[users.PASSWORD] == user_password):
                     return {
                         "SYSTEM_STATUS": "PASSED"
-                    }
+                    }, 200
 
             return {
                 "SYSTEM_STATUS": "FAILED"
-            }
+            }, 200
 
         except Exception:
             return {
                 "SYSTEM_STATUS": "FAILED"
-            }
+            }, 406
 
 
 @api.route(f'{REGISTRATION_SYSTEM}')
@@ -191,30 +191,30 @@ class MainMenu(Resource):
                 }}
 
 
-@api.route(f'{CLIENT_MENU_EP}')
-class ClientMenu(Resource):
-    """
-    Displays Client Main Menu
-    """
-    def get(self):
-        """
-        This method will deliver the client main menu
-        """
-        return {
-        }
+# @api.route(f'{CLIENT_MENU_EP}')
+# class ClientMenu(Resource):
+#     """
+#     Displays Client Main Menu
+#     """
+#     def get(self):
+#         """
+#         This method will deliver the client main menu
+#         """
+#         return {
+#         }
 
 
-@api.route(f'{RESTAURANT_MENU_EP}')
-class RestaurantMenu(Resource):
-    """
-    Displays Restaurant Main Menu
-    """
-    def get(self):
-        """
-        This method will deliver the Restaurant main menu
-        """
-        return {
-        }
+# @api.route(f'{RESTAURANT_MENU_EP}')
+# class RestaurantMenu(Resource):
+#     """
+#     Displays Restaurant Main Menu
+#     """
+#     def get(self):
+#         """
+#         This method will deliver the Restaurant main menu
+#         """
+#         return {
+#         }
 
 
 # @api.route(f'{USERS}')
