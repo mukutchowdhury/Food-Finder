@@ -4,6 +4,7 @@ The endpoint called `endpoints` will return all available endpoints.
 """
 
 from flask import Flask
+from flask import request
 from flask_restx import Resource, Api
 # import db.db as db
 
@@ -94,10 +95,15 @@ class LoginSystem(Resource):
     """
     This class handles user authentication using database
     """
-    def post(self, user_email: str, user_password: str) -> dict[str, str]:
+    def post(self) -> dict[str, str]:
         """
         Handles user login by checking the provided credentials
         """
+
+        data = request.get_json()
+        user_email = data.get("user_email")
+        user_password = data.get("user_password")
+
         try:
             if (not isinstance(user_email, str) and
                not isinstance(user_password, str)):
@@ -106,7 +112,8 @@ class LoginSystem(Resource):
 
             # Hardcoded User Database #
             db_users = users.get_users()
-
+            # use bcrypt to hash user_password #
+            # hash_password = bcrpyt(user_password, salt) #
             for users_key in db_users:
                 user_info = db_users[users_key]
                 if (user_info[users.EMAIL] == user_email and
