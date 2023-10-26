@@ -3,10 +3,10 @@ This is the file containing all of the endpoints for our flask app.
 The endpoint called `endpoints` will return all available endpoints.
 """
 
-from flask import Flask
-from flask import request
-from flask_restx import Resource, Api
+from flask import Flask, request
+from flask_restx import Resource, Api, fields
 
+import bcrypt
 import db.users as users
 
 app = Flask(__name__)
@@ -106,12 +106,24 @@ class LoginPage(Resource):
 
 # START OF PROJECT #
 
+login_data = api.model('Authentication', {
+    "user_email": fields.String,
+    "user_password": fields.String
+})
+
+registration_data = api.model('Regisration', {
+    "user_email": fields.String,
+    "user_password": fields.String,
+    "user_confirm_password": fields.String
+})
+
 
 @api.route(f'{LOGIN_SYSTEM}')
 class LoginSystem(Resource):
     """
     This class handles user authentication using database
     """
+    @api.expect(login_data)
     def post(self):
         """
         Handles user login by checking the provided credentials
@@ -132,12 +144,16 @@ class LoginSystem(Resource):
 
             # Hardcoded User Database #
             db_users = users.get_users()
+
             # use bcrypt to hash user_password #
-            # hash_password = bcrpyt(user_password, salt) #
+            byte_password = user_password.encode('utf-8')
+
             for users_key in db_users:
                 user_info = db_users[users_key]
                 if (user_info[users.EMAIL] == user_email and
-                   user_info[users.PASSWORD] == user_password):
+                   bcrypt.checkpw(byte_password, user_info[users.PASSWORD])):
+                    # return a token, some cookie, or create a session for user
+                    # load onto a new route
                     return {
                         "SYSTEM_STATUS": "PASSED"
                     }, 200
@@ -159,6 +175,7 @@ class RegistrationSystem(Resource):
     This class handles registration
     """
 
+    @api.expect(registration_data)
     def post(self):
         """
         Takes care of login information with the entered data information
@@ -184,8 +201,11 @@ class RegistrationSystem(Resource):
 
             # Hardcoded User Database #
             db_users = users.get_users()
+
             # use bcrypt to hash user_password #
-            # hash_password = bcrpyt(user_password, salt) #
+            # byte_password = user_password.encode('utf-8')
+            # hashed_password = bcrypt.hashpw(byte_password, bcrypt.gensalt())
+
             for users_key in db_users:
                 user_info = db_users[users_key]
                 if (user_info[users.EMAIL] == user_email):
@@ -194,6 +214,12 @@ class RegistrationSystem(Resource):
                     }, 200
 
             # Create a new record in database once that's up
+            # Store user_email and hased_password
+
+            byte_password = user_password.encode('utf-8')
+            hashed_password = bcrypt.hashpw(byte_password, bcrypt.gensalt())
+            users.add_user(user_email, hashed_password)
+
             return {
                 "SYSTEM_STATUS": "PASSED"
             }, 200
