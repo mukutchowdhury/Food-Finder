@@ -82,9 +82,9 @@ class LoginPage(Resource):
         return {'Title': LOGIN_SCREEN_MSG,
                 'Default': 1,
                 'Choices': {
-                    '1': {'url': '/', 'method': 'get',
+                    '1': {'url': f'{LOGIN_SYSTEM}', 'method': 'get',
                           'text': 'Log-In'},
-                    '2': {'url': '/',
+                    '2': {'url': f'{REGISTRATION_SYSTEM}',
                           'method': 'get', 'text': 'Sign-Up'},
                     'X': {'text': 'Exit'},
                 }}
@@ -108,7 +108,10 @@ class LoginSystem(Resource):
             if (not isinstance(user_email, str) and
                not isinstance(user_password, str)):
                 # no feedback will do until we start working with the front-end
-                raise Exception
+                raise TypeError(
+                    "One or more parameters for "
+                    "registration are not of type string"
+                    )
 
             # Hardcoded User Database #
             db_users = users.get_users()
@@ -126,9 +129,10 @@ class LoginSystem(Resource):
                 "SYSTEM_STATUS": "FAILED"
             }, 200
 
-        except Exception:
+        except Exception as error:
             return {
-                "SYSTEM_STATUS": "FAILED"
+                "SYSTEM_STATUS": "FAILED",
+                "ERROR_MESSAGE": str(error)
             }, 406
 
 
@@ -138,7 +142,7 @@ class RegistrationSystem(Resource):
     This class handles registration
     """
 
-    def post(self, email, password):
+    def post(self):
         """
         Takes care of login information with the entered data information
 
@@ -155,20 +159,48 @@ class RegistrationSystem(Resource):
         # later on this will be changed when we have our database.
         # checks if the data information is correct
 
-        email_already_exists = False
-        if email and password:
-            users_data = users.get_users()
-            for user_data in users_data.values():
-                if user_data.get(users.EMAIL) == email:
-                    email_already_exists = True
-                    break
+        data = request.get_json()
+        user_email = data.get("user_email")
+        user_password = data.get("user_password")
+        user_confirm_password = data.get("user_confirm_password")
 
-            if not email_already_exists:
-                return {"Registration is done": True}
-            else:
-                return {"message": "Email already exists"}
-        else:
-            return {"message": "Email and password are both required!"}
+        try:
+            if (not isinstance(user_email, str) and
+               not isinstance(user_password, str) and
+               not isinstance(user_confirm_password, str)):
+                # no feedback will do until we start working with the front-end
+                raise TypeError(
+                    "One or more parameters for "
+                    "registration are not of type string"
+                    )
+
+            if user_password != user_confirm_password:
+                raise Exception("Passwords don't match")
+
+            # Hardcoded User Database #
+            db_users = users.get_users()
+            # use bcrypt to hash user_password #
+            # hash_password = bcrpyt(user_password, salt) #
+            for users_key in db_users:
+                user_info = db_users[users_key]
+                if (user_info[users.EMAIL] == user_email):
+                    return {
+                        "SYSTEM_STATUS": "FAILED"
+                    }, 200
+
+            return {
+                "SYSTEM_STATUS": "PASSED"
+            }, 200
+        except TypeError as error:
+            return {
+                "SYSTEM_STATUS": "FAILED",
+                "ERROR_MESSAGE": str(error)
+            }, 406
+        except Exception as error:
+            return {
+                "SYSTEM_STATUS": "FAILED",
+                "ERROR_MESSAGE": str(error)
+            }, 406
 
 
 @api.route(f'{MAIN_MENU}')
