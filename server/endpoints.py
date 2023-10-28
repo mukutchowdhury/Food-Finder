@@ -3,11 +3,10 @@ This is the file containing all of the endpoints for our flask app.
 The endpoint called `endpoints` will return all available endpoints.
 """
 
-from flask import Flask
-from flask import request
-from flask_restx import Resource, Api
-# import db.db as db
+from flask import Flask, request
+from flask_restx import Resource, Api, fields
 
+import bcrypt
 import db.users as users
 
 app = Flask(__name__)
@@ -16,12 +15,13 @@ api = Api(app)
 HELLO_EP = '/hello'
 HELLO_RESP = 'hello'
 
+# MENUS
 MAIN_MENU = '/MainMenu'
 MAIN_MENU_NM = "Welcome to Food Finder!"
-
 LOGIN_PAGE = '/LoginPage'
 LOGIN_SCREEN_MSG = 'Please Login or Register'
 
+# ENDPOINTS
 LOGIN_SYSTEM = '/LoginSystem'
 REGISTRATION_SYSTEM = '/RegistrationSystem'
 
@@ -33,9 +33,6 @@ MENU = 'menu'
 
 USER_MENU_EP = '/user_menu'
 MAIN_MENU_EP = '/MainMenu'
-
-CLIENT_MENU_EP = '/ClientMenu'
-RESTAURANT_MENU_EP = '/RestaurantMenu'
 
 
 @api.route('/hello')
@@ -66,111 +63,6 @@ class Endpoints(Resource):
         return {"Available endpoints": endpoints}
 
 
-# START OF PROJECT #
-
-
-@api.route(f'{LOGIN_PAGE}')
-@api.route('/')
-class LoginPage(Resource):
-    """
-    Some Comment
-    """
-    def get(self):
-        """
-        Some Comment
-        """
-        return {'Title': LOGIN_SCREEN_MSG,
-                'Default': 1,
-                'Choices': {
-                    '1': {'url': '/', 'method': 'get',
-                          'text': 'Log-In'},
-                    '2': {'url': '/',
-                          'method': 'get', 'text': 'Sign-Up'},
-                    'X': {'text': 'Exit'},
-                }}
-
-
-@api.route(f'{LOGIN_SYSTEM}')
-class LoginSystem(Resource):
-    """
-    This class handles user authentication using database
-    """
-    def post(self):
-        """
-        Handles user login by checking the provided credentials
-        """
-
-        data = request.get_json()
-        user_email = data.get("user_email")
-        user_password = data.get("user_password")
-
-        try:
-            if (not isinstance(user_email, str) and
-               not isinstance(user_password, str)):
-                # no feedback will do until we start working with the front-end
-                raise Exception
-
-            # Hardcoded User Database #
-            db_users = users.get_users()
-            # use bcrypt to hash user_password #
-            # hash_password = bcrpyt(user_password, salt) #
-            for users_key in db_users:
-                user_info = db_users[users_key]
-                if (user_info[users.EMAIL] == user_email and
-                   user_info[users.PASSWORD] == user_password):
-                    return {
-                        "SYSTEM_STATUS": "PASSED"
-                    }, 200
-
-            return {
-                "SYSTEM_STATUS": "FAILED"
-            }, 200
-
-        except Exception:
-            return {
-                "SYSTEM_STATUS": "FAILED"
-            }, 406
-
-
-@api.route(f'{REGISTRATION_SYSTEM}')
-class RegistrationSystem(Resource):
-    """
-    This class handles registration
-    """
-
-    def post(self, email, password):
-        """
-        Takes care of login information with the entered data information
-
-        :param email: The email of the user
-        :param password: The password of the user
-
-        :return: Registration Complete Message
-        """
-
-        # The information will be retreieved from the data
-        # Email and Password will be the two given parameters
-
-        # check username in database and if it then return True or else.
-        # later on this will be changed when we have our database.
-        # checks if the data information is correct
-
-        email_already_exists = False
-        if email and password:
-            users_data = users.get_users()
-            for user_data in users_data.values():
-                if user_data.get(users.EMAIL) == email:
-                    email_already_exists = True
-                    break
-
-            if not email_already_exists:
-                return {"Registration is done": True}
-            else:
-                return {"message": "Email already exists"}
-        else:
-            return {"message": "Email and password are both required!"}
-
-
 @api.route(f'{MAIN_MENU}')
 class MainMenu(Resource):
     """
@@ -191,45 +83,153 @@ class MainMenu(Resource):
                 }}
 
 
-# @api.route(f'{CLIENT_MENU_EP}')
-# class ClientMenu(Resource):
-#     """
-#     Displays Client Main Menu
-#     """
-#     def get(self):
-#         """
-#         This method will deliver the client main menu
-#         """
-#         return {
-#         }
+@api.route(f'{LOGIN_PAGE}')
+@api.route('/')
+class LoginPage(Resource):
+    """
+    Some Comment
+    """
+    def get(self):
+        """
+        Some Comment
+        """
+        return {'Title': LOGIN_SCREEN_MSG,
+                'Default': 1,
+                'Choices': {
+                    '1': {'url': f'{LOGIN_SYSTEM}', 'method': 'get',
+                          'text': 'Log-In'},
+                    '2': {'url': f'{REGISTRATION_SYSTEM}',
+                          'method': 'get', 'text': 'Sign-Up'},
+                    'X': {'text': 'Exit'},
+                }}
 
 
-# @api.route(f'{RESTAURANT_MENU_EP}')
-# class RestaurantMenu(Resource):
-#     """
-#     Displays Restaurant Main Menu
-#     """
-#     def get(self):
-#         """
-#         This method will deliver the Restaurant main menu
-#         """
-#         return {
-#         }
+# START OF PROJECT #
+
+login_data = api.model('Authentication', {
+    "user_email": fields.String,
+    "user_password": fields.String
+})
+
+registration_data = api.model('Regisration', {
+    "user_email": fields.String,
+    "user_password": fields.String,
+    "user_confirm_password": fields.String
+})
 
 
-# @api.route(f'{USERS}')
-# class Users(Resource):
-#     """
-#     This class supports fetching a list of all users.
-#     """
-#     def get(self):
-#         """
-#         This method returns all users.
-#         """
-#         return {
-#             TYPE: DATA,
-#             TITLE: 'Current USER',
-#             DATA: users.get_users(),
-#             MENU: USER_MENU_EP,
-#             RETURN: MAIN_MENU_EP,
-#         }
+@api.route(f'{LOGIN_SYSTEM}')
+class LoginSystem(Resource):
+    """
+    This class handles user authentication using database
+    """
+    @api.expect(login_data)
+    def post(self):
+        """
+        Handles user login by checking the provided credentials
+        """
+
+        data = request.get_json()
+        user_email = data.get("user_email")
+        user_password = data.get("user_password")
+
+        try:
+            if (not isinstance(user_email, str) and
+               not isinstance(user_password, str)):
+                # no feedback will do until we start working with the front-end
+                raise TypeError(
+                    "One or more parameters for "
+                    "registration are not of type string"
+                    )
+
+            # Hardcoded User Database #
+            db_users = users.get_users()
+
+            # use bcrypt to hash user_password #
+            byte_password = user_password.encode('utf-8')
+
+            for users_key in db_users:
+                user_info = db_users[users_key]
+                if (user_info[users.EMAIL] == user_email and
+                   bcrypt.checkpw(byte_password, user_info[users.PASSWORD])):
+                    # return a token, some cookie, or create a session for user
+                    # load onto a new route
+                    return {
+                        "SYSTEM_STATUS": "PASSED"
+                    }, 200
+
+            return {
+                "SYSTEM_STATUS": "FAILED"
+            }, 200
+
+        except Exception as error:
+            return {
+                "SYSTEM_STATUS": "FAILED",
+                "ERROR_MESSAGE": str(error)
+            }, 406
+
+
+@api.route(f'{REGISTRATION_SYSTEM}')
+class RegistrationSystem(Resource):
+    """
+    This class handles registration
+    """
+
+    @api.expect(registration_data)
+    def post(self):
+        """
+        Takes care of login information with the entered data information
+        """
+
+        data = request.get_json()
+        user_email = data.get("user_email")
+        user_password = data.get("user_password")
+        user_confirm_password = data.get("user_confirm_password")
+
+        try:
+            if (not isinstance(user_email, str) and
+               not isinstance(user_password, str) and
+               not isinstance(user_confirm_password, str)):
+                # no feedback will do until we start working with the front-end
+                raise TypeError(
+                    "One or more parameters for "
+                    "registration are not of type string"
+                    )
+
+            if user_password != user_confirm_password:
+                raise Exception("Passwords don't match")
+
+            # Hardcoded User Database #
+            db_users = users.get_users()
+
+            # use bcrypt to hash user_password #
+            # byte_password = user_password.encode('utf-8')
+            # hashed_password = bcrypt.hashpw(byte_password, bcrypt.gensalt())
+
+            for users_key in db_users:
+                user_info = db_users[users_key]
+                if (user_info[users.EMAIL] == user_email):
+                    return {
+                        "SYSTEM_STATUS": "FAILED"
+                    }, 200
+
+            # Create a new record in database once that's up
+            # Store user_email and hased_password
+
+            byte_password = user_password.encode('utf-8')
+            hashed_password = bcrypt.hashpw(byte_password, bcrypt.gensalt())
+            users.add_user(user_email, hashed_password)
+
+            return {
+                "SYSTEM_STATUS": "PASSED"
+            }, 200
+        except TypeError as error:
+            return {
+                "SYSTEM_STATUS": "FAILED",
+                "ERROR_MESSAGE": str(error)
+            }, 406
+        except Exception as error:
+            return {
+                "SYSTEM_STATUS": "FAILED",
+                "ERROR_MESSAGE": str(error)
+            }, 406

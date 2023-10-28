@@ -13,6 +13,10 @@ def test_get_users():
         assert usrs.EMAIL in user
         assert usrs.PASSWORD in user
         assert isinstance(user[usrs.EMAIL], str)
-        assert isinstance(user[usrs.PASSWORD], str)
+        assert isinstance(user[usrs.PASSWORD], bytes)
         assert len(user[usrs.EMAIL]) >= usrs.MIN_EMAIL_LEN
-        assert len(user[usrs.PASSWORD]) >= usrs.MIN_PASSWORD_LEN
+        # Password is hashed, so we can't check for length here
+
+def test_add_users():
+    # TO DO
+    pass
