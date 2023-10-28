@@ -11,14 +11,14 @@ PASSWORD = 'PASSWORD'
 # John's password -> JOHN123
 
 users = {
-        "Eric Brown": {
+        "User_1": {
             EMAIL: 'app123@gmail.com',
             PASSWORD: (
                 b'$2b$12$0AZZGPgP7MCwyGwn7KR58eRWyvsJw8WrnjCqy6n.'
                 b'gE9OF8V/ayQ/G'
             )
         },
-        "John Richards": {
+        "User_2": {
             EMAIL: 'ora123@gmail.com',
             PASSWORD: (
                 b'$2b$12$.s3eFLLJqiPzHSUM.0VVAuW3Alt4TJH'
