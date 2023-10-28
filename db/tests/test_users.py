@@ -17,6 +17,11 @@ def test_get_users():
         assert len(user[usrs.EMAIL]) >= usrs.MIN_EMAIL_LEN
         # Password is hashed, so we can't check for length here
 
+
+ACCOUNT_EMAIL = "Root@root.com"
+ACCOUNT_PASSWORD = "rooted_admin"
 def test_add_users():
-    # TO DO
-    pass
+    usrs.add_user(ACCOUNT_EMAIL, ACCOUNT_PASSWORD)
+    all_users = usrs.get_users()
+    new_user = f'User_{len(all_users)}'
+    assert new_user in all_users
