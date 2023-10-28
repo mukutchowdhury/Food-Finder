@@ -25,6 +25,20 @@ LOGIN_SCREEN_MSG = 'Please Login or Register'
 LOGIN_SYSTEM = '/LoginSystem'
 REGISTRATION_SYSTEM = '/RegistrationSystem'
 
+# RESTAURANT_RELATED ENDPOINTS
+RESTAURANT_REGISTRATION = '/Restaurant_Registration'
+ADD_RESTAURANT_MENUITEM = '/Add_Restaurant_MenuItem'
+REMOVE_RESTAURANT_MENUITEM = '/Remove_Restaurant_MenuItem'
+SET_RESTAURANT_HOURS = '/Set_Restaurant_Hours'
+GET_RESTAURANT_REVIEWS = '/Get_Restaurant_Reviews'
+SET_RESTAURANT_OPTIONS = '/Set_Restaurant_Options'
+
+# CLIENT_RELATED ENDPOINTS
+GET_RESTAURANT_LIST = '/Get_Restaurant_List'
+GET_TRENDING_RESTAURANT_LIST = '/Get_Trending_Restaurant_List'
+PROVIDE_REVIEW = '/Provide_Review'
+GET_RESTAURANT_INFO = '/Get_Restaurant_Info'
+
 TYPE = 'Type'
 DATA = 'Data'
 TITLE = 'Title'
@@ -233,3 +247,40 @@ class RegistrationSystem(Resource):
                 "SYSTEM_STATUS": "FAILED",
                 "ERROR_MESSAGE": str(error)
             }, 406
+
+
+# CLIENT ENDPOINTS #
+@api.route(f'{GET_RESTAURANT_LIST}')
+class GenerateRestaurantList(Resource):
+    """
+    Provides users with a list of restaurants
+    """
+    def get(self):
+        """
+        Uses zip code and radius to generate the list
+        of restaurants and sends it
+        """
+        pass
+
+
+# RESTAURANT ENDPOINTS #
+@api.route(f'{RESTAURANT_REGISTRATION}')
+class RestaurantRegistration(Resource):
+    """
+    Handles the registration of restaurants
+    """
+    def post(self):
+        """
+        Updates restaurants database with a new
+        restaurant entry
+        """
+        try:
+            data = request.get_json()
+            rest_name = data.get("rest_name")
+            rest_owner_email = data.get("rest_owner_email")
+            rest_location_zip = data.get("rest_location_zip")
+
+            pass
+
+        except Exception:
+            pass
