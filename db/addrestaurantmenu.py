@@ -50,8 +50,12 @@ MenuItem = {
 }
 
 
+<<<<<<< HEAD
 def add_menu(restaurant_name, item_name, item_description, 
              item_price, item_category):
+=======
+def add_menu(restaurant_name, item_name, item_description, item_price, item_category):
+>>>>>>> 892045e9916f1d056532dcd0c4bb2e2a9e2c308c
     """
     Adds items information to the MenuItem
     """
@@ -79,9 +83,12 @@ def remove_item(restaurant_name, item_name):
             return True
     return False
 
+<<<<<<< HEAD
 
 def get_menu():
     """
     No arguments, return menuitem
     """
     return MenuItem
+=======
+>>>>>>> 892045e9916f1d056532dcd0c4bb2e2a9e2c308c
