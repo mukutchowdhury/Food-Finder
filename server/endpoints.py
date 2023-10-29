@@ -284,3 +284,31 @@ class RestaurantRegistration(Resource):
 
         except Exception:
             pass
+
+
+# Add Restaurant Menu Items
+@api.route(f'{ADD_RESTAURANT_MENUITEM}')
+class AddRestaurantMenuItem(Resource):
+    @api.expect(menu_item_data)
+    def post(self):
+        """
+        Adds new menu item to the restaurant's menu
+        """
+        data = request.json
+        restaurant_name = data['restaurant_name']
+        item_name = data['item_name']
+        item_description = data['item_description']
+        item_price = data['item_price']
+        item_category = data['item_category']
+
+        if restaurant_name in MenuItem:
+            new_item = {
+                "item_name": item_name,
+                "item_description": item_description,
+                "item_price": item_price,
+                "item_category": item_category
+            }
+            MenuItem[restaurant_name]['Menu'].append(new_item)
+            return {"status": "Menu item added successfully"}, 201
+        else:
+            return {"status": "Restaurant not found"}, 404
