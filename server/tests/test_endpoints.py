@@ -110,3 +110,12 @@ def test_registration_system():
     print(f'LOGIN ATTEMPT: {resp_json["SYSTEM_STATUS"]}')
     assert "FAILED" in resp_json["SYSTEM_STATUS"]
 
+def test_addmenuitem():
+    # return successfully added message
+    user_json = {"restaurant_name": "Restaurant1", "item_name": "Spagetti", "item_description": "spicy", "item_price": 5.68, "item_category": "Spagetti"}
+    resp = TEST_CLIENT.post(ep.ADD_RESTAURANT_MENUITEM, json=user_json)
+    assert resp.status_code == 201
+    resp_json = resp.get_json()
+    assert "MENU_STATUS" in resp_json
+    print(f'RestaurantMenu: {resp_json["MENU_STATUS"]}')
+    assert "PASS" in resp_json["MENU_STATUS"]
