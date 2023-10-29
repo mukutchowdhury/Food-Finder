@@ -50,8 +50,13 @@ MenuItem = {
 }
 
 
-def add_menu(restaurant_name, item_name, item_description,
-            item_price, item_category):
+def add_menu(
+        restaurant_name,
+        item_name,
+        item_description,
+        item_price,
+        item_category
+        ):
     """
     Adds items information to the MenuItem
     """
