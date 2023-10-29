@@ -62,7 +62,7 @@ def add_menu(restaurant_name, item_name, item_description, item_price, item_cate
         "item_category": item_category
     }
 
-    MenuItem[restaurant_name]["Menu".append(another_new_item)]
+    MenuItem[restaurant_name]["Menu"].append(another_new_item)
 
 
 def remove_item(restaurant_name, item_name):
