@@ -3,7 +3,7 @@ ratings.py: the interface to our restaurant rating data.
 """
 
 RATING = 'restaurantRating'
-POSSIBLE_RATINGS = ['Terrible', 'Poor', 'Ok', 'Good', 'Excellent'] 
+POSSIBLE_RATINGS = ['Terrible','Poor','Ok','Good','Excellent']
 TEST_RESTAURANT_NAME = 'Food Store'
 
 resturant_ratings = {
