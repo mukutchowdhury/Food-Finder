@@ -3,10 +3,12 @@ This is the file containing all of the endpoints for our flask app.
 The endpoint called `endpoints` will return all available endpoints.
 """
 
-from flask import Flask, request
-from flask_restx import Resource, Api, fields
-
 import bcrypt
+from flask import Flask, request
+from flask_restx import Api, Resource, fields
+
+import db.addrestaurantmenu as restaurantmenu
+# import db.restaurants as restaurants
 import db.users as users
 
 app = Flask(__name__)
@@ -119,6 +121,14 @@ class LoginPage(Resource):
 
 
 # START OF PROJECT #
+
+menu_item_data = api.model('menu', {
+    "restaurent_name": fields.String,
+    "item_name": fields.String,
+    "item_description": fields.String,
+    "item_price": fields.Float,
+    "item_category": fields.String,
+})
 
 login_data = api.model('Authentication', {
     "user_email": fields.String,
@@ -264,23 +274,58 @@ class GenerateRestaurantList(Resource):
 
 
 # RESTAURANT ENDPOINTS #
-@api.route(f'{RESTAURANT_REGISTRATION}')
-class RestaurantRegistration(Resource):
-    """
-    Handles the registration of restaurants
-    """
+
+# @api.route(f'{RESTAURANT_REGISTRATION}')
+# class RestaurantRegistration(Resource):
+#     """
+#     Handles the registration of restaurants
+#     """
+#     def post(self):
+#         """
+#         Updates restaurants database with a new
+#         restaurant entry
+#         """
+#         try:
+#             data = request.get_json()
+#             rest_name = data.get("rest_name")
+#             rest_owner_email = data.get("rest_owner_email")
+#             rest_location_zip = data.get("rest_location_zip")
+
+#             pass
+
+#         except Exception:
+#             pass
+
+
+# Add Restaurant Menu Items
+@api.route(f'{ADD_RESTAURANT_MENUITEM}')
+class AddRestaurantMenuItem(Resource):
+    @api.expect(menu_item_data)
     def post(self):
         """
-        Updates restaurants database with a new
-        restaurant entry
+        Adds new menu item to the restaurant's menu
         """
-        try:
-            data = request.get_json()
-            rest_name = data.get("rest_name")
-            rest_owner_email = data.get("rest_owner_email")
-            rest_location_zip = data.get("rest_location_zip")
+        data = request.json
+        restaurant_name = data['restaurant_name']
+        item_name = data['item_name']
+        item_description = data['item_description']
+        item_price = data['item_price']
+        item_category = data['item_category']
 
-            pass
+        menu = restaurantmenu.get_menu()
 
-        except Exception:
-            pass
+        if restaurant_name in menu:
+            # if item_name in restaurant_name["Menu"][0]:
+            #     return {"status": "Item cannot be accepte
+            # d at this time"}, 406
+            new_item = {
+                "item_name": item_name,
+                "item_description": item_description,
+                "item_price": item_price,
+                "item_category": item_category
+            }
+            print(new_item)
+            # menu[restaurant_name]['Menu'].append(new_item)
+            return {"MENU_STATUS": "PASS"}, 201
+        else:
+            return {"MENU_STATUS": "FAIL"}, 404
