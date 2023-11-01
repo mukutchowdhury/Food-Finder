@@ -22,6 +22,5 @@ ACCOUNT_EMAIL = "Root@root.com"
 ACCOUNT_PASSWORD = "rooted_admin"
 def test_add_users():
     usrs.add_user(ACCOUNT_EMAIL, ACCOUNT_PASSWORD)
-    all_users = usrs.get_users()
-    new_user = f'User_{len(all_users)}'
-    assert new_user in all_users
+    new_user = f'User_{len(usrs.get_users())}'
+    assert new_user in usrs.get_users()
