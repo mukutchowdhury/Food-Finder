@@ -65,4 +65,3 @@ def add_restaurant(store_name: str,  store_address: str, store_zipcode: str):
         OWNER_ID: f'{len(restaurants)}',
         RESTAURANT_ID: f'{len(restaurants)}'
     }
-
