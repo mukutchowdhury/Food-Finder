@@ -332,7 +332,8 @@ class AddRestaurantMenuItem(Resource):
         if (restaurant_name is None or
                 '' or item_name is None or '' or
                 item_description is None or '' or
-                item_price is None or '' or item_category is None or ''):
+                item_price is None or '' or item_category is None or
+                '' or item_price <= 0):
             return {"MENU_STATUS": "FAIL"}, 400
         if restaurant_name in menu:
             # if item_name in restaurant_name["Menu"][0]:
