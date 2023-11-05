@@ -173,7 +173,23 @@ def test_empty_restaurant_registration():
     # Trying to add a menu with a missing required field should lead to a fail message
     user_json = {"restaurant_name": "rest1", "item_name": "", "item_description": "", "item_price": None, "item_category": ""}
     resp = TEST_CLIENT.post(ep.ADD_RESTAURANT_MENUITEM, json=user_json)
-    assert resp.status_code == 400  # Expecting a bad request
+    assert resp.status_code == 400  
+    resp_json = resp.get_json()
+    assert "MENU_STATUS" in resp_json
+    assert "FAIL" in resp_json["MENU_STATUS"]
+
+    # Negative price
+    user_json = {"restaurant_name": "rest1", "item_name": "", "item_description": "", "item_price": -1.00, "item_category": ""}
+    resp = TEST_CLIENT.post(ep.ADD_RESTAURANT_MENUITEM, json=user_json)
+    assert resp.status_code == 400 
+    resp_json = resp.get_json()
+    assert "MENU_STATUS" in resp_json
+    assert "FAIL" in resp_json["MENU_STATUS"]
+
+    # 0 entered in price
+    user_json = {"restaurant_name": "rest1", "item_name": "", "item_description": "", "item_price": 0, "item_category": ""}
+    resp = TEST_CLIENT.post(ep.ADD_RESTAURANT_MENUITEM, json=user_json)
+    assert resp.status_code == 400  
     resp_json = resp.get_json()
     assert "MENU_STATUS" in resp_json
     assert "FAIL" in resp_json["MENU_STATUS"]
