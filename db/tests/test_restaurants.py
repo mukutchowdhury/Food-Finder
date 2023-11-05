@@ -1,31 +1,72 @@
 import pytest
+import db.restaurants as rest
 
-import db.restaurants as restnts
+def test_get_nearby_restaurants():
+    zip_code = "10004"
+    gen_rest = rest.get_nearby_restaurants(zip_code)
+    assert isinstance(gen_rest, dict)
+    for rest_key in gen_rest:
+        assert isinstance(rest_key, str)
+        rest_store = gen_rest[rest_key]
+        assert isinstance(rest_store, dict)
+
+        assert rest.NAME in rest_store
+        assert rest.ADDRESS in rest_store
+        assert rest.ZIPCODE in rest_store
+        assert rest.OWNER_ID in rest_store
+        assert rest.RESTAURANT_ID in rest_store
+
+        assert isinstance(rest_store[rest.NAME], str)
+        assert isinstance(rest_store[rest.ADDRESS], str)
+        assert isinstance(rest_store[rest.ZIPCODE], str)
+        assert isinstance(rest_store[rest.OWNER_ID], int)
+        assert isinstance(rest_store[rest.RESTAURANT_ID], int)
+
+        assert gen_rest[rest_key][rest.ZIPCODE] == zip_code
 
 
 def test_get_restaurants():
-    restaurants = restnts.get_restaurants()
-    assert isinstance(restaurants, dict)
-    assert len(restaurants) > 0
-    for restaurant in restaurants:
-        assert isinstance(restaurant, str)
-        assert isinstance(restaurants[restaurant], dict)
-    assert restnts.TEST_RESTAURANT_NAME in restaurants
+    gen_rest = rest.get_restaurants()
+    assert isinstance(gen_rest, dict)
+    for rest_key in gen_rest:
+        assert isinstance(rest_key, str)
+        rest_store = gen_rest[rest_key]
+        assert isinstance(rest_store, dict)
+
+        assert rest.NAME in rest_store
+        assert rest.ADDRESS in rest_store
+        assert rest.ZIPCODE in rest_store
+        assert rest.OWNER_ID in rest_store
+        assert rest.RESTAURANT_ID in rest_store
+
+        assert isinstance(rest_store[rest.NAME], str)
+        assert isinstance(rest_store[rest.ADDRESS], str)
+        assert isinstance(rest_store[rest.ZIPCODE], str)
+        assert isinstance(rest_store[rest.OWNER_ID], int)
+        assert isinstance(rest_store[rest.RESTAURANT_ID], int)
 
 
-def test_add_copy_restaurant():
+def test_add_restaurant():
+    store_name = 'Local Seafood'
+    store_address = '153 Broadway St'
+    store_zipcode = '10004'
+    new_restaurant = f'User_{len(rest.get_restaurants())}'
+    rest.add_restaurant(store_name, store_address, store_zipcode)
+    assert new_restaurant in rest.get_restaurants()
+
+
+def test_duplicate_restaurant_location():
+    store_name = 'Local Seafood'
+    store_address = '242 Chicken Street'
+    store_zipcode = '10002'
     with pytest.raises(ValueError):
-        restnts.add_restaurant(restnts.TEST_RESTAURANT_NAME, "111 Apple Road")
+        rest.add_restaurant(store_name, store_address, store_zipcode)
 
 
-def test_add_empty_restaurant():
+def test_empty_restaurant_input():
+    store_name = ''
+    store_address = '242 Chicken Street'
+    store_zipcode = ''
     with pytest.raises(ValueError):
-        restnts.add_restaurant('', "111 Apple Road")
+        rest.add_restaurant(store_name, store_address, store_zipcode)
 
-
-NEW_RESTAURANT_NAME = 'Spicy Sandwiches'
-
-
-def test_add_new_restaurant():
-    restnts.add_restaurant(NEW_RESTAURANT_NAME, "111 Cool Street")
-    assert NEW_RESTAURANT_NAME in restnts.get_restaurants()

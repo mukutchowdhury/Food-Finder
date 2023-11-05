@@ -8,7 +8,7 @@ from flask import Flask, request
 from flask_restx import Api, Resource, fields
 
 import db.addrestaurantmenu as restaurantmenu
-# import db.restaurants as restaurants
+import db.restaurants as restaurants
 import db.users as users
 
 app = Flask(__name__)
@@ -139,6 +139,12 @@ registration_data = api.model('Regisration', {
     "user_email": fields.String,
     "user_password": fields.String,
     "user_confirm_password": fields.String
+})
+
+restaurant_data = api.model('Register_Restaurant', {
+    "rest_name": fields.String,
+    "rest_address": fields.String,
+    "rest_zipcode": fields.String
 })
 
 
@@ -274,27 +280,36 @@ class GenerateRestaurantList(Resource):
 
 
 # RESTAURANT ENDPOINTS #
+@api.route(f'{RESTAURANT_REGISTRATION}')
+class RestaurantRegistration(Resource):
+    """
+    Handles the registration of restaurants
+    """
 
-# @api.route(f'{RESTAURANT_REGISTRATION}')
-# class RestaurantRegistration(Resource):
-#     """
-#     Handles the registration of restaurants
-#     """
-#     def post(self):
-#         """
-#         Updates restaurants database with a new
-#         restaurant entry
-#         """
-#         try:
-#             data = request.get_json()
-#             rest_name = data.get("rest_name")
-#             rest_owner_email = data.get("rest_owner_email")
-#             rest_location_zip = data.get("rest_location_zip")
-
-#             pass
-
-#         except Exception:
-#             pass
+    @api.expect(restaurant_data)
+    def post(self):
+        """
+        Updates restaurants database with a new
+        restaurant entry
+        """
+        try:
+            data = request.get_json()
+            rest_name = data.get("rest_name")
+            rest_address = data.get("rest_address")
+            rest_location_zip = data.get("rest_zipcode")
+            restaurants.add_restaurant(
+                rest_name,
+                rest_address,
+                rest_location_zip
+            )
+            return {
+                "SYSTEM_STATUS": "PASSED"
+            }, 200
+        except ValueError as error:
+            return {
+                "SYSTEM_STATUS": "FAILED",
+                "ERROR_MESSAGE": str(error)
+            }, 406
 
 
 # Add Restaurant Menu Items
