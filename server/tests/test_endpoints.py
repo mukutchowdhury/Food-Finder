@@ -119,3 +119,18 @@ def test_addmenuitem():
     assert "MENU_STATUS" in resp_json
     print(f'RestaurantMenu: {resp_json["MENU_STATUS"]}')
     assert "PASS" in resp_json["MENU_STATUS"]
+
+    # Try to add an item with the same name as an existing item, giving a fail message
+    # user_json = {"restaurant_name": "Restaurant1", "item_name": "Spagetti", "item_description": "spicy", "item_price": 5.68, "item_category": "Spagetti"}
+    # resp = TEST_CLIENT.post(ep.ADD_RESTAURANT_MENUITEM, json=user_json)
+    # assert resp.status_code == 406
+    # resp_json = resp.get_json()
+    # assert "FAIL" in resp_json["MENU_STATUS"]
+
+    # Trying to add a menu with a missing required field should lead to a fail message
+    user_json = {"restaurant_name": "rest1", "item_name": "", "item_description": "", "item_price": None, "item_category": ""}
+    resp = TEST_CLIENT.post(ep.ADD_RESTAURANT_MENUITEM, json=user_json)
+    assert resp.status_code == 400  # Expecting a bad request
+    resp_json = resp.get_json()
+    assert "MENU_STATUS" in resp_json
+    assert "FAIL" in resp_json["MENU_STATUS"]

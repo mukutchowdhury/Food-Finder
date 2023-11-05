@@ -329,10 +329,16 @@ class AddRestaurantMenuItem(Resource):
 
         menu = restaurantmenu.get_menu()
 
+        if (restaurant_name is None or
+                '' or item_name is None or '' or
+                item_description is None or '' or
+                item_price is None or '' or item_category is None or ''):
+            return {"MENU_STATUS": "FAIL"}, 400
         if restaurant_name in menu:
             # if item_name in restaurant_name["Menu"][0]:
             #     return {"status": "Item cannot be accepte
             # d at this time"}, 406
+
             new_item = {
                 "item_name": item_name,
                 "item_description": item_description,
@@ -342,5 +348,6 @@ class AddRestaurantMenuItem(Resource):
             print(new_item)
             # menu[restaurant_name]['Menu'].append(new_item)
             return {"MENU_STATUS": "PASS"}, 201
+
         else:
             return {"MENU_STATUS": "FAIL"}, 404
