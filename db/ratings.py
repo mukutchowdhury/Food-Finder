@@ -2,16 +2,22 @@
 ratings.py: the interface to our restaurant rating data.
 """
 
-RATING = 'restaurantRating'
-POSSIBLE_RATINGS = ['Terrible', 'Poor', 'Ok', 'Good', 'Excellent']
 TEST_RESTAURANT_NAME = 'Food Store'
+USER_ID = 'user_id'
+REVIEW = 'review'
+STAR = 'star'
+
 
 ratings = {
     'Terrific Tacos': {
-        RATING: 'Terrible',
+        USER_ID: 1,
+        REVIEW: 'The tacos were bad',
+        STAR: 2,
     },
     TEST_RESTAURANT_NAME: {
-        RATING: 'Good',
+        USER_ID: 2,
+        REVIEW: 'I liked the food',
+        STAR: 5,
     },
 }
 
@@ -20,12 +26,15 @@ def get_ratings() -> dict:
     return ratings
 
 
-def add_restaurant_rating(store_name: str,  store_rating: str):
-    if store_name in ratings:
-        raise ValueError(f'Error duplicate restaurant name: {store_name=}')
-    if len(store_name) == 0:
+def add_restaurant_rating(store_name: str,
+                          user_id: int,
+                          review: str,
+                          star: int):
+    if store_name is None or store_name == '':
         raise ValueError('Fill out the restaurant name')
-    if store_rating not in POSSIBLE_RATINGS:
-        raise ValueError('Error invalid restaurant rating')
+    if star < 0:
+        raise ValueError('Plese enter a positive number of stars')
 
-    ratings[store_name] = {RATING: store_rating}
+    ratings[store_name] = {USER_ID: user_id,
+                           REVIEW: review,
+                           STAR: star}

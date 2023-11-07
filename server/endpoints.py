@@ -278,6 +278,19 @@ class GenerateRestaurantList(Resource):
         """
         pass
 
+# @api.route(f'{PROVIDE_REVIEW}')
+# class writeReview(Resource):
+#     """
+#     Handles clients writing reviews on restaurants
+#     """
+
+#     @api.expect(restaurant_data)
+#     def post(self):
+#         """
+#         update ratings with custumer reviews
+#         """
+#         data = request.json
+
 
 # RESTAURANT ENDPOINTS #
 @api.route(f'{RESTAURANT_REGISTRATION}')
