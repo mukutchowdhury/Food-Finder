@@ -2,6 +2,11 @@
 addrestaurant.py: the menu of our restaurant
 """
 
+ITEM_NAME = 'item_name'
+ITEM_DESCRIPTION = 'item_description'
+ITEM_PRICE = 'item_price'
+ITEM_CATEGORY = 'item_category'
+
 MenuItem = {
     "Restaurant1": {
         "Menu": [
@@ -60,6 +65,13 @@ def add_menu(
     """
     Adds items information to the MenuItem
     """
+
+    if (not restaurant_name):
+        raise ValueError("SOmething")
+
+    for i in range(len(MenuItem[restaurant_name]['Menu'])):
+        if (item_category == MenuItem[restaurant_name]['Menu'][i][ITEM_NAME]):
+            raise ValueError("Something")
 
     another_new_item = {
         "item_name": item_name,
