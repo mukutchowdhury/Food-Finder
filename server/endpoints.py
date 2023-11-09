@@ -4,6 +4,8 @@ The endpoint called `endpoints` will return all available endpoints.
 """
 
 import bcrypt
+import werkzeug.exceptions as wz
+from http import HTTPStatus
 from flask import Flask, request
 from flask_restx import Api, Resource, fields
 
@@ -288,12 +290,16 @@ class GenerateRestaurantList(Resource):
 
 
 @api.route(f'{PROVIDE_REVIEW}')
+@api.response(HTTPStatus.OK, 'Success')
+@api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
 class WriteReview(Resource):
     """
     Handles clients writing reviews on restaurants
     """
 
     @api.expect(restaurant_data)
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
     def post(self):
         """
         update ratings with custumer reviews
@@ -314,11 +320,16 @@ class WriteReview(Resource):
         if restuarant_name not in restratings:
             return {'the restaurant is not on our server'}, 404
         else:
-            ratings.add_restaurant_rating(restuarant_name,
-                                          user_id,
-                                          review,
-                                          star)
-            return {'review added successfully!'}, 201
+            try:
+                new_id = ratings.add_restaurant_rating(restuarant_name,
+                                            user_id,
+                                            review,
+                                            star)
+                if new_id is None:
+                    raise wz.ServiceUnavailable('We have a technical problem.')
+                return {'review added successfully!'}, 201
+            except ValueError as e:
+                raise wz.NotAcceptable(f'{str(e)}')
 
 
 # RESTAURANT ENDPOINTS #
