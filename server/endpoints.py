@@ -149,7 +149,8 @@ registration_data = api.model('Regisration', {
 restaurant_data = api.model('Register_Restaurant', {
     "rest_name": fields.String,
     "rest_address": fields.String,
-    "rest_zipcode": fields.String
+    "rest_zipcode": fields.String,
+    "rest_owner_id": fields.Integer
 })
 
 review_data = api.model('ratings', {
@@ -370,7 +371,6 @@ class RestaurantRegistration(Resource):
     """
     Handles the registration of restaurants
     """
-
     @api.expect(restaurant_data)
     def post(self):
         """
@@ -382,10 +382,12 @@ class RestaurantRegistration(Resource):
             rest_name = data.get("rest_name")
             rest_address = data.get("rest_address")
             rest_location_zip = data.get("rest_zipcode")
+            rest_owner_id = data.get("rest_owner_id")
             restaurants.add_restaurant(
                 rest_name,
                 rest_address,
-                rest_location_zip
+                rest_location_zip,
+                rest_owner_id
             )
             return {
                 "SYSTEM_STATUS": "PASSED"
