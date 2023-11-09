@@ -2,6 +2,8 @@ from unittest.mock import patch
 
 import pytest
 
+import db.ratings as rvws
+
 import server.endpoints as ep
 
 TEST_CLIENT = ep.app.test_client()
@@ -210,3 +212,6 @@ def test_add_review():
     }
     resp = TEST_CLIENT.post(ep.PROVIDE_REVIEW, json=user_json)
     assert resp.status_code == 201
+
+
+
