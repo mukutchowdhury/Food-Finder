@@ -2,11 +2,18 @@
 restaurants.py: the interface to our restaurant data.
 """
 
+import random
+BIG_NUM = 1_000_000_000_000
+
 ADDRESS = 'address'
 ZIPCODE = 'zipcode'
 NAME = 'name'
 OWNER_ID = 'owner_id'
 RESTAURANT_ID = 'restaurant_id'
+
+REST_NAME = 'rest_name'
+REST_ADDRESS = 'rest_address'
+REST_ZIPCODE = 'rest_zipcode'
 
 # Make a list of all restaruant for all users; for now,
 # one restaurant per user
@@ -33,6 +40,27 @@ restaurants = {
         RESTAURANT_ID: 3
     }
 }
+
+
+def _get_test_address():
+    address_text = 'TEST'
+    address_nummber = str(random.randint(0, BIG_NUM)) + address_text
+    return address_nummber
+
+
+def _get_test_zipcode():
+    min_zip = 10000
+    max_zip = 99999
+    random_zip = random.randint(min_zip, max_zip)
+    return random_zip
+
+
+def get_test_restaurant():
+    test_rest = {}
+    test_rest[REST_NAME] = 'TEST_NAME'
+    test_rest[REST_ADDRESS] = _get_test_address()
+    test_rest[REST_ZIPCODE] = _get_test_zipcode()
+    return test_rest
 
 
 def get_restaurants():
