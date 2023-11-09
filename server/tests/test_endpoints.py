@@ -1,3 +1,7 @@
+from unittest.mock import patch
+
+import pytest
+
 import server.endpoints as ep
 
 TEST_CLIENT = ep.app.test_client()
@@ -193,3 +197,16 @@ def test_empty_restaurant_registration():
     resp_json = resp.get_json()
     assert "MENU_STATUS" in resp_json
     assert "FAIL" in resp_json["MENU_STATUS"]
+
+    #test for successfully adding a review
+
+@pytest.mark.skip('skip this test, come back to it later')
+def test_add_review():
+    user_json = {
+    "restaurant_name": "Terrific Tacos", 
+    "user_id": '3', 
+    "review": "It's alright",
+    "star": '2'
+    }
+    resp = TEST_CLIENT.post(ep.PROVIDE_REVIEW, json=user_json)
+    assert resp.status_code == 201

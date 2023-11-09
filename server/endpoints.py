@@ -10,6 +10,7 @@ from flask_restx import Api, Resource, fields
 import db.addrestaurantmenu as restaurantmenu
 import db.restaurants as restaurants
 import db.users as users
+import db.ratings as ratings
 
 app = Flask(__name__)
 api = Api(app)
@@ -147,6 +148,13 @@ restaurant_data = api.model('Register_Restaurant', {
     "rest_zipcode": fields.String
 })
 
+review_data = api.model('ratings', {
+    'rest_name': fields.String,
+    'user_id': fields.Integer,
+    'review': fields.String,
+    'star': fields.Integer
+})
+
 
 @api.route(f'{LOGIN_SYSTEM}')
 class LoginSystem(Resource):
@@ -278,18 +286,39 @@ class GenerateRestaurantList(Resource):
         """
         pass
 
-# @api.route(f'{PROVIDE_REVIEW}')
-# class writeReview(Resource):
-#     """
-#     Handles clients writing reviews on restaurants
-#     """
 
-#     @api.expect(restaurant_data)
-#     def post(self):
-#         """
-#         update ratings with custumer reviews
-#         """
-#         data = request.json
+@api.route(f'{PROVIDE_REVIEW}')
+class WriteReview(Resource):
+    """
+    Handles clients writing reviews on restaurants
+    """
+
+    @api.expect(restaurant_data)
+    def post(self):
+        """
+        update ratings with custumer reviews
+        """
+        data = request.json
+        restuarant_name = data.get('restaurant_name')
+        user_id = data.get('user_id')
+        review = data.get('review')
+        star = data.get('star')
+
+        restratings = ratings.get_ratings()
+
+        if (not isinstance(restuarant_name, str) and
+                not isinstance(user_id, int) and
+                not isinstance(review, str) and
+                not isinstance(star, int)):
+            return {'Please enter valid information'}, 400
+        if restuarant_name not in restratings:
+            return {'the restaurant is not on our server'}, 404
+        else:
+            ratings.add_restaurant_rating(restuarant_name,
+                                          user_id,
+                                          review,
+                                          star)
+            return {'review added successfully!'}, 201
 
 
 # RESTAURANT ENDPOINTS #
