@@ -1,6 +1,6 @@
 import pytest
 
-import db.addrestaurantmenu as menu
+import db.menus as menu
 
 
 def test_get_menu():
