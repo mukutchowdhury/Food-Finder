@@ -2,103 +2,105 @@
 addrestaurant.py: the menu of our restaurant
 """
 
-ITEM_NAME = 'item_name'
 ITEM_DESCRIPTION = 'item_description'
 ITEM_PRICE = 'item_price'
 ITEM_CATEGORY = 'item_category'
 
-MenuItem = {
-    "Restaurant1": {
-        "Menu": [
-            {
-                "item_name": "Burger",
-                "item_description": "Delicious burger with cheese and Onions",
-                "item_price": 9.99,
-                "item_category": "Burgers"
-            },
-            {
-                "item_name": "Pizza",
-                "item_description": "Margherita pizza with fresh ingredients",
-                "item_price": 13.99,
-                "item_category": "Pizza"
-            },
-            {
-                "item_name": "Salad",
-                "item_description": "Salad with dressing",
-                "item_price": 4.99,
-                "item_category": "Salads"
-            }
-        ]
+menu_items = {
+    1: {
+        "Burger": {
+            ITEM_DESCRIPTION: "Delicious burger with cheese and onions",
+            ITEM_PRICE: 9.99,
+            ITEM_CATEGORY: "Burgers"
+        },
+        "Pizza": {
+            ITEM_DESCRIPTION: "Margherita pizza with fresh ingredients",
+            ITEM_PRICE: 13.99,
+            ITEM_CATEGORY: "Pizza"
+        },
+        "Salad": {
+            ITEM_DESCRIPTION: "Salad with dressing",
+            ITEM_PRICE: 4.99,
+            ITEM_CATEGORY: "Salads"
+        },
+        "Expensive Dog Food": {
+            ITEM_DESCRIPTION: "It's in the name",
+            ITEM_PRICE: 99.99,
+            ITEM_CATEGORY: "NO"
+        }
     },
-    "Restaurant2": {
-        "Menu": [
-            {
-                "item_name": "Tacos",
-                "item_description": "Delicious meat with toppings",
-                "item_price": 2.99,
-                "item_category": "Tacos"
-            },
-            {
-                "item_name": "Pasta",
-                "item_description": "Spagetti with tomato sauce",
-                "item_price": 8.99,
-                "item_category": "Pizza"
-            },
-            {
-                "item_name": "Gyro",
-                "item_description": "Chicken over rice",
-                "item_price": 12.00,
-                "item_category": "Gyro"
-            }
-        ]
-    },
+    2: {
+        "Tacos": {
+            ITEM_DESCRIPTION: "Delicious meat with toppings",
+            ITEM_PRICE: 2.99,
+            ITEM_CATEGORY: "Tacos"
+        },
+        "Pasta": {
+            ITEM_DESCRIPTION: "Spaghetti with tomato sauce",
+            ITEM_PRICE: 8.99,
+            ITEM_CATEGORY: "Pizza"
+        },
+        "Gyro": {
+            ITEM_DESCRIPTION: "Chicken over rice",
+            ITEM_PRICE: 12.00,
+            ITEM_CATEGORY: "Gyro"
+        }
+    }
 }
 
 
-def add_menu(
-        restaurant_name,
-        item_name,
-        item_description,
-        item_price,
-        item_category
-        ):
+# unique item name per menu
+def add_item_to_menu(restaurant_id: int, item_info: dict) -> None:
     """
     Adds items information to the MenuItem
+
+    interface item_info {
+        item_name: str,
+        item_description: str,
+        item_price: float,
+        item_category: str
+    }
     """
+    # Assuming restaurant_id is valid and provided
+    # (exists in the restaurants.py)
+    item_name = item_info['item_name']
+    if not item_name:
+        raise ValueError("Missing Item Name")
 
-    if (not restaurant_name):
-        raise ValueError("SOmething")
+    if restaurant_id not in menu_items:
+        menu_items[restaurant_id] = {}
+    else:
+        if item_name in menu_items[restaurant_id]:
+            raise ValueError("Item exists, unique constraint")
 
-    for i in range(len(MenuItem[restaurant_name]['Menu'])):
-        if (item_category == MenuItem[restaurant_name]['Menu'][i][ITEM_NAME]):
-            raise ValueError("Something")
-
-    another_new_item = {
-        "item_name": item_name,
-        "item_description": item_description,
-        "item_price": item_price,
-        "item_category": item_category
+    menu_items[restaurant_id][item_name] = {
+        ITEM_DESCRIPTION: item_info["item_description"],
+        ITEM_PRICE: item_info["item_price"],
+        ITEM_CATEGORY: item_info["item_category"]
     }
 
-    MenuItem[restaurant_name]["Menu"].append(another_new_item)
 
-
-def remove_item(restaurant_name, item_name):
+def remove_item_from_menu(restaurant_id: int, item_name: str) -> None:
     """
     Removes items information from the MenuItem
     """
+    if restaurant_id not in menu_items:
+        raise ValueError("restaurant doesn't exists")
 
-    menu = MenuItem[restaurant_name]["Menu"]
+    if item_name not in menu_items[restaurant_id]:
+        raise ValueError("item doesn't exists")
 
-    for i in menu:
-        if i["item_name"] == item_name:
-            menu.remove(i)
-            return True
-    return False
+    del menu_items[restaurant_id][item_name]
 
 
-def get_menu():
+def get_restuarant_menu(restaurant_id: int) -> dict:
     """
-    No arguments, return menuitem
+    Get all menu items from restaurant
     """
-    return MenuItem
+    if (restaurant_id not in menu_items):
+        raise ValueError("restaurant doesn't exists")
+    return menu_items[restaurant_id]
+
+
+# def get_all_menu_items() -> dict:
+#     return menu_items
