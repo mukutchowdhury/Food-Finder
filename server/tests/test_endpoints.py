@@ -13,6 +13,7 @@ import pytest
 
 import server.endpoints as ep
 import db.restaurants as rest
+import db.ratings as rvws
 
 TEST_CLIENT = ep.app.test_client()
 
@@ -206,3 +207,30 @@ def test_make_reservation():
     }
     resp = TEST_CLIENT.post(ep.MAKE_RESERVATION, json=user_json)
     assert resp.status_code == 201
+
+
+@patch('db.ratings.add_restaurant_rating', side_effect=rvws.MOCK_ID, autospec=True)
+def test_add_review(mock_add):
+    """
+    Testing we do the right thing with a good return from add_resturant_rating.
+    """
+    resp = TEST_CLIENT.post(ep.PROVIDE_REVIEW, json=rvws.get_test_rating())
+    assert resp.status_code == OK or 500
+
+
+@patch('db.ratings.add_restaurant_rating', side_effect=ValueError(), autospec=True)
+def test_add_review_incorrect(mock_add):
+    """
+    Testing we do the right thing with a value error from add_resturant_rating.
+    """
+    resp = TEST_CLIENT.post(ep.PROVIDE_REVIEW, json=rvws.get_test_rating())
+    assert resp.status_code == NOT_ACCEPTABLE or 500
+
+
+@patch('db.ratings.add_restaurant_rating', side_effect=None)
+def test_add_review_not_in_db(mock_add):
+    """
+    Testing we do the right thing with a None from add_resturant_rating.
+    """
+    resp = TEST_CLIENT.post(ep.PROVIDE_REVIEW, json=rvws.get_test_rating())
+    assert resp.status_code == SERVICE_UNAVAILABLE or 500
