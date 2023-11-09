@@ -352,10 +352,11 @@ class WriteReview(Resource):
             return {'the restaurant is not on our server'}, 404
         else:
             try:
-                new_id = ratings.add_restaurant_rating(restuarant_name,
-                                            user_id,
-                                            review,
-                                            star)
+                new_id = ratings.add_restaurant_rating(
+                    restuarant_name,
+                    user_id,
+                    review,
+                    star)
                 if new_id is None:
                     raise wz.ServiceUnavailable('We have a technical problem.')
                 return {'review added successfully!'}, 201
