@@ -11,6 +11,7 @@ import db.addrestaurantmenu as restaurantmenu
 import db.restaurants as restaurants
 import db.users as users
 import db.ratings as ratings
+import db.reservations as reservations
 
 app = Flask(__name__)
 api = Api(app)
@@ -41,6 +42,7 @@ GET_RESTAURANT_LIST = '/Get_Restaurant_List'
 GET_TRENDING_RESTAURANT_LIST = '/Get_Trending_Restaurant_List'
 PROVIDE_REVIEW = '/Provide_Review'
 GET_RESTAURANT_INFO = '/Get_Restaurant_Info'
+MAKE_RESERVATION = '/Make_Reservation'
 
 TYPE = 'Type'
 DATA = 'Data'
@@ -153,6 +155,13 @@ review_data = api.model('ratings', {
     'user_id': fields.Integer,
     'review': fields.String,
     'star': fields.Integer
+})
+
+reservation_data = api.model('reservations', {
+    'rest_name': fields.String,
+    'username': fields.String,
+    'time': fields.String,
+    'party_size': fields.String
 })
 
 
@@ -275,7 +284,7 @@ class RegistrationSystem(Resource):
 
 # CLIENT ENDPOINTS #
 @api.route(f'{GET_RESTAURANT_LIST}')
-class GenerateRestaurantList(Resource):
+class GetRestaurantList(Resource):
     """
     Provides users with a list of restaurants
     """
@@ -285,6 +294,28 @@ class GenerateRestaurantList(Resource):
         of restaurants and sends it
         """
         pass
+
+
+@api.route(f'{MAKE_RESERVATION}')
+class SetReservation(Resource):
+    """
+    users can reserve a table at a restaurant
+    """
+    def post(self):
+        data = request.json
+        rest_name = data.get('rest_name')
+        username = data.get('username')
+        time = data.get('time')
+        party_size = data.get('party_size')
+
+        # reservation_list = reservations.get_rest_reservation(rest_name)
+        restaurant_list = restaurants.get_restaurants
+
+        if rest_name not in restaurant_list:
+            return (
+                'Restaurant not found in server'), 404
+        reservations.make_reservation(rest_name, username, time, party_size)
+        return {'Reservation made for' + rest_name + 'successfully!'}, 201
 
 
 @api.route(f'{PROVIDE_REVIEW}')

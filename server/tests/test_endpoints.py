@@ -199,7 +199,6 @@ def test_empty_restaurant_registration():
     assert "FAIL" in resp_json["MENU_STATUS"]
 
     #test for successfully adding a review
-
 @pytest.mark.skip('skip this test, come back to it later')
 def test_add_review():
     user_json = {
@@ -209,4 +208,15 @@ def test_add_review():
     "star": '2'
     }
     resp = TEST_CLIENT.post(ep.PROVIDE_REVIEW, json=user_json)
+    assert resp.status_code == 201
+
+@pytest.mark.skip('skip this test, come back to it later')
+def test_make_reservation():
+    user_json = {
+        'rest_name': 'Terrific Tacos',
+        'username': 'Mary123',
+        'time': '2023-12-23 23:00',
+        'party_size': 3
+    }
+    resp = TEST_CLIENT.post(ep.MAKE_RESERVATION, json=user_json)
     assert resp.status_code == 201
