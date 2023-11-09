@@ -59,7 +59,7 @@ def add_restaurant_rating(store_name: str,
                           review: str,
                           star: int):
     newstar = int(star)
-    if store_name is None or store_name == '':
+    if store_name is None or store_name == '' or store_name in ratings:
         raise ValueError('Fill out the restaurant name')
     if review is None or review == '':
         raise ValueError('Please provide a review')
