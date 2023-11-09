@@ -9,7 +9,7 @@ from http import HTTPStatus
 from flask import Flask, request
 from flask_restx import Api, Resource, fields
 
-import db.addrestaurantmenu as restaurantmenu
+import db.menus as restaurantmenu
 import db.restaurants as restaurants
 import db.users as users
 import db.ratings as ratings
