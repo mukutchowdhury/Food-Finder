@@ -1,8 +1,16 @@
+from http.client import (
+    BAD_REQUEST,
+    FORBIDDEN,
+    NOT_ACCEPTABLE,
+    NOT_FOUND,
+    OK,
+    SERVICE_UNAVAILABLE,
+)
+
 from unittest.mock import patch
 
-import pytest
-
 import server.endpoints as ep
+import db.restaurants as rest
 
 TEST_CLIENT = ep.app.test_client()
 
@@ -127,6 +135,12 @@ def test_addmenuitem():
 
 
 ### Restaurant Registration Tests ###
+@patch('db.restaurants.add_restaurant', side_effect=ValueError, autospec=True)
+def test_existing_restaurant_registration(mock_add):
+    resp = TEST_CLIENT.post(ep.RESTAURANT_REGISTRATION, json=rest.get_test_restaurant())
+    assert resp.status_code == NOT_ACCEPTABLE
+
+
 def test_restaurant_registration():
     user_json = {
         "rest_name": "Imperial Fish", 
@@ -140,6 +154,7 @@ def test_restaurant_registration():
     print(f'Restaurant Registrated: {resp_json["SYSTEM_STATUS"]}')
     assert "PASSED" in resp_json["SYSTEM_STATUS"]
 
+
 def test_existing_restaurant_registration():
     user_json = {
         "rest_name": "Imperial Fish", 
@@ -152,6 +167,7 @@ def test_existing_restaurant_registration():
     assert "SYSTEM_STATUS" in resp_json
     print(f'Restaurant Registrated: {resp_json["SYSTEM_STATUS"]}')
     assert "FAILED" in resp_json["SYSTEM_STATUS"]
+
 
 def test_empty_restaurant_registration():
     user_json = {
@@ -199,6 +215,7 @@ def test_empty_restaurant_registration():
     assert "FAIL" in resp_json["MENU_STATUS"]
 
     #test for successfully adding a review
+
 @pytest.mark.skip('skip this test, come back to it later')
 def test_add_review():
     user_json = {
