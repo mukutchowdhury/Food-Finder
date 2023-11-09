@@ -50,7 +50,7 @@ def test_add_restaurant():
     store_name = 'Local Seafood'
     store_address = '153 Broadway St'
     store_zipcode = '10004'
-    new_restaurant = f'User_{len(rest.get_restaurants())}'
+    new_restaurant = f'Entry_{len(rest.get_restaurants())}'
     rest.add_restaurant(store_name, store_address, store_zipcode)
     assert new_restaurant in rest.get_restaurants()
 

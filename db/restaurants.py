@@ -3,7 +3,7 @@ restaurants.py: the interface to our restaurant data.
 """
 
 import random
-BIG_NUM = 1_000_000_000_000
+BIG_NUM = 1_000_000_000
 
 ADDRESS = 'address'
 ZIPCODE = 'zipcode'
@@ -18,26 +18,23 @@ REST_ZIPCODE = 'rest_zipcode'
 # Make a list of all restaruant for all users; for now,
 # one restaurant per user
 restaurants = {
-    "User_1": {
+    1: {
         NAME: "Taco Spot",
         ADDRESS: "92 Water Ave",
         ZIPCODE: "10004",
         OWNER_ID: 1,
-        RESTAURANT_ID: 1
     },
-    "User_2": {
+    2: {
         NAME: "Italian Spot",
         ADDRESS: "242 Chicken Street",
         ZIPCODE: "10002",
         OWNER_ID: 2,
-        RESTAURANT_ID: 2
     },
-    "User_3": {
+    3: {
         NAME: "Bonjour Spot",
         ADDRESS: "3 Wall Street",
         ZIPCODE: "10004",
         OWNER_ID: 3,
-        RESTAURANT_ID: 3
     }
 }
 
@@ -75,6 +72,13 @@ def get_nearby_restaurants(zip_code: str):
     return nearby_rest
 
 
+def _generate_restaurant_id():
+    prim_key = random.randint(0, BIG_NUM)
+    while prim_key in restaurants:
+        prim_key = random.randint(0, BIG_NUM)
+    return prim_key
+
+
 def add_restaurant(store_name: str,  store_address: str, store_zipcode: str):
     for rest_key in restaurants:
         rest = restaurants[rest_key]
@@ -85,11 +89,10 @@ def add_restaurant(store_name: str,  store_address: str, store_zipcode: str):
         if not (store_name and store_address and store_zipcode):
             raise ValueError("All attributes must be filled out")
 
-    new_entry = f'User_{len(restaurants)}'
+    new_entry = _generate_restaurant_id()
     restaurants[new_entry] = {
         NAME: store_name,
         ADDRESS: store_address,
         ZIPCODE: store_zipcode,
-        OWNER_ID: f'{len(restaurants)}',
-        RESTAURANT_ID: f'{len(restaurants)}'
+        OWNER_ID: f'{len(restaurants)}'
     }
