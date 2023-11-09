@@ -9,6 +9,7 @@ from http.client import (
 
 from unittest.mock import patch
 
+import pytest
 import server.endpoints as ep
 import db.restaurants as rest
 
