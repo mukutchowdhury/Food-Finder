@@ -79,14 +79,15 @@ def _generate_restaurant_id():
     return prim_key
 
 
-def add_restaurant(store_name: str,  store_address: str, store_zipcode: str):
+def add_restaurant(store_name: str,  store_address: str,
+                   store_zipcode: str, owner_id: int) -> int:
     for rest_key in restaurants:
         rest = restaurants[rest_key]
         if (rest[ADDRESS] == store_address and
            rest[ZIPCODE] == store_zipcode):
             raise ValueError("Location already has a store")
 
-        if not (store_name and store_address and store_zipcode):
+        if not (store_name and store_address and store_zipcode and owner_id):
             raise ValueError("All attributes must be filled out")
 
     new_entry = _generate_restaurant_id()
@@ -94,5 +95,7 @@ def add_restaurant(store_name: str,  store_address: str, store_zipcode: str):
         NAME: store_name,
         ADDRESS: store_address,
         ZIPCODE: store_zipcode,
-        OWNER_ID: f'{len(restaurants)}'
+        OWNER_ID: owner_id
     }
+
+    return new_entry
