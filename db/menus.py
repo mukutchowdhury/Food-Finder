@@ -2,6 +2,12 @@
 menus.py: the menu of our restaurant
 """
 
+import random
+
+BIG_NUM = 1_000_000_000
+
+RESTAURANT_ID = 'restaurant_id'
+ITEM_NAME = 'item_name'
 ITEM_DESCRIPTION = 'item_description'
 ITEM_PRICE = 'item_price'
 ITEM_CATEGORY = 'item_category'
@@ -49,6 +55,20 @@ menu_items = {
 }
 
 
+def _get_test_restaurant_id():
+    return random.randint(0, BIG_NUM)
+
+
+def get_test_menu():
+    test_menu = {}
+    test_menu[RESTAURANT_ID] = _get_test_restaurant_id()
+    test_menu[ITEM_NAME] = 'TEST'
+    test_menu[ITEM_DESCRIPTION] = 'TEST'
+    test_menu[ITEM_PRICE] = 9.99
+    test_menu[ITEM_CATEGORY] = 'TEST'
+    return test_menu
+
+
 # unique item name per menu
 def add_item_to_menu(restaurant_id: int, item_info: dict) -> None:
     """
@@ -86,10 +106,8 @@ def remove_item_from_menu(restaurant_id: int, item_name: str) -> None:
     """
     if restaurant_id not in menu_items:
         raise ValueError("restaurant doesn't exists")
-
     if item_name not in menu_items[restaurant_id]:
         raise ValueError("item doesn't exists")
-
     del menu_items[restaurant_id][item_name]
 
 

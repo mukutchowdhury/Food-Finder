@@ -1,19 +1,13 @@
-from http.client import (
-    BAD_REQUEST,
-    FORBIDDEN,
-    NOT_ACCEPTABLE,
-    NOT_FOUND,
-    OK,
-    SERVICE_UNAVAILABLE,
-)
-
+from http.client import (BAD_REQUEST, FORBIDDEN, NOT_ACCEPTABLE, NOT_FOUND, OK,
+                         SERVICE_UNAVAILABLE)
 from unittest.mock import patch
 
 import pytest
 
-import server.endpoints as ep
-import db.restaurants as rest
+import db.menus as menus
 import db.ratings as rvws
+import db.restaurants as rest
+import server.endpoints as ep
 
 TEST_CLIENT = ep.app.test_client()
 
@@ -139,38 +133,18 @@ def test_bad_restaurant_registration(mock_add):
     assert resp.status_code == NOT_ACCEPTABLE
 
 
-    # Try to add an item with the same name as an existing item, giving a fail message
-    # user_json = {"restaurant_name": "Restaurant1", "item_name": "Spagetti", "item_description": "spicy", "item_price": 5.68, "item_category": "Spagetti"}
-    # resp = TEST_CLIENT.post(ep.ADD_RESTAURANT_MENUITEM, json=user_json)
-    # assert resp.status_code == 406
-    # resp_json = resp.get_json()
-    # assert "FAIL" in resp_json["MENU_STATUS"]
+### Add Menu Tests ###
+@patch('db.menus.add_item_to_menu', side_effect=None, autospec=True)
+def test_good_add_menu(mock_add):
+    resp = TEST_CLIENT.post(ep.ADD_RESTAURANT_MENUITEM, json=menus.get_test_menu())
+    assert resp.status_code == OK
 
-    # Trying to add a menu with a missing required field should lead to a fail message
-    # user_json = {"restaurant_name": "rest1", "item_name": "", "item_description": "", "item_price": None, "item_category": ""}
-    # resp = TEST_CLIENT.post(ep.ADD_RESTAURANT_MENUITEM, json=user_json)
-    # assert resp.status_code == 400  
-    # resp_json = resp.get_json()
-    # assert "MENU_STATUS" in resp_json
-    # assert "FAIL" in resp_json["MENU_STATUS"]
 
-    # # Negative price
-    # user_json = {"restaurant_name": "rest1", "item_name": "", "item_description": "", "item_price": -1.00, "item_category": ""}
-    # resp = TEST_CLIENT.post(ep.ADD_RESTAURANT_MENUITEM, json=user_json)
-    # assert resp.status_code == 400 
-    # resp_json = resp.get_json()
-    # assert "MENU_STATUS" in resp_json
-    # assert "FAIL" in resp_json["MENU_STATUS"]
+@patch('db.menus.add_item_to_menu', side_effect=ValueError, autospec=True)
+def test_bad_add_menu(mock_add):
+    resp = TEST_CLIENT.post(ep.ADD_RESTAURANT_MENUITEM, json=menus.get_test_menu())
+    assert resp.status_code == NOT_ACCEPTABLE
 
-    # # 0 entered in price
-    # user_json = {"restaurant_name": "rest1", "item_name": "", "item_description": "", "item_price": 0, "item_category": ""}
-    # resp = TEST_CLIENT.post(ep.ADD_RESTAURANT_MENUITEM, json=user_json)
-    # assert resp.status_code == 400  
-    # resp_json = resp.get_json()
-    # assert "MENU_STATUS" in resp_json
-    # assert "FAIL" in resp_json["MENU_STATUS"]
-
-    #test for successfully adding a review
 
 @pytest.mark.skip('skip this test, come back to it later')
 def test_addmenuitem():
