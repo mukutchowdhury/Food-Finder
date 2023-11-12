@@ -292,8 +292,35 @@ class GetRestaurantList(Resource):
     """
     Provides users with a list of restaurants
     """
-    
-
+    @api.expect(restaurant_data)
+    def post(self):
+        """
+        Uses zip code and radius to generate the list
+        of restaurants and sends it
+        """
+        data = request.json
+        zip_code = data.get("rest_zipcode")
+        RADIUS = 10
+        zipcode_str = str(zip_code)
+        if (int(zipcode_str[-2:]) <= 10):
+            RADIUS = int(zipcode_str[-2:])
+        nearby_zipcodes = ()
+        if RADIUS > 0:
+            for i in range(1, RADIUS):
+                nearby_zipcodes[zip_code-i] = 0
+                nearby_zipcodes[zip_code+i] = 0
+        else:
+            for i in range(1, RADIUS):
+                nearby_zipcodes[zip_code+i] = 0
+        nearby_restaurants = {}
+        for zip in nearby_zipcodes:
+            nearby_restaurant = restaurants.get_nearby_restaurants(zip)
+            if len(nearby_restaurant) > 0:
+                nearby_restaurants.append(nearby_restaurant)
+        if len(nearby_restaurants) == 0:
+            return (
+                'No restaurants found nearby in server'), 404
+        return {nearby_restaurants}, 201
 
 
 @api.route(f'{MAKE_RESERVATION}')
