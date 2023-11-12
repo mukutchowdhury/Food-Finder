@@ -86,10 +86,8 @@ def remove_item_from_menu(restaurant_id: int, item_name: str) -> None:
     """
     if restaurant_id not in menu_items:
         raise ValueError("restaurant doesn't exists")
-
     if item_name not in menu_items[restaurant_id]:
         raise ValueError("item doesn't exists")
-
     del menu_items[restaurant_id][item_name]
 
 

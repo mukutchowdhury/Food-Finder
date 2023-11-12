@@ -3,17 +3,18 @@ This is the file containing all of the endpoints for our flask app.
 The endpoint called `endpoints` will return all available endpoints.
 """
 
+from http import HTTPStatus
+
 import bcrypt
 import werkzeug.exceptions as wz
-from http import HTTPStatus
 from flask import Flask, request
 from flask_restx import Api, Resource, fields
 
 import db.menus as restaurantmenu
-import db.restaurants as restaurants
-import db.users as users
 import db.ratings as ratings
 import db.reservations as reservations
+import db.restaurants as restaurants
+import db.users as users
 
 app = Flask(__name__)
 api = Api(app)
@@ -437,5 +438,47 @@ class AddRestaurantMenuItem(Resource):
             # menu[restaurant_name]['Menu'].append(new_item)
             return {"MENU_STATUS": "PASS"}, 201
 
+        else:
+            return {"MENU_STATUS": "FAIL"}, 404
+
+
+# Remove Restaurant Menu Items
+@api.route(f'{REMOVE_RESTAURANT_MENUITEM}')
+class RemoveRestaurantMenuItem(Resource):
+    @api.expect(menu_item_data)
+    def post(self):
+        """
+        removes item from the list
+        """
+        data = request.json
+        restaurant_name = data['restaurant_name']
+        item_name = data['item_name']
+        item_description = data['item_description']
+        item_price = data['item_price']
+        item_category = data['item_category']
+
+        menu = restaurantmenu.get_menu()
+
+        # checks if certain inputs are valid
+        if (restaurant_name is None or
+                '' or item_name is None or '' or
+                item_description is None or '' or
+                item_price is None or '' or item_category is None or
+                '' or item_price <= 0):
+            return {"MENU_STATUS": "FAIL"}, 400
+        if restaurant_name in menu:
+            menu_items = menu[restaurant_name]['Menu']
+            # remove all matching items using a for loop
+            matching_items = []
+            updated_menu_item = []
+            for item in menu_items:
+                if item['item_name'] == item_name:
+                    matching_items.append(item)
+                else:
+                    updated_menu_item.append(item)
+            menu[restaurant_name]['Menu'] = updated_menu_item
+            if not matching_items:
+                return {"MENU_STATUS": "Item not found in the menu"}, 404
+            return {"MENU_STATUS": "PASS", "message": "Items removed"}, 200
         else:
             return {"MENU_STATUS": "FAIL"}, 404
