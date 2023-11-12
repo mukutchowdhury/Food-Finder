@@ -128,3 +128,13 @@ def test_get_restuarant_menu_bad():
     restaurant_id = 64
     with pytest.raises(ValueError):
         menu.get_restuarant_menu(restaurant_id)
+
+
+def test_get_test_menu():
+    test_menu = menu.get_test_menu()
+    assert isinstance(test_menu, dict)
+    
+
+def test_get_test_restaurant_id():
+    id = menu._get_test_restaurant_id()
+    assert isinstance(id, int)
