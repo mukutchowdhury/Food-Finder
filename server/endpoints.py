@@ -10,9 +10,7 @@ import werkzeug.exceptions as wz
 from flask import Flask, request
 from flask_restx import Api, Resource, fields
 
-import db.menus as restaurantmenu
-import db.restaurants as restaurants
-import db.users as users
+import db.menus as menus
 import db.ratings as ratings
 import db.reservations as reservations
 import db.restaurants as restaurants
@@ -392,9 +390,10 @@ class RestaurantRegistration(Resource):
                 rest_location_zip,
                 rest_owner_id
             )
+
             return {
                 "SYSTEM_STATUS": "PASSED"
-            }, 200
+                }, 200
         except ValueError as error:
             return {
                 "SYSTEM_STATUS": "FAILED",
@@ -418,8 +417,40 @@ class AddRestaurantMenuItem(Resource):
             item_price = data['item_price']
             item_category = data['item_category']
 
-        menu = restaurantmenu.get_menu()
+            menus.add_item_to_menu(restaurant_id, {
+                'item_name': item_name,
+                'item_description': item_description,
+                'item_price': item_price,
+                'item_category': item_category
+            })
+            return {
+                "SYSTEM_STATUS": "PASSED"
+            }, 200
+        except ValueError as error:
+            return {
+                "SYSTEM_STATUS": "FAILED",
+                "ERROR_MESSAGE": str(error)
+            }, 406
 
+
+# Remove Restaurant Menu Items
+@api.route(f'{REMOVE_RESTAURANT_MENUITEM}')
+class RemoveRestaurantMenuItem(Resource):
+    @api.expect(menu_item_data)
+    def post(self):
+        """
+        removes item from the list
+        """
+        data = request.json
+        restaurant_name = data['restaurant_name']
+        item_name = data['item_name']
+        item_description = data['item_description']
+        item_price = data['item_price']
+        item_category = data['item_category']
+
+        menu = menus.get_menu()
+
+        # checks if certain inputs are valid
         if (restaurant_name is None or
                 '' or item_name is None or '' or
                 item_description is None or '' or
@@ -427,19 +458,18 @@ class AddRestaurantMenuItem(Resource):
                 '' or item_price <= 0):
             return {"MENU_STATUS": "FAIL"}, 400
         if restaurant_name in menu:
-            # if item_name in restaurant_name["Menu"][0]:
-            #     return {"status": "Item cannot be accepte
-            # d at this time"}, 406
-
-            new_item = {
-                "item_name": item_name,
-                "item_description": item_description,
-                "item_price": item_price,
-                "item_category": item_category
-            }
-            print(new_item)
-            # menu[restaurant_name]['Menu'].append(new_item)
-            return {"MENU_STATUS": "PASS"}, 201
-
+            menu_items = menu[restaurant_name]['Menu']
+            # remove all matching items using a for loop
+            matching_items = []
+            updated_menu_item = []
+            for item in menu_items:
+                if item['item_name'] == item_name:
+                    matching_items.append(item)
+                else:
+                    updated_menu_item.append(item)
+            menu[restaurant_name]['Menu'] = updated_menu_item
+            if not matching_items:
+                return {"MENU_STATUS": "Item not found in the menu"}, 404
+            return {"MENU_STATUS": "PASS", "message": "Items removed"}, 200
         else:
             return {"MENU_STATUS": "FAIL"}, 404
