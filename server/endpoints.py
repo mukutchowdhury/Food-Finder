@@ -9,7 +9,7 @@ from http import HTTPStatus
 from flask import Flask, request
 from flask_restx import Api, Resource, fields
 
-import db.menus as restaurantmenu
+import db.menus as menus
 import db.restaurants as restaurants
 import db.users as users
 import db.ratings as ratings
@@ -399,7 +399,7 @@ class RestaurantRegistration(Resource):
             }, 406
 
 
-# Add Restaurant Menu Items
+# Add Restaurant Menu Items REFRACTORING
 @api.route(f'{ADD_RESTAURANT_MENUITEM}')
 class AddRestaurantMenuItem(Resource):
     @api.expect(menu_item_data)
@@ -407,35 +407,25 @@ class AddRestaurantMenuItem(Resource):
         """
         Adds new menu item to the restaurant's menu
         """
-        data = request.json
-        restaurant_name = data['restaurant_name']
-        item_name = data['item_name']
-        item_description = data['item_description']
-        item_price = data['item_price']
-        item_category = data['item_category']
+        try:
+            data = request.json
+            restaurant_id = data['restaurant_id']
+            item_name = data['item_name']
+            item_description = data['item_description']
+            item_price = data['item_price']
+            item_category = data['item_category']
 
-        menu = restaurantmenu.get_menu()
-
-        if (restaurant_name is None or
-                '' or item_name is None or '' or
-                item_description is None or '' or
-                item_price is None or '' or item_category is None or
-                '' or item_price <= 0):
-            return {"MENU_STATUS": "FAIL"}, 400
-        if restaurant_name in menu:
-            # if item_name in restaurant_name["Menu"][0]:
-            #     return {"status": "Item cannot be accepte
-            # d at this time"}, 406
-
-            new_item = {
-                "item_name": item_name,
-                "item_description": item_description,
-                "item_price": item_price,
-                "item_category": item_category
-            }
-            print(new_item)
-            # menu[restaurant_name]['Menu'].append(new_item)
-            return {"MENU_STATUS": "PASS"}, 201
-
-        else:
-            return {"MENU_STATUS": "FAIL"}, 404
+            menus.add_item_to_menu(restaurant_id, {
+                'item_name': item_name,
+                'item_description': item_description,
+                'item_price': item_price,
+                'item_category': item_category
+            })
+            return {
+                "SYSTEM_STATUS": "PASSED"
+            }, 200
+        except ValueError as error:
+            return {
+                "SYSTEM_STATUS": "FAILED",
+                "ERROR_MESSAGE": str(error)
+            }, 406
