@@ -291,12 +291,8 @@ class GetRestaurantList(Resource):
     """
     Provides users with a list of restaurants
     """
-    def get(self):
-        """
-        Uses zip code and radius to generate the list
-        of restaurants and sends it
-        """
-        pass
+    
+
 
 
 @api.route(f'{MAKE_RESERVATION}')
