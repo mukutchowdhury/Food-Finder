@@ -473,3 +473,25 @@ class RemoveRestaurantMenuItem(Resource):
             return {"MENU_STATUS": "PASS", "message": "Items removed"}, 200
         else:
             return {"MENU_STATUS": "FAIL"}, 404
+
+
+# Set options for restaurant
+@api.route(f'{SET_RESTAURANT_OPTIONS}')
+class SetRestaurantOptions(Resource):
+    """
+    set the options for the restaurant
+    """
+    @api.expect(restaurant_data)
+    def post(self):
+        data = request.json
+        rest_name = data.get('rest_name')
+        rest_address = data.get('rest_address')
+
+        # reservation_list = reservations.get_rest_reservation(rest_name)
+        restaurant_list = restaurants.get_restaurants
+
+        if rest_name not in restaurant_list:
+            return (
+                'Restaurant not found in server'), 404
+        reservations.make_reservation(rest_name, rest_address)
+        return {'Reservation made for' + rest_name + 'successfully!'}, 201

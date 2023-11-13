@@ -1,5 +1,7 @@
 import pytest
+
 import db.restaurants as rest
+
 
 def test_get_nearby_restaurants():
     zip_code = "10004"
