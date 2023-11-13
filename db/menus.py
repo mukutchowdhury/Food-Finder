@@ -1,5 +1,5 @@
 """
-addrestaurant.py: the menu of our restaurant
+menus.py: the menu of our restaurant
 """
 
 import random
