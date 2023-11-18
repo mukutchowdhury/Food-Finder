@@ -129,7 +129,7 @@ class LoginPage(Resource):
 # START OF PROJECT #
 
 menu_item_data = api.model('menu', {
-    "restaurent_name": fields.String,
+    "restaurent_id": fields.Integer,
     "item_name": fields.String,
     "item_description": fields.String,
     "item_price": fields.Float,
