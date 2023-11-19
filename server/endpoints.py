@@ -464,38 +464,14 @@ class RemoveRestaurantMenuItem(Resource):
         """
         removes item from the list
         """
-        data = request.json
-        restaurant_name = data['restaurant_name']
-        item_name = data['item_name']
-        item_description = data['item_description']
-        item_price = data['item_price']
-        item_category = data['item_category']
-
-        menu = menus.get_menu()
-
-        # checks if certain inputs are valid
-        if (restaurant_name is None or
-                '' or item_name is None or '' or
-                item_description is None or '' or
-                item_price is None or '' or item_category is None or
-                '' or item_price <= 0):
-            return {"MENU_STATUS": "FAIL"}, 400
-        if restaurant_name in menu:
-            menu_items = menu[restaurant_name]['Menu']
-            # remove all matching items using a for loop
-            matching_items = []
-            updated_menu_item = []
-            for item in menu_items:
-                if item['item_name'] == item_name:
-                    matching_items.append(item)
-                else:
-                    updated_menu_item.append(item)
-            menu[restaurant_name]['Menu'] = updated_menu_item
-            if not matching_items:
-                return {"MENU_STATUS": "Item not found in the menu"}, 404
+        try:
+            data = request.json
+            restaurant_id = data['restaurant_id']
+            item_name = data['item_name']
+            menus.remove_item_from_menu(restaurant_id, item_name)
             return {"MENU_STATUS": "PASS", "message": "Items removed"}, 200
-        else:
-            return {"MENU_STATUS": "FAIL"}, 404
+        except ValueError as error:
+            return {"MENU_STATUS": "FAIL", "ERROR_MESSAGE": str(error)}, 406
 
 
 # Set options for restaurant

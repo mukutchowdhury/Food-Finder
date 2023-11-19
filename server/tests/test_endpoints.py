@@ -170,8 +170,6 @@ def test_add_review():
     assert resp.status_code == 201
 
 
-
-
 @pytest.mark.skip('skip this test, come back to it later')
 def test_make_reservation():
     user_json = {
@@ -209,3 +207,16 @@ def test_add_review_not_in_db(mock_add):
     """
     resp = TEST_CLIENT.post(ep.PROVIDE_REVIEW, json=rvws.get_test_rating())
     assert resp.status_code == SERVICE_UNAVAILABLE or 500
+
+
+@patch('db.menus.remove_item_from_menu', side_effect=None, autospec=True)
+def test_good_delete_menu(mock_add):
+    resp = TEST_CLIENT.post(ep.REMOVE_RESTAURANT_MENUITEM, json=menus.get_test_menu())
+    assert resp.status_code == OK
+
+
+@patch('db.menus.remove_item_from_menu', side_effect=ValueError, autospec=True)
+def test_bad_delete_menu(mock_add):
+    resp = TEST_CLIENT.post(ep.REMOVE_RESTAURANT_MENUITEM, json=menus.get_test_menu())
+    assert resp.status_code == NOT_ACCEPTABLE
+    
