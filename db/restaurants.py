@@ -24,6 +24,7 @@ REST_COLLECT = 'restaurants'
 # one restaurant per user
 restaurants = {}
 
+
 def _get_test_address():
     address_text = 'TEST'
     address_nummber = str(random.randint(0, BIG_NUM)) + address_text
@@ -86,7 +87,7 @@ def del_restaurant(restaurant_id: int):
         return dbc.del_one(REST_COLLECT, {NAME: restaurant_id})
     else:
         raise ValueError(f'Delete failure: {restaurant_id} not in database.')
-    
+
 
 ###
 def get_restaurants():
@@ -98,6 +99,3 @@ def get_restaurants():
 def exists(restaurant_id: int) -> bool:
     dbc.connect_db()
     return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})
-
-
-###
