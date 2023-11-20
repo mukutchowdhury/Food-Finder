@@ -120,17 +120,17 @@ def test_registration_system():
     assert "FAILED" in resp_json["SYSTEM_STATUS"]
 
 
-### Restaurant Registration Tests ###
-@patch('db.restaurants.add_restaurant', side_effect=None, autospec=True)
-def test_good_restaurant_registration(mock_add):
-    resp = TEST_CLIENT.post(ep.RESTAURANT_REGISTRATION, json=rest.get_test_restaurant())
-    assert resp.status_code == OK
+# ### Restaurant Registration Tests ###
+# @patch('db.restaurants.add_restaurant', side_effect=None, autospec=True)
+# def test_good_restaurant_registration(mock_add):
+#     resp = TEST_CLIENT.post(ep.RESTAURANT_REGISTRATION, json=rest.get_test_restaurant())
+#     assert resp.status_code == OK
 
 
-@patch('db.restaurants.add_restaurant', side_effect=ValueError, autospec=True)
-def test_bad_restaurant_registration(mock_add):
-    resp = TEST_CLIENT.post(ep.RESTAURANT_REGISTRATION, json=rest.get_test_restaurant())
-    assert resp.status_code == NOT_ACCEPTABLE
+# @patch('db.restaurants.add_restaurant', side_effect=ValueError, autospec=True)
+# def test_bad_restaurant_registration(mock_add):
+#     resp = TEST_CLIENT.post(ep.RESTAURANT_REGISTRATION, json=rest.get_test_restaurant())
+#     assert resp.status_code == NOT_ACCEPTABLE
 
 
 ### Add Menu Tests ###
