@@ -226,3 +226,11 @@ def test_bad_delete_menu(mock_add):
 def test_get_restaurant_info(self, mock_get, mock_get_list):
     resp = TEST_CLIENT.post(ep.GET_RESTAURANT_INFO, json=user_json)
     assert resp.status_code == NOT_ACCEPTABLE
+
+@pytest.mark.skip('skip this test, come back to it later')
+def test_get_nearby_resturants():
+    location_json = {
+    "rest_zipcode": "10004", 
+    }
+    resp = TEST_CLIENT.post(ep.GET_RESTAURANT_LIST, json=location_json)
+    assert resp.status_code == 201

@@ -308,7 +308,7 @@ class GetRestaurantList(Resource):
         zipcode_str = str(zip_code)
         if (int(zipcode_str[-2:]) <= 10):
             RADIUS = int(zipcode_str[-2:])
-        nearby_zipcodes = ()
+        nearby_zipcodes = {zip_code: 0}
         if RADIUS > 0:
             for i in range(1, RADIUS):
                 nearby_zipcodes[zip_code-i] = 0
