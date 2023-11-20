@@ -22,26 +22,7 @@ REST_COLLECT = 'restaurants'
 
 # Make a list of all restaruant for all users; for now,
 # one restaurant per user
-restaurants = {
-    1: {
-        NAME: "Taco Spot",
-        ADDRESS: "92 Water Ave",
-        ZIPCODE: "10004",
-        OWNER_ID: 1,
-    },
-    2: {
-        NAME: "Italian Spot",
-        ADDRESS: "242 Chicken Street",
-        ZIPCODE: "10002",
-        OWNER_ID: 2,
-    },
-    3: {
-        NAME: "Bonjour Spot",
-        ADDRESS: "3 Wall Street",
-        ZIPCODE: "10004",
-        OWNER_ID: 3,
-    }
-}
+restaurants = {}
 
 
 def _get_test_address():
@@ -65,18 +46,6 @@ def get_test_restaurant():
     return test_rest
 
 
-def get_restaurants():
-    # return restaurants
-    dbc.connect_db()
-    return dbc.fetch_all_as_dict(RESTAURANT_ID, REST_COLLECT)
-
-
-def exists(store_address: str, store_zipcode: str) -> bool:
-    dbc.connect_db()
-    return dbc.fetch_one(REST_COLLECT, {ADDRESS: store_address,
-                                        ZIPCODE: store_zipcode})
-
-
 def get_nearby_restaurants(zip_code: str):
     nearby_rest = {}
     for rest_key in restaurants:
@@ -85,17 +54,14 @@ def get_nearby_restaurants(zip_code: str):
     return nearby_rest
 
 
-def _generate_restaurant_id():
-    prim_key = random.randint(0, BIG_NUM)
-    while prim_key in restaurants:
-        prim_key = random.randint(0, BIG_NUM)
-    return prim_key
-
-
-def add_restaurant(store_name: str,  store_address: str,
+def add_restaurant(restaurant_id: int, store_name: str,  store_address: str,
                    store_zipcode: str, owner_id: int) -> int:
     for rest_key in restaurants:
         rest = restaurants[rest_key]
+
+        if rest[RESTAURANT_ID] == restaurant_id:
+            raise ValueError("restaurant id exists")
+
         if (rest[ADDRESS] == store_address and
            rest[ZIPCODE] == store_zipcode):
             raise ValueError("Location already has a store")
@@ -103,8 +69,8 @@ def add_restaurant(store_name: str,  store_address: str,
         if not (store_name and store_address and store_zipcode and owner_id):
             raise ValueError("All attributes must be filled out")
 
-    # new_entry = _generate_restaurant_id()
     restaurant = {
+        RESTAURANT_ID: restaurant_id,
         NAME: store_name,
         ADDRESS: store_address,
         ZIPCODE: store_zipcode,
@@ -114,3 +80,22 @@ def add_restaurant(store_name: str,  store_address: str,
     dbc.connect_db()
     _id = dbc.insert_one(REST_COLLECT, restaurant)
     return _id is not None
+
+
+def del_restaurant(restaurant_id: int):
+    if exists(restaurant_id):
+        return dbc.del_one(REST_COLLECT, {NAME: restaurant_id})
+    else:
+        raise ValueError(f'Delete failure: {restaurant_id} not in database.')
+
+
+###
+def get_restaurants():
+    # return restaurants
+    dbc.connect_db()
+    return dbc.fetch_all_as_dict(RESTAURANT_ID, REST_COLLECT)
+
+
+def exists(restaurant_id: int) -> bool:
+    dbc.connect_db()
+    return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})
