@@ -35,6 +35,7 @@ REGISTRATION_SYSTEM = '/RegistrationSystem'
 # RESTAURANT_RELATED ENDPOINTS
 RESTAURANT_REGISTRATION = '/Restaurant_Registration'
 ADD_RESTAURANT_MENUITEM = '/Add_Restaurant_MenuItem'
+REMOVE_RESTAURANT = '/Remove_Restaurant'
 REMOVE_RESTAURANT_MENUITEM = '/Remove_Restaurant_MenuItem'
 SET_RESTAURANT_HOURS = '/Set_Restaurant_Hours'
 GET_RESTAURANT_REVIEWS = '/Get_Restaurant_Reviews'
@@ -325,6 +326,24 @@ class GetRestaurantList(Resource):
             return (
                 'No restaurants found nearby in server'), 404
         return {nearby_restaurants}, 201
+
+
+@api.route(f'{REMOVE_RESTAURANT}')
+class RemoveResturant(Resource):
+    """
+    users can remove restaurants
+    """
+    def post(self):
+        data = request.json
+        rest_name = data.get('rest_owner_id')
+
+        restaurant_list = restaurants.get_restaurants
+
+        if rest_name not in restaurant_list:
+            return (
+                'Restaurant not found in server'), 404
+        restaurants.del_restaurant(rest_name)
+        return {'Removed' + rest_name + 'successfully!'}, 201
 
 
 @api.route(f'{MAKE_RESERVATION}')
