@@ -3,6 +3,9 @@ restaurants.py: the interface to our restaurant data.
 """
 
 import random
+
+import db.db_connect as dbc
+
 BIG_NUM = 1_000_000_000
 
 ADDRESS = 'address'
@@ -14,6 +17,8 @@ RESTAURANT_ID = 'restaurant_id'
 REST_NAME = 'rest_name'
 REST_ADDRESS = 'rest_address'
 REST_ZIPCODE = 'rest_zipcode'
+
+REST_COLLECT = 'restaurants'
 
 # Make a list of all restaruant for all users; for now,
 # one restaurant per user
@@ -61,7 +66,15 @@ def get_test_restaurant():
 
 
 def get_restaurants():
-    return restaurants
+    # return restaurants
+    dbc.connect_db()
+    return dbc.fetch_all_as_dict(RESTAURANT_ID, REST_COLLECT)
+
+
+def exists(store_address: str, store_zipcode: str) -> bool:
+    dbc.connect_db()
+    return dbc.fetch_one(REST_COLLECT, {ADDRESS: store_address,
+                                        ZIPCODE: store_zipcode})
 
 
 def get_nearby_restaurants(zip_code: str):
@@ -90,12 +103,14 @@ def add_restaurant(store_name: str,  store_address: str,
         if not (store_name and store_address and store_zipcode and owner_id):
             raise ValueError("All attributes must be filled out")
 
-    new_entry = _generate_restaurant_id()
-    restaurants[new_entry] = {
+    # new_entry = _generate_restaurant_id()
+    restaurant = {
         NAME: store_name,
         ADDRESS: store_address,
         ZIPCODE: store_zipcode,
         OWNER_ID: owner_id
     }
 
-    return new_entry
+    dbc.connect_db()
+    _id = dbc.insert_one(REST_COLLECT, restaurant)
+    return _id is not None

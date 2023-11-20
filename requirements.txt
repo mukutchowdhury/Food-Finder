@@ -1,3 +1,4 @@
+bcrypt==4.0.1
 flask==2.3.3
 flask-restx==1.1.0
-bcrypt==4.0.1
+pymongo
