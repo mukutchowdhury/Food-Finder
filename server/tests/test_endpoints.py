@@ -220,3 +220,9 @@ def test_bad_delete_menu(mock_add):
     resp = TEST_CLIENT.post(ep.REMOVE_RESTAURANT_MENUITEM, json=menus.get_test_menu())
     assert resp.status_code == NOT_ACCEPTABLE
     
+
+@pytest.mark.skip('skip this test, come back to it later')
+@patch('restaurants.get', return_value={'name': 'Restaurant1', 'cuisine': 'Italian'})
+def test_get_restaurant_info(self, mock_get, mock_get_list):
+    resp = TEST_CLIENT.post(ep.GET_RESTAURANT_INFO, json=user_json)
+    assert resp.status_code == NOT_ACCEPTABLE

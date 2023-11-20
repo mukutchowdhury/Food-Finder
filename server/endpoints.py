@@ -141,7 +141,7 @@ login_data = api.model('Authentication', {
     "user_password": fields.String
 })
 
-registration_data = api.model('Regisration', {
+registration_data = api.model('Registration', {
     "user_email": fields.String,
     "user_password": fields.String,
     "user_confirm_password": fields.String
@@ -166,6 +166,10 @@ reservation_data = api.model('reservations', {
     'username': fields.String,
     'time': fields.String,
     'party_size': fields.String
+})
+
+rest_info_data = api.model('restaurant_info', {
+    'rest_name': fields.String
 })
 
 
@@ -387,6 +391,25 @@ class WriteReview(Resource):
                 return {'review added successfully!'}, 201
             except ValueError as e:
                 raise wz.NotAcceptable(f'{str(e)}')
+
+
+# get restaurant information for a client
+@api.route(f'{GET_RESTAURANT_INFO}')
+class GETRESTAURANTINFO(Resource):
+    """
+    Gets restaurant information that the client request for
+    """
+    @api.expect(rest_info_data)
+    def get(self):
+        data = request.get_json()
+        rest_name = data.get("rest_name")
+
+        restaurant_list = restaurants.get_list
+        if rest_name not in restaurant_list:
+            return (
+                'Restaurant not found'), 404
+        rest_info = restaurants.get(rest_name)
+        return rest_info
 
 
 # RESTAURANT ENDPOINTS #
