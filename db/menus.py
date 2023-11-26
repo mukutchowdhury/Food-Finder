@@ -69,6 +69,14 @@ def get_test_menu():
     return test_menu
 
 
+def get_special_test_menu():
+    test_menu = {}
+    test_menu[RESTAURANT_ID] = _get_test_restaurant_id()
+    test_menu[ITEM_NAME] = 'TEST'
+    test_menu[ITEM_PRICE] = 2.99
+    return test_menu
+
+
 # unique item name per menu
 def add_item_to_menu(restaurant_id: int, item_info: dict) -> None:
     """
@@ -118,6 +126,18 @@ def get_restuarant_menu(restaurant_id: int) -> dict:
     if (restaurant_id not in menu_items):
         raise ValueError("restaurant doesn't exists")
     return menu_items[restaurant_id]
+
+
+def special_deal_update_price(
+        RESTAURANT_ID: str, ITEM_NAME: str, new_price: float) -> None:
+    """
+    Updates the price of a special deal in the menu.
+    """
+    if RESTAURANT_ID not in menu_items:
+        raise ValueError("Restaurant not found")
+    if ITEM_NAME not in menu_items:
+        raise ValueError("Item does not exist")
+    menu_items[RESTAURANT_ID][ITEM_NAME][ITEM_PRICE] = new_price
 
 
 # def get_all_menu_items() -> dict:

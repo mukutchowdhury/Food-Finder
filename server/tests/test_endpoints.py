@@ -230,7 +230,12 @@ def test_get_restaurant_info(self, mock_get, mock_get_list):
 @pytest.mark.skip('skip this test, come back to it later')
 def test_get_nearby_resturants():
     location_json = {
-    "rest_zipcode": "10004", 
+    "rest_zipcode": "10004",
     }
     resp = TEST_CLIENT.post(ep.GET_RESTAURANT_LIST, json=location_json)
     assert resp.status_code == 201
+
+@patch('db.menus.special_deal_update_price', side_effect=None, autospec=True)
+def test_good_special_deal(mock_add):
+    resp = TEST_CLIENT.put(ep.RESTAURANT_SPECIAL_MEALS, json=menus.get_special_test_menu())
+    assert resp.status_code == OK

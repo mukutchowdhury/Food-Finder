@@ -40,6 +40,8 @@ REMOVE_RESTAURANT_MENUITEM = '/Remove_Restaurant_MenuItem'
 SET_RESTAURANT_HOURS = '/Set_Restaurant_Hours'
 GET_RESTAURANT_REVIEWS = '/Get_Restaurant_Reviews'
 SET_RESTAURANT_OPTIONS = '/Set_Restaurant_Options'
+RESTAURANT_SPECIAL_MEALS = '/Restaurant_Special_Meals'
+
 
 # CLIENT_RELATED ENDPOINTS
 GET_RESTAURANT_LIST = '/Get_Restaurant_List'
@@ -153,6 +155,12 @@ restaurant_data = api.model('Register_Restaurant', {
     "rest_address": fields.String,
     "rest_zipcode": fields.String,
     "rest_owner_id": fields.Integer
+})
+
+special_deals = api.model('Special_Deals', {
+    "Restaurant_id": fields.Integer,
+    "deal_name": fields.String,
+    "deal_price": fields.Float
 })
 
 review_data = api.model('ratings', {
@@ -536,5 +544,27 @@ class SetRestaurantHours(Resource):
             return (
                 'Restaurant not found in server'), 404
         reservations.make_reservation(rest_name, rest_address)
-        return {'Reservation made for' + rest_name +  'at time' + rest_hours +
+        return {'Reservation made for' + rest_name + 'at time' + rest_hours +
                 'added successfully!'}, 201
+
+
+# Set special menus for restaurant
+@api.route(f'{RESTAURANT_SPECIAL_MEALS}')
+class Restaurant_Special_Meals(Resource):
+    @api.expect(special_deals)
+    def put(self):
+        try:
+            data = request.json
+            restaurant_id = data['restaurant_id']
+            item_name = data['item_name']
+            item_price = data['item_price']
+            menus.special_deal_update_price(
+                restaurant_id, item_name, item_price)
+            return {
+                "SYSTEM_STATUS": "PASSED"
+            }, 200
+        except ValueError as error:
+            return {
+                "SYSTEM_STATUS": "FAILED",
+                "ERROR_MESSAGE": str(error)
+            }, 406
