@@ -19,6 +19,7 @@ REST_ADDRESS = 'rest_address'
 REST_ZIPCODE = 'rest_zipcode'
 
 REST_COLLECT = 'restaurants'
+RESTAURANT_DB = 'restaurantDB'
 
 # Make a list of all restaruant for all users; for now,
 # one restaurant per user
@@ -78,24 +79,23 @@ def add_restaurant(restaurant_id: int, store_name: str,  store_address: str,
     }
 
     dbc.connect_db()
-    _id = dbc.insert_one(REST_COLLECT, restaurant)
+    _id = dbc.insert_one(REST_COLLECT, restaurant, RESTAURANT_DB)
     return _id is not None
 
 
 def del_restaurant(restaurant_id: int):
     if exists(restaurant_id):
-        return dbc.del_one(REST_COLLECT, {NAME: restaurant_id})
+        return dbc.del_one(REST_COLLECT, {NAME: restaurant_id}, RESTAURANT_DB)
     else:
         raise ValueError(f'Delete failure: {restaurant_id} not in database.')
 
 
 ###
 def get_restaurants():
-    # return restaurants
     dbc.connect_db()
-    return dbc.fetch_all_as_dict(RESTAURANT_ID, REST_COLLECT)
+    return dbc.fetch_all_as_dict(RESTAURANT_ID, REST_COLLECT, RESTAURANT_DB)
 
 
 def exists(restaurant_id: int) -> bool:
     dbc.connect_db()
-    return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})
+    return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id}, RESTAURANT_DB)
