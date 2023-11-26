@@ -32,7 +32,8 @@ def get_rest_reservation(restaurant_id):
     if restaurant_id not in reservations:
         raise ValueError("no reservations made for " + restaurant_id)
 
-    return dbc.fetch_one(RESERV_COLLECT, {RESTAURANT_ID: restaurant_id}, RESERVATION_DB)
+    return dbc.fetch_one(RESERV_COLLECT, {RESTAURANT_ID: restaurant_id},
+                         RESERVATION_DB)
     # return reservations[restaurant]
 
 
