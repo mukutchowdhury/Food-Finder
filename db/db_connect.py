@@ -6,7 +6,6 @@ LOCAL = "0"
 CLOUD = "1"
 
 REST_DB = 'restaurantDB'
-
 client = None
 
 MONGO_ID = '_id'
