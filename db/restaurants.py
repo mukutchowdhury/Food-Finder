@@ -98,4 +98,5 @@ def get_restaurants():
 
 def exists(restaurant_id: int) -> bool:
     dbc.connect_db()
-    return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id}, RESTAURANT_DB)
+    return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id},
+                         RESTAURANT_DB)
