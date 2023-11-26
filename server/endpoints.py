@@ -476,7 +476,7 @@ class RemoveRestaurantMenuItem(Resource):
 
 # Set options for restaurant
 @api.route(f'{SET_RESTAURANT_OPTIONS}')
-class SetRestaurantOptions(Resource):
+class SetRestaurantHours(Resource):
     """
     set the options for the restaurant
     """
@@ -485,6 +485,7 @@ class SetRestaurantOptions(Resource):
         data = request.json
         rest_name = data.get('rest_name')
         rest_address = data.get('rest_address')
+        rest_hours = data.get('rest_hours')
 
         # reservation_list = reservations.get_rest_reservation(rest_name)
         restaurant_list = restaurants.get_restaurants
@@ -493,4 +494,5 @@ class SetRestaurantOptions(Resource):
             return (
                 'Restaurant not found in server'), 404
         reservations.make_reservation(rest_name, rest_address)
-        return {'Reservation made for' + rest_name + 'successfully!'}, 201
+        return {'Reservation made for' + rest_name +  'at time' + rest_hours +
+                'added successfully!'}, 201
