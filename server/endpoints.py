@@ -35,6 +35,7 @@ REGISTRATION_SYSTEM = '/RegistrationSystem'
 # RESTAURANT_RELATED ENDPOINTS
 RESTAURANT_REGISTRATION = '/Restaurant_Registration'
 ADD_RESTAURANT_MENUITEM = '/Add_Restaurant_MenuItem'
+REMOVE_RESTAURANT = '/Remove_Restaurant'
 REMOVE_RESTAURANT_MENUITEM = '/Remove_Restaurant_MenuItem'
 SET_RESTAURANT_HOURS = '/Set_Restaurant_Hours'
 GET_RESTAURANT_REVIEWS = '/Get_Restaurant_Reviews'
@@ -141,7 +142,7 @@ login_data = api.model('Authentication', {
     "user_password": fields.String
 })
 
-registration_data = api.model('Regisration', {
+registration_data = api.model('Registration', {
     "user_email": fields.String,
     "user_password": fields.String,
     "user_confirm_password": fields.String
@@ -166,6 +167,10 @@ reservation_data = api.model('reservations', {
     'username': fields.String,
     'time': fields.String,
     'party_size': fields.String
+})
+
+rest_info_data = api.model('restaurant_info', {
+    'rest_name': fields.String
 })
 
 
@@ -304,7 +309,7 @@ class GetRestaurantList(Resource):
         zipcode_str = str(zip_code)
         if (int(zipcode_str[-2:]) <= 10):
             RADIUS = int(zipcode_str[-2:])
-        nearby_zipcodes = ()
+        nearby_zipcodes = {zip_code: 0}
         if RADIUS > 0:
             for i in range(1, RADIUS):
                 nearby_zipcodes[zip_code-i] = 0
@@ -321,6 +326,24 @@ class GetRestaurantList(Resource):
             return (
                 'No restaurants found nearby in server'), 404
         return {nearby_restaurants}, 201
+
+
+@api.route(f'{REMOVE_RESTAURANT}')
+class RemoveResturant(Resource):
+    """
+    users can remove restaurants
+    """
+    def post(self):
+        data = request.json
+        rest_name = data.get('rest_owner_id')
+
+        restaurant_list = restaurants.get_restaurants
+
+        if rest_name not in restaurant_list:
+            return (
+                'Restaurant not found in server'), 404
+        restaurants.del_restaurant(rest_name)
+        return {'Removed' + rest_name + 'successfully!'}, 201
 
 
 @api.route(f'{MAKE_RESERVATION}')
@@ -387,6 +410,25 @@ class WriteReview(Resource):
                 return {'review added successfully!'}, 201
             except ValueError as e:
                 raise wz.NotAcceptable(f'{str(e)}')
+
+
+# get restaurant information for a client
+@api.route(f'{GET_RESTAURANT_INFO}')
+class GETRESTAURANTINFO(Resource):
+    """
+    Gets restaurant information that the client request for
+    """
+    @api.expect(rest_info_data)
+    def get(self):
+        data = request.get_json()
+        rest_name = data.get("rest_name")
+
+        restaurant_list = restaurants.get_list
+        if rest_name not in restaurant_list:
+            return (
+                'Restaurant not found'), 404
+        rest_info = restaurants.get(rest_name)
+        return rest_info
 
 
 # RESTAURANT ENDPOINTS #
