@@ -37,6 +37,14 @@ def get_rest_reservation(restaurant_id):
     # return reservations[restaurant]
 
 
+def del_reservations(restaurant_id: int):
+    if restaurant_id not in reservations:
+        raise ValueError("no reservations made for " + restaurant_id)
+
+    return dbc.del_one(RESERV_COLLECT, {RESTAURANT_ID: restaurant_id},
+                       RESERVATION_DB)
+
+
 def make_reservation(restaurant, user_name, time, party_size):
     if restaurant not in reservations:
         reservations[restaurant] = []
