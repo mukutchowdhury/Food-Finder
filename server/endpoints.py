@@ -36,6 +36,7 @@ REGISTRATION_SYSTEM = '/RegistrationSystem'
 RESTAURANT_REGISTRATION = '/Restaurant_Registration'
 ADD_RESTAURANT_MENUITEM = '/Add_Restaurant_MenuItem'
 REMOVE_RESTAURANT = '/Remove_Restaurant'
+REMOVE_RESTAURANT_RESERVATIONS = '/Remove_Restaurant_Reservations'
 REMOVE_RESTAURANT_MENUITEM = '/Remove_Restaurant_MenuItem'
 SET_RESTAURANT_HOURS = '/Set_Restaurant_Hours'
 GET_RESTAURANT_REVIEWS = '/Get_Restaurant_Reviews'
@@ -374,6 +375,24 @@ class SetReservation(Resource):
                 'Restaurant not found in server'), 404
         reservations.make_reservation(rest_name, username, time, party_size)
         return {'Reservation made for' + rest_name + 'successfully!'}, 201
+
+
+@api.route(f'{REMOVE_RESTAURANT_RESERVATIONS}')
+class RemoveResturantReservations(Resource):
+    """
+    users can cancel all restaurant reservations
+    """
+    def post(self):
+        data = request.json
+        rest_name = data.get('rest_owner_id')
+
+        reservation_list = reservations.get_all_reservations
+
+        if rest_name not in reservation_list:
+            return (
+                'Restaurant not found in server'), 404
+        reservations.del_reservations(rest_name)
+        return {'Cancelled' + rest_name + 'reservations successfully!'}, 201
 
 
 @api.route(f'{PROVIDE_REVIEW}')
