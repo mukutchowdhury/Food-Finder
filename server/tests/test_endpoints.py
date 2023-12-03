@@ -239,3 +239,9 @@ def test_get_nearby_resturants():
 def test_good_special_deal(mock_add):
     resp = TEST_CLIENT.put(ep.RESTAURANT_SPECIAL_MEALS, json=menus.get_special_test_menu())
     assert resp.status_code == OK
+
+
+@patch('db.menus.special_deal_update_price', side_effect=ValueError, autospec=True)
+def test_good_special_deal(mock_add):
+    resp = TEST_CLIENT.put(ep.RESTAURANT_SPECIAL_MEALS, json=menus.get_special_test_menu())
+    assert resp.status_code == SERVICE_UNAVAILABLE or 500
