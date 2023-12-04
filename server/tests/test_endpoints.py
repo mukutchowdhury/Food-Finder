@@ -261,3 +261,8 @@ def test_bad_delete_reservations(mock_add):
     }
     resp = TEST_CLIENT.post(ep.REMOVE_RESTAURANT_RESERVATIONS, json=user_json)
     assert resp.status_code == 404
+
+@patch('db.restaurants.del_restaurant', side_effect=None, autospec=True)
+def test_bad_delete_restaurant(mock_add):
+    resp = TEST_CLIENT.post(ep.REMOVE_RESTAURANT_RESERVATIONS, json=rest.get_test_restaurant())
+    assert resp.status_code == 404
