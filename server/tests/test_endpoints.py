@@ -250,3 +250,14 @@ def test_good_special_deal(mock_add):
     resp = TEST_CLIENT.put(ep.RESTAURANT_SPECIAL_MEALS, json=menus.get_special_test_menu())
     assert resp.status_code == NOT_ACCEPTABLE
 
+
+@patch('db.reservations.del_reservations', side_effect=None, autospec=True)
+def test_bad_delete_reservations(mock_add):
+    user_json = {
+    'rest_name': "Terrific Tacos", 
+    'username': 'Jack', 
+    "time": "2023-11-08 19:00",
+    "party_size": '5'
+    }
+    resp = TEST_CLIENT.post(ep.REMOVE_RESTAURANT_RESERVATIONS, json=user_json)
+    assert resp.status_code == 404
