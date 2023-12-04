@@ -341,22 +341,19 @@ class GetRestaurantList(Resource):
     #     return {nearby_restaurants}, 201
 
 
-@api.route(f'{REMOVE_RESTAURANT}')
+@api.route(f'{REMOVE_RESTAURANT}/<restaurant_id>')
 class RemoveResturant(Resource):
     """
     users can remove restaurants
     """
-    def post(self):
-        data = request.json
-        rest_name = data.get('rest_owner_id')
-
-        restaurant_list = restaurants.get_restaurants
-
-        if rest_name not in restaurant_list:
-            return (
-                'Restaurant not found in server'), 404
-        restaurants.del_restaurant(rest_name)
-        return {'Removed' + rest_name + 'successfully!'}, 201
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    def delete(self, restaurant_id):
+        try:
+            restaurants.del_restaurant(restaurant_id)
+            return {restaurant_id: 'Deleted'}
+        except ValueError as e:
+            raise wz.NotFound(f'{str(e)}')
 
 
 @api.route(f'{MAKE_RESERVATION}')
@@ -381,22 +378,19 @@ class SetReservation(Resource):
         return {'Reservation made for' + rest_name + 'successfully!'}, 201
 
 
-@api.route(f'{REMOVE_RESTAURANT_RESERVATIONS}')
+@api.route(f'{REMOVE_RESTAURANT_RESERVATIONS}/<restaurant_name>')
 class RemoveResturantReservations(Resource):
     """
     users can cancel all restaurant reservations
     """
-    def post(self):
-        data = request.json
-        rest_name = data.get('rest_owner_id')
-
-        reservation_list = reservations.get_all_reservations
-
-        if rest_name not in reservation_list:
-            return (
-                'Restaurant not found in server'), 404
-        reservations.del_reservations(rest_name)
-        return {'Cancelled' + rest_name + 'reservations successfully!'}, 201
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    def delete(self, restaurant_name):
+        try:
+            reservations.del_reservations(restaurant_name)
+            return {'Cancelled reservation successfully!'}, 201
+        except ValueError as e:
+            raise wz.NotFound(f'{str(e)}')
 
 
 @api.route(f'{PROVIDE_REVIEW}')
