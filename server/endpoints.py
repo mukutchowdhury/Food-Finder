@@ -526,21 +526,18 @@ class AddRestaurantMenuItem(Resource):
 
 
 # Remove Restaurant Menu Items
-@api.route(f'{REMOVE_RESTAURANT_MENUITEM}')
+@api.route(f'{REMOVE_RESTAURANT_MENUITEM}/<restaurant_id>/<item_name>')
 class RemoveRestaurantMenuItem(Resource):
     @api.expect(menu_item_data)
-    def post(self):
+    def delete(self, restaurant_id, item_name):
         """
         removes item from the list
         """
         try:
-            data = request.json
-            restaurant_id = data['restaurant_id']
-            item_name = data['item_name']
-            menus.remove_item_from_menu(restaurant_id, item_name)
+            menus.del_item_from_menu(restaurant_id, item_name)
             return {"MENU_STATUS": "PASS", "message": "Items removed"}, 200
         except ValueError as error:
-            return {"MENU_STATUS": "FAIL", "ERROR_MESSAGE": str(error)}, 406
+            return {"MENU_STATUS": "FAIL", "ERROR_MESSAGE": str(error)}, 404
 
 
 # Set options for restaurant
