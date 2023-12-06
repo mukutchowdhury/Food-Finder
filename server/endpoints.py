@@ -535,7 +535,7 @@ class AddRestaurantMenuItem(Resource):
 @api.route(f'{REMOVE_RESTAURANT_MENUITEM}')
 class RemoveRestaurantMenuItem(Resource):
     @api.expect(menu_item_data)
-    def post(self):
+    def delete(self):
         """
         removes item from the list
         """
