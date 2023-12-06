@@ -10,7 +10,7 @@ TIME = 'time'
 PARTY_SIZE = 'party_size'
 
 RESERVATION_DB = 'reservationdb'
-RESTAURANT_ID = 'restaurant_id'
+RESTAURANT_NAME = 'restaurant_name'
 RESERV_COLLECT = 'reservations'
 
 # reservations can be made by users
@@ -25,24 +25,25 @@ reservations = {
 
 def get_all_reservations():
     dbc.connect_db()
-    return dbc.fetch_all_as_dict(RESTAURANT_ID, RESERV_COLLECT, RESERVATION_DB)
+    return dbc.fetch_all_as_dict(RESTAURANT_NAME,
+                                 RESERV_COLLECT,
+                                 RESERVATION_DB)
 
 
 def get_rest_reservation(restaurant_id):
     if restaurant_id not in reservations:
         raise ValueError("no reservations made for " + restaurant_id)
 
-    return dbc.fetch_one(RESERV_COLLECT, {RESTAURANT_ID: restaurant_id},
+    return dbc.fetch_one(RESERV_COLLECT, {RESTAURANT_NAME: restaurant_id},
                          RESERVATION_DB)
     # return reservations[restaurant]
 
 
-def del_reservations(restaurant_id: int):
-    if restaurant_id not in reservations:
-        raise ValueError("no reservations made for " + restaurant_id)
-
-    return dbc.del_one(RESERV_COLLECT, {RESTAURANT_ID: restaurant_id},
-                       RESERVATION_DB)
+def del_reservations(rest_name: str):
+    if exists(rest_name):
+        return dbc.del_one(RESERV_COLLECT,
+                           {RESTAURANT_NAME: rest_name},
+                           RESERVATION_DB)
 
 
 def make_reservation(restaurant, user_name, time, party_size):
@@ -58,3 +59,9 @@ def make_reservation(restaurant, user_name, time, party_size):
     dbc.connect_db()
     _id = dbc.insert_one(RESERV_COLLECT, restaurant, RESERVATION_DB)
     return _id is not None
+
+
+def exists(rest_name: str) -> bool:
+    dbc.connect_db()
+    return dbc.fetch_one(RESERV_COLLECT, {RESTAURANT_NAME: rest_name},
+                         RESERVATION_DB)
