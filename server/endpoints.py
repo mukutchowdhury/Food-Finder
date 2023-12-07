@@ -360,7 +360,7 @@ class Add_Restaurant(Resource):
             return {'restaurant_id': rest_id['restaurant_id']}
         except ValueError as e:
             raise wz.NotAcceptable(f'{str(e)}')
-        
+
 
 @api.route('/restaurant/all')
 class Get_Restaurants(Resource):
@@ -385,9 +385,9 @@ class Get_Restaurants_By_Zipcode(Resource):
         Returns restaurants based on a given zip code
         """
         pass
-    
 
-# Working On everything below it
+
+# Working On everything below this
 @api.route(f'{ADD_RESTAURANT_MENUITEM}')
 class AddRestaurantMenuItem(Resource):
     @api.expect(menu_item_data)
@@ -521,7 +521,7 @@ class RemoveResturantReservations(Resource):
                 'Restaurant not found in server'), 404
         reservations.del_reservations(rest_name)
         return {'Cancelled' + rest_name + 'reservations successfully!'}, 201
-    
+
 
 @api.route(f'{PROVIDE_REVIEW}')
 @api.response(HTTPStatus.OK, 'Success')
