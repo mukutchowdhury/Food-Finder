@@ -133,7 +133,7 @@ class LoginPage(Resource):
 # START OF PROJECT #
 
 menu_item_data = api.model('menu', {
-    "restaurent_id": fields.Integer,
+    "restaurant_id": fields.Integer,
     "item_name": fields.String,
     "item_description": fields.String,
     "item_price": fields.Float,
@@ -151,8 +151,7 @@ registration_data = api.model('Registration', {
     "user_confirm_password": fields.String
 })
 
-restaurant_data = api.model('Register_Restaurant', {
-    "rest_id": fields.Integer,
+restaurant_data = api.model('restaurant_ep_post', {
     "rest_name": fields.String,
     "rest_address": fields.String,
     "rest_zipcode": fields.String,
@@ -302,53 +301,29 @@ class RegistrationSystem(Resource):
 
 
 # CLIENT ENDPOINTS #
-@api.route(f'{GET_RESTAURANT_LIST}')
-class GetRestaurantList(Resource):
+@api.route('/restaurant/<int:restaurant_id>')
+class Restaurant_EP(Resource):
     """
-    Provides users with a list of restaurants
-    """
-    def get(self):
-        return restaurants.get_restaurants()
-
-    # @api.expect(restaurant_data)
-    # def post(self):
-    #     """
-    #     Uses zip code and radius to generate the list
-    #     of restaurants and sends it
-    #     """
-    #     data = request.json
-    #     zip_code = data.get("rest_zipcode")
-    #     RADIUS = 10
-    #     zipcode_str = str(zip_code)
-    #     if (int(zipcode_str[-2:]) <= 10):
-    #         RADIUS = int(zipcode_str[-2:])
-    #     nearby_zipcodes = {zip_code: 0}
-    #     if RADIUS > 0:
-    #         for i in range(1, RADIUS):
-    #             nearby_zipcodes[zip_code-i] = 0
-    #             nearby_zipcodes[zip_code+i] = 0
-    #     else:
-    #         for i in range(1, RADIUS):
-    #             nearby_zipcodes[zip_code+i] = 0
-    #     nearby_restaurants = {}
-    #     for zip in nearby_zipcodes:
-    #         nearby_restaurant = restaurants.get_nearby_restaurants(zip)
-    #         if len(nearby_restaurant) > 0:
-    #             nearby_restaurants.append(nearby_restaurant)
-    #     if len(nearby_restaurants) == 0:
-    #         return (
-    #             'No restaurants found nearby in server'), 404
-    #     return {nearby_restaurants}, 201
-
-
-@api.route(f'{REMOVE_RESTAURANT}/<restaurant_id>')
-class RemoveResturant(Resource):
-    """
-    users can remove restaurants
+    Handles restaurant get and delete
     """
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
-    def delete(self, restaurant_id):
+    def get(self, restaurant_id: int):
+        """
+        Gets a restaurant by restaurant id.
+        """
+        try:
+            rest_data = restaurants.get_restuarant(restaurant_id)
+            return rest_data
+        except ValueError as e:
+            raise wz.NotFound(f'{str(e)}')
+
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    def delete(self, restaurant_id: int):
+        """
+        Deletes a restaurant by restaurant id.
+        """
         try:
             restaurants.del_restaurant(restaurant_id)
             return {restaurant_id: 'Deleted'}
@@ -356,144 +331,63 @@ class RemoveResturant(Resource):
             raise wz.NotFound(f'{str(e)}')
 
 
-@api.route(f'{MAKE_RESERVATION}')
-class SetReservation(Resource):
+@api.route('/restaurant/register')
+class Add_Restaurant(Resource):
     """
-    users can reserve a table at a restaurant
+    Handles restaurant creation
     """
-    def post(self):
-        data = request.json
-        rest_name = data.get('rest_name')
-        username = data.get('username')
-        time = data.get('time')
-        party_size = data.get('party_size')
-
-        # reservation_list = reservations.get_rest_reservation(rest_name)
-        restaurant_list = restaurants.get_restaurants
-
-        if rest_name not in restaurant_list:
-            return (
-                'Restaurant not found in server'), 404
-        reservations.make_reservation(rest_name, username, time, party_size)
-        return {'Reservation made for' + rest_name + 'successfully!'}, 201
-
-
-@api.route(f'{REMOVE_RESTAURANT_RESERVATIONS}/<restaurant_name>')
-class RemoveResturantReservations(Resource):
-    """
-    users can cancel all restaurant reservations
-    """
-    @api.response(HTTPStatus.OK, 'Success')
-    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
-    def delete(self, restaurant_name):
-        try:
-            reservations.del_reservations(restaurant_name)
-            return {'Cancelled reservation successfully!'}, 201
-        except ValueError as e:
-            raise wz.NotFound(f'{str(e)}')
-
-
-@api.route(f'{PROVIDE_REVIEW}')
-@api.response(HTTPStatus.OK, 'Success')
-@api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
-class WriteReview(Resource):
-    """
-    Handles clients writing reviews on restaurants
-    """
-
     @api.expect(restaurant_data)
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
     def post(self):
         """
-        update ratings with custumer reviews
-        """
-        data = request.json
-        restuarant_name = data.get('restaurant_name')
-        user_id = data.get('user_id')
-        review = data.get('review')
-        star = data.get('star')
-
-        restratings = ratings.get_ratings()
-
-        if (not isinstance(restuarant_name, str) and
-                not isinstance(user_id, int) and
-                not isinstance(review, str) and
-                not isinstance(star, int)):
-            return {'Please enter valid information'}, 400
-        if restuarant_name not in restratings:
-            return {'the restaurant is not on our server'}, 404
-        else:
-            try:
-                new_id = ratings.add_restaurant_rating(
-                    restuarant_name,
-                    user_id,
-                    review,
-                    star)
-                if new_id is None:
-                    raise wz.ServiceUnavailable('We have a technical problem.')
-                return {'review added successfully!'}, 201
-            except ValueError as e:
-                raise wz.NotAcceptable(f'{str(e)}')
-
-
-# get restaurant information for a client
-@api.route(f'{GET_RESTAURANT_INFO}')
-class GETRESTAURANTINFO(Resource):
-    """
-    Gets restaurant information that the client request for
-    """
-    @api.expect(rest_info_data)
-    def get(self):
-        data = request.get_json()
-        rest_name = data.get("rest_name")
-
-        restaurant_list = restaurants.get_list
-        if rest_name not in restaurant_list:
-            return (
-                'Restaurant not found'), 404
-        rest_info = restaurants.get(rest_name)
-        return rest_info
-
-
-# RESTAURANT ENDPOINTS #
-@api.route(f'{RESTAURANT_REGISTRATION}')
-class RestaurantRegistration(Resource):
-    """
-    Handles the registration of restaurants
-    """
-    @api.expect(restaurant_data)
-    def post(self):
-        """
-        Updates restaurants database with a new
-        restaurant entry
+        Create a restaurant entry
         """
         try:
             data = request.get_json()
-            rest_id = data.get("rest_id")
             rest_name = data.get("rest_name")
             rest_address = data.get("rest_address")
             rest_location_zip = data.get("rest_zipcode")
             rest_owner_id = data.get("rest_owner_id")
-            restaurants.add_restaurant(
-                rest_id,
+            rest_id = restaurants.add_restaurant(
                 rest_name,
                 rest_address,
                 rest_location_zip,
                 rest_owner_id
             )
+            if rest_id['status'] is None:
+                raise wz.ServiceUnavailable('We have a technical problem.')
+            return {'restaurant_id': rest_id['restaurant_id']}
+        except ValueError as e:
+            raise wz.NotAcceptable(f'{str(e)}')
+        
 
-            return {
-                "SYSTEM_STATUS": "PASSED"
-                }, 200
-        except ValueError as error:
-            return {
-                "SYSTEM_STATUS": "FAILED",
-                "ERROR_MESSAGE": str(error)
-            }, 406
+@api.route('/restaurant/all')
+class Get_Restaurants(Resource):
+    """
+    Handles get restaurants
+    """
+    def get(self):
+        """
+        Returns all recorded restaurants
+        """
+        rest_data = restaurants.get_restaurants()
+        return rest_data
 
 
-# Add Restaurant Menu Items REFRACTORING
+@api.route('/restaurants/by-zipcode/<int:zipcode>')
+class Get_Restaurants_By_Zipcode(Resource):
+    """
+    Handles get on nearby restaurants
+    """
+    def get(self, zipcode):
+        """
+        Returns restaurants based on a given zip code
+        """
+        pass
+    
+
+# Working On everything below it
 @api.route(f'{ADD_RESTAURANT_MENUITEM}')
 class AddRestaurantMenuItem(Resource):
     @api.expect(menu_item_data)
@@ -526,18 +420,21 @@ class AddRestaurantMenuItem(Resource):
 
 
 # Remove Restaurant Menu Items
-@api.route(f'{REMOVE_RESTAURANT_MENUITEM}/<restaurant_id>/<item_name>')
+@api.route(f'{REMOVE_RESTAURANT_MENUITEM}')
 class RemoveRestaurantMenuItem(Resource):
     @api.expect(menu_item_data)
-    def delete(self, restaurant_id, item_name):
+    def post(self):
         """
         removes item from the list
         """
         try:
-            menus.del_item_from_menu(restaurant_id, item_name)
+            data = request.json
+            restaurant_id = data['restaurant_id']
+            item_name = data['item_name']
+            menus.remove_item_from_menu(restaurant_id, item_name)
             return {"MENU_STATUS": "PASS", "message": "Items removed"}, 200
         except ValueError as error:
-            return {"MENU_STATUS": "FAIL", "ERROR_MESSAGE": str(error)}, 404
+            return {"MENU_STATUS": "FAIL", "ERROR_MESSAGE": str(error)}, 406
 
 
 # Set options for restaurant
@@ -584,3 +481,87 @@ class Restaurant_Special_Meals(Resource):
                 "SYSTEM_STATUS": "FAILED",
                 "ERROR_MESSAGE": str(error)
             }, 406
+
+
+@api.route(f'{MAKE_RESERVATION}')
+class SetReservation(Resource):
+    """
+    users can reserve a table at a restaurant
+    """
+    def post(self):
+        data = request.json
+        rest_name = data.get('rest_name')
+        username = data.get('username')
+        time = data.get('time')
+        party_size = data.get('party_size')
+
+        # reservation_list = reservations.get_rest_reservation(rest_name)
+        restaurant_list = restaurants.get_restaurants
+
+        if rest_name not in restaurant_list:
+            return (
+                'Restaurant not found in server'), 404
+        reservations.make_reservation(rest_name, username, time, party_size)
+        return {'Reservation made for' + rest_name + 'successfully!'}, 201
+
+
+@api.route(f'{REMOVE_RESTAURANT_RESERVATIONS}')
+class RemoveResturantReservations(Resource):
+    """
+    users can cancel all restaurant reservations
+    """
+    def post(self):
+        data = request.json
+        rest_name = data.get('rest_owner_id')
+
+        reservation_list = reservations.get_all_reservations
+
+        if rest_name not in reservation_list:
+            return (
+                'Restaurant not found in server'), 404
+        reservations.del_reservations(rest_name)
+        return {'Cancelled' + rest_name + 'reservations successfully!'}, 201
+    
+
+@api.route(f'{PROVIDE_REVIEW}')
+@api.response(HTTPStatus.OK, 'Success')
+@api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
+class WriteReview(Resource):
+    """
+    Handles clients writing reviews on restaurants
+    """
+
+    @api.expect(restaurant_data)
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
+    def post(self):
+        """
+        update ratings with custumer reviews
+        """
+        data = request.json
+        restuarant_name = data.get('restaurant_name')
+        user_id = data.get('user_id')
+        review = data.get('review')
+        star = data.get('star')
+
+        restratings = ratings.get_ratings()
+
+        if (not isinstance(restuarant_name, str) and
+                not isinstance(user_id, int) and
+                not isinstance(review, str) and
+                not isinstance(star, int)):
+            return {'Please enter valid information'}, 400
+        if restuarant_name not in restratings:
+            return {'the restaurant is not on our server'}, 404
+        else:
+            try:
+                new_id = ratings.add_restaurant_rating(
+                    restuarant_name,
+                    user_id,
+                    review,
+                    star)
+                if new_id is None:
+                    raise wz.ServiceUnavailable('We have a technical problem.')
+                return {'review added successfully!'}, 201
+            except ValueError as e:
+                raise wz.NotAcceptable(f'{str(e)}')
