@@ -133,7 +133,6 @@ class LoginPage(Resource):
 # START OF PROJECT #
 
 menu_item_data = api.model('menu', {
-    "restaurant_id": fields.Integer,
     "item_name": fields.String,
     "item_description": fields.String,
     "item_price": fields.Float,
@@ -158,12 +157,11 @@ restaurant_data = api.model('restaurant_ep_post', {
     "rest_owner_id": fields.Integer
 })
 
-special_deals = api.model('Special_Deals', {
-    "Restaurant_id": fields.Integer,
-    "deal_name": fields.String,
-    "deal_price": fields.Float
+menuitem_price = api.model('menu_price', {
+    "new_price": fields.Float
 })
 
+#
 review_data = api.model('ratings', {
     'rest_name': fields.String,
     'user_id': fields.Integer,
@@ -379,64 +377,92 @@ class Get_Restaurants(Resource):
 class Get_Restaurants_By_Zipcode(Resource):
     """
     Handles get on nearby restaurants
+    NOT FINISHED - GIANFRANCO
     """
     def get(self, zipcode):
         """
         Returns restaurants based on a given zip code
         """
+        # rest_data = restaurants.get_nearby_restaurants(zipcode)
+        # return {'data': 'Offline'}
         pass
 
 
-# Working On everything below this
-@api.route(f'{ADD_RESTAURANT_MENUITEM}')
-class AddRestaurantMenuItem(Resource):
-    @api.expect(menu_item_data)
-    def post(self):
+@api.route('/menu/<int:restaurant_id>')
+class Menu_EP(Resource):
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    def get(self, restaurant_id):
         """
-        Adds new menu item to the restaurant's menu
+        Returns a restaurant's menu
+        """
+        try:
+            menu_data = menus.get_restuarant_menu(restaurant_id)
+            return menu_data
+        except ValueError as e:
+            raise wz.NotFound(f'{str(e)}')
+
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
+    @api.expect(menu_item_data)
+    def post(self, restaurant_id):
+        """
+        Adds a menu item to an existing restaurant
         """
         try:
             data = request.json
-            restaurant_id = data['restaurant_id']
             item_name = data['item_name']
             item_description = data['item_description']
             item_price = data['item_price']
             item_category = data['item_category']
 
-            menus.add_item_to_menu(restaurant_id, {
+            menu_data = menus.add_item_to_menu(restaurant_id, {
                 'item_name': item_name,
                 'item_description': item_description,
                 'item_price': item_price,
                 'item_category': item_category
             })
+            if menu_data['status'] is None:
+                raise wz.ServiceUnavailable('We have a technical problem.')
             return {
-                "SYSTEM_STATUS": "PASSED"
-            }, 200
-        except ValueError as error:
-            return {
-                "SYSTEM_STATUS": "FAILED",
-                "ERROR_MESSAGE": str(error)
-            }, 406
+                'restaurant_id': menu_data['restaurant_id'],
+                'menuitem_id': menu_data['menuitem_id']
+            }
+        except ValueError as e:
+            raise wz.NotAcceptable(f'{str(e)}')
 
 
-# Remove Restaurant Menu Items
-@api.route(f'{REMOVE_RESTAURANT_MENUITEM}')
-class RemoveRestaurantMenuItem(Resource):
-    @api.expect(menu_item_data)
-    def post(self):
+@api.route('/menu/<int:restaurant_id>/<int:menuitem_id>')
+class MenuItem_EP(Resource):
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    @api.expect(menuitem_price)
+    def put(self, restaurant_id, menuitem_id):
         """
-        removes item from the list
+        Updates the price of an existing menu item
         """
         try:
             data = request.json
-            restaurant_id = data['restaurant_id']
-            item_name = data['item_name']
-            menus.remove_item_from_menu(restaurant_id, item_name)
-            return {"MENU_STATUS": "PASS", "message": "Items removed"}, 200
-        except ValueError as error:
-            return {"MENU_STATUS": "FAIL", "ERROR_MESSAGE": str(error)}, 406
+            item_price = data['new_price']
+            menus.update_item_price(restaurant_id, menuitem_id, item_price)
+            return {menuitem_id: f'Updated From {restaurant_id}'}
+        except ValueError as e:
+            raise wz.NotFound(f'{str(e)}')
+
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    def delete(self, restaurant_id, menuitem_id):
+        """
+        Deletes a menuitem from a restaurant
+        """
+        try:
+            menus.del_item_from_menu(restaurant_id, menuitem_id)
+            return {menuitem_id: f'Deleted From {restaurant_id}'}
+        except ValueError as e:
+            raise wz.NotFound(f'{str(e)}')
 
 
+# WORKING ON ALL BELOW HERE
 # Set options for restaurant
 @api.route(f'{SET_RESTAURANT_OPTIONS}')
 class SetRestaurantHours(Resource):
@@ -459,28 +485,6 @@ class SetRestaurantHours(Resource):
         reservations.make_reservation(rest_name, rest_address)
         return {'Reservation made for' + rest_name + 'at time' + rest_hours +
                 'added successfully!'}, 201
-
-
-# Set special menus for restaurant
-@api.route(f'{RESTAURANT_SPECIAL_MEALS}')
-class Restaurant_Special_Meals(Resource):
-    @api.expect(special_deals)
-    def put(self):
-        try:
-            data = request.json
-            restaurant_id = data['restaurant_id']
-            item_name = data['item_name']
-            item_price = data['item_price']
-            menus.special_deal_update_price(
-                restaurant_id, item_name, item_price)
-            return {
-                "SYSTEM_STATUS": "PASSED"
-            }, 200
-        except ValueError as error:
-            return {
-                "SYSTEM_STATUS": "FAILED",
-                "ERROR_MESSAGE": str(error)
-            }, 406
 
 
 @api.route(f'{MAKE_RESERVATION}')
