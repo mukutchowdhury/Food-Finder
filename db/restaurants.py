@@ -3,8 +3,11 @@ restaurants.py: the interface to our restaurant data.
 """
 
 import random
-
 import db.db_connect as dbc
+
+# from openai import OpenAI
+# client = OpenAI()
+
 
 BIG_NUM = 1_000_000_000
 
@@ -47,18 +50,23 @@ def get_test_restaurant():
 
 
 def get_nearby_restaurants(zip_code: str):
-    nearby_rest = {}
-    for rest_key in restaurants:
-        if (restaurants[rest_key][ZIPCODE] == zip_code):
-            nearby_rest[rest_key] = restaurants[rest_key]
-    return nearby_rest
+    # completion = client.chat.completions.create(
+    #     model="gpt-3.5-turbo",
+    #     messages=[
+    #         {"role": "system", "content": "You provide nearby zipcode" +
+    #          "using the zipcode the user provides as reference"},
+    #         {"role": "user", "content": f'{zip_code}'}
+    #     ]
+    # )
+    # return completion.choices[0].message
+    pass
 
 
 # GOOD #
 def get_restuarant(restaurant_id: int):
     if exists(restaurant_id):
         return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})
-    raise ValueError(f'Delete failure: {restaurant_id} not found.')
+    raise ValueError(f'Get failure: {restaurant_id} not found.')
 
 
 def del_restaurant(restaurant_id: int):
