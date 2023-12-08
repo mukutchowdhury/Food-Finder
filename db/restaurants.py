@@ -19,7 +19,6 @@ REST_ADDRESS = 'rest_address'
 REST_ZIPCODE = 'rest_zipcode'
 
 REST_COLLECT = 'restaurants'
-RESTAURANT_DB = 'restaurantDB'
 
 # Make a list of all restaruant for all users; for now,
 # one restaurant per user
@@ -55,20 +54,29 @@ def get_nearby_restaurants(zip_code: str):
     return nearby_rest
 
 
-def add_restaurant(restaurant_id: int, store_name: str,  store_address: str,
-                   store_zipcode: str, owner_id: int) -> int:
-    for rest_key in restaurants:
-        rest = restaurants[rest_key]
+# GOOD #
+def get_restuarant(restaurant_id: int):
+    if exists(restaurant_id):
+        return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})
+    raise ValueError(f'Delete failure: {restaurant_id} not found.')
 
-        if rest[RESTAURANT_ID] == restaurant_id:
-            raise ValueError("restaurant id exists")
 
-        if (rest[ADDRESS] == store_address and
-           rest[ZIPCODE] == store_zipcode):
-            raise ValueError("Location already has a store")
+def del_restaurant(restaurant_id: int):
+    if exists(restaurant_id):
+        return dbc.del_one(REST_COLLECT,
+                           {RESTAURANT_ID: restaurant_id})
+    raise ValueError(f'Delete failure: {restaurant_id} not found.')
 
-        if not (store_name and store_address and store_zipcode and owner_id):
-            raise ValueError("All attributes must be filled out")
+
+def add_restaurant(store_name: str,  store_address: str,
+                   store_zipcode: str, owner_id: int) -> dict:
+
+    if not (store_name and store_address and store_zipcode and owner_id):
+        raise ValueError("All attributes must be filled out")
+
+    restaurant_id = random.randint(0, BIG_NUM)
+    while exists(restaurant_id):
+        restaurant_id = random.randint(0, BIG_NUM)
 
     restaurant = {
         RESTAURANT_ID: restaurant_id,
@@ -79,24 +87,18 @@ def add_restaurant(restaurant_id: int, store_name: str,  store_address: str,
     }
 
     dbc.connect_db()
-    _id = dbc.insert_one(REST_COLLECT, restaurant, RESTAURANT_DB)
-    return _id is not None
+    _id = dbc.insert_one(REST_COLLECT, restaurant)
+    return {
+        "status": _id is not None,
+        "restaurant_id": restaurant_id
+    }
 
 
-def del_restaurant(restaurant_id: int):
-    if exists(restaurant_id):
-        return dbc.del_one(REST_COLLECT, {NAME: restaurant_id}, RESTAURANT_DB)
-    else:
-        raise ValueError(f'Delete failure: {restaurant_id} not in database.')
-
-
-###
 def get_restaurants():
     dbc.connect_db()
-    return dbc.fetch_all_as_dict(RESTAURANT_ID, REST_COLLECT, RESTAURANT_DB)
+    return dbc.fetch_all_as_dict(RESTAURANT_ID, REST_COLLECT)
 
 
 def exists(restaurant_id: int) -> bool:
     dbc.connect_db()
-    return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id},
-                         RESTAURANT_DB)
+    return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})

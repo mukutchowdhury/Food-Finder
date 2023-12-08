@@ -1,0 +1,164 @@
+# CLIENT ENDPOINTS #
+# @api.route(f'{GET_RESTAURANT_LIST}')
+# class GetRestaurantList(Resource):
+#     """
+#     Provides users with a list of restaurants
+#     """
+#     def get(self):
+#         return restaurants.get_restaurants()
+
+    # @api.expect(restaurant_data)
+    # def post(self):
+    #     """
+    #     Uses zip code and radius to generate the list
+    #     of restaurants and sends it
+    #     """
+    #     data = request.json
+    #     zip_code = data.get("rest_zipcode")
+    #     RADIUS = 10
+    #     zipcode_str = str(zip_code)
+    #     if (int(zipcode_str[-2:]) <= 10):
+    #         RADIUS = int(zipcode_str[-2:])
+    #     nearby_zipcodes = {zip_code: 0}
+    #     if RADIUS > 0:
+    #         for i in range(1, RADIUS):
+    #             nearby_zipcodes[zip_code-i] = 0
+    #             nearby_zipcodes[zip_code+i] = 0
+    #     else:
+    #         for i in range(1, RADIUS):
+    #             nearby_zipcodes[zip_code+i] = 0
+    #     nearby_restaurants = {}
+    #     for zip in nearby_zipcodes:
+    #         nearby_restaurant = restaurants.get_nearby_restaurants(zip)
+    #         if len(nearby_restaurant) > 0:
+    #             nearby_restaurants.append(nearby_restaurant)
+    #     if len(nearby_restaurants) == 0:
+    #         return (
+    #             'No restaurants found nearby in server'), 404
+    #     return {nearby_restaurants}, 201
+
+
+
+#     @api.route(f'{REMOVE_RESTAURANT}')
+# class RemoveResturant(Resource):
+#     """
+#     users can remove restaurants
+#     """
+#     def post(self):
+#         data = request.json
+#         rest_name = data.get('rest_owner_id')
+
+#         restaurant_list = restaurants.get_restaurants
+
+#         if rest_name not in restaurant_list:
+#             return (
+#                 'Restaurant not found in server'), 404
+#         restaurants.del_restaurant(rest_name)
+#         return {'Removed' + rest_name + 'successfully!'}, 201
+
+
+
+# # RESTAURANT ENDPOINTS #
+# @api.route(f'{RESTAURANT_REGISTRATION}')
+# class RestaurantRegistration(Resource):
+#     """
+#     Handles the registration of restaurants
+#     """
+#     @api.expect(restaurant_data)
+#     def post(self):
+#         """
+#         Updates restaurants database with a new
+#         restaurant entry
+#         """
+#         try:
+#             data = request.get_json()
+#             rest_id = data.get("rest_id")
+#             rest_name = data.get("rest_name")
+#             rest_address = data.get("rest_address")
+#             rest_location_zip = data.get("rest_zipcode")
+#             rest_owner_id = data.get("rest_owner_id")
+#             restaurants.add_restaurant(
+#                 rest_id,
+#                 rest_name,
+#                 rest_address,
+#                 rest_location_zip,
+#                 rest_owner_id
+#             )
+
+#             return {
+#                 "SYSTEM_STATUS": "PASSED"
+#                 }, 200
+#         except ValueError as error:
+#             return {
+#                 "SYSTEM_STATUS": "FAILED",
+#                 "ERROR_MESSAGE": str(error)
+#             }, 406
+
+
+
+# # get restaurant information for a client
+# @api.route(f'{GET_RESTAURANT_INFO}')
+# class GETRESTAURANTINFO(Resource):
+#     """
+#     Gets restaurant information that the client request for
+#     """
+#     @api.expect(rest_info_data)
+#     def get(self):
+#         data = request.get_json()
+#         rest_name = data.get("rest_name")
+
+#         restaurant_list = restaurants.get_list
+#         if rest_name not in restaurant_list:
+#             return (
+#                 'Restaurant not found'), 404
+#         rest_info = restaurants.get(rest_name)
+#         return rest_info
+
+
+
+# @api.route(f'{REMOVE_RESTAURANT}')
+# class RemoveResturant(Resource):
+#     """
+#     users can remove restaurants
+#     """
+#     def post(self):
+#         data = request.json
+#         rest_name = data.get('rest_owner_id')
+
+#         restaurant_list = restaurants.get_restaurants
+
+#         if rest_name not in restaurant_list:
+#             return (
+#                 'Restaurant not found in server'), 404
+#         restaurants.del_restaurant(rest_name)
+#         return {'Removed' + rest_name + 'successfully!'}, 201
+
+
+## Restaurant db
+
+# def add_restaurant(restaurant_id: int, store_name: str,  store_address: str,
+#                    store_zipcode: str, owner_id: int) -> int:
+#     for rest_key in restaurants:
+#         rest = restaurants[rest_key]
+
+#         if rest[RESTAURANT_ID] == restaurant_id:
+#             raise ValueError("restaurant id exists")
+
+#         if (rest[ADDRESS] == store_address and
+#            rest[ZIPCODE] == store_zipcode):
+#             raise ValueError("Location already has a store")
+
+#         if not (store_name and store_address and store_zipcode and owner_id):
+#             raise ValueError("All attributes must be filled out")
+
+#     restaurant = {
+#         RESTAURANT_ID: restaurant_id,
+#         NAME: store_name,
+#         ADDRESS: store_address,
+#         ZIPCODE: store_zipcode,
+#         OWNER_ID: owner_id
+#     }
+
+#     dbc.connect_db()
+#     _id = dbc.insert_one(REST_COLLECT, restaurant, RESTAURANT_DB)
+#     return _id is not None
