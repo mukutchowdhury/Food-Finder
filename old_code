@@ -162,3 +162,77 @@
 #     dbc.connect_db()
 #     _id = dbc.insert_one(REST_COLLECT, restaurant, RESTAURANT_DB)
 #     return _id is not None
+
+
+# # Working On everything below this
+# @api.route(f'{ADD_RESTAURANT_MENUITEM}')
+# class AddRestaurantMenuItem(Resource):
+#     @api.expect(menu_item_data)
+#     def post(self):
+#         """
+#         Adds new menu item to the restaurant's menu
+#         """
+#         try:
+#             data = request.json
+#             restaurant_id = data['restaurant_id']
+#             item_name = data['item_name']
+#             item_description = data['item_description']
+#             item_price = data['item_price']
+#             item_category = data['item_category']
+
+#             menus.add_item_to_menu(restaurant_id, {
+#                 'item_name': item_name,
+#                 'item_description': item_description,
+#                 'item_price': item_price,
+#                 'item_category': item_category
+#             })
+#             return {
+#                 "SYSTEM_STATUS": "PASSED"
+#             }, 200
+#         except ValueError as error:
+#             return {
+#                 "SYSTEM_STATUS": "FAILED",
+#                 "ERROR_MESSAGE": str(error)
+#             }, 406
+
+
+
+# # Remove Restaurant Menu Items
+# @api.route(f'{REMOVE_RESTAURANT_MENUITEM}')
+# class RemoveRestaurantMenuItem(Resource):
+#     @api.expect(menu_item_data)
+#     def post(self):
+#         """
+#         removes item from the list
+#         """
+#         try:
+#             data = request.json
+#             restaurant_id = data['restaurant_id']
+#             item_name = data['item_name']
+#             menus.remove_item_from_menu(restaurant_id, item_name)
+#             return {"MENU_STATUS": "PASS", "message": "Items removed"}, 200
+#         except ValueError as error:
+#             return {"MENU_STATUS": "FAIL", "ERROR_MESSAGE": str(error)}, 406
+
+
+
+# # Set special menus for restaurant
+# @api.route(f'{RESTAURANT_SPECIAL_MEALS}')
+# class Restaurant_Special_Meals(Resource):
+#     @api.expect(special_deals)
+#     def put(self):
+#         try:
+#             data = request.json
+#             restaurant_id = data['restaurant_id']
+#             item_name = data['item_name']
+#             item_price = data['item_price']
+#             menus.special_deal_update_price(
+#                 restaurant_id, item_name, item_price)
+#             return {
+#                 "SYSTEM_STATUS": "PASSED"
+#             }, 200
+#         except ValueError as error:
+#             return {
+#                 "SYSTEM_STATUS": "FAILED",
+#                 "ERROR_MESSAGE": str(error)
+#             }, 406
