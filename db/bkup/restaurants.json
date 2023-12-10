@@ -1,3 +1,4 @@
 {"_id":{"$oid":"656a5c3b2a10340adfb20c86"},"restaurant_id":10,"name":"test","address":"test_add","zipcode":"10001","owner_id":2}
 {"_id":{"$oid":"656a6d112a10340adfb20c87"},"restaurant_id":2,"name":"test2","address":"tes_add","zipcode":"10000","owner_id":4}
 {"_id":{"$oid":"656c2869b86f0645a482e167"},"restaurant_id":1,"name":"another","address":"some","zipcode":"10000","owner_id":1}
+{"_id":{"$oid":"65760f5377e3ef1fe8c2cd66"},"restaurant_id":164820837,"name":"mcDonalds","address":"123 spring st","zipcode":"12345","owner_id":2}
