@@ -276,3 +276,42 @@ def test_bad_delete_reservations(mock_add):
 def test_bad_delete_restaurant(mock_add):
     resp = TEST_CLIENT.post(ep.REMOVE_RESTAURANT_RESERVATIONS, json=rest.get_test_restaurant())
     assert resp.status_code == 404
+
+
+@pytest.mark.skip('skip this test, come back to it later')
+@patch('db.rest.get_restaurants', side_effect=None, autospec=True)
+def test_get_restaurant_id(mock_add):
+    """
+    Testing with a good return from get_test_restaurant.
+
+    """
+    resp = TEST_CLIENT.post(ep.Restaurant_EP, json=rest.get_restaurants)
+    assert resp.status_code == OK
+
+
+@pytest.mark.skip('skip this test, come back to it later')
+@patch('db.rest.del_restaurant', side_effect=ValueError, autospec=True)
+def test_delete_get_restaurant_id(mock_add):
+    """
+    Testing with a good delete return from get_test_restaurant.
+
+    """
+    resp = TEST_CLIENT.post(ep.Restaurant_EP, json=rest.del_restaurant)
+    assert resp.status_code == OK
+
+@pytest.mark.skip('skip this test, come back to it later')
+@patch('db.restaurants.add_restaurant', side_effect=None, autospec=True)
+def test_register_add_restaurant(mock_add):
+    """
+    Testing with a restaurant entry
+
+    """
+    resp = TEST_CLIENT.post(ep.Add_Restaurant, json=rest.get_test_restaurant)
+    assert resp.status_code == OK
+
+
+
+
+
+
+

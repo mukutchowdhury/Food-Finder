@@ -3,6 +3,7 @@ restaurants.py: the interface to our restaurant data.
 """
 
 import random
+
 import db.db_connect as dbc
 
 # from openai import OpenAI
@@ -14,7 +15,8 @@ BIG_NUM = 1_000_000_000
 ADDRESS = 'address'
 ZIPCODE = 'zipcode'
 NAME = 'name'
-OWNER_ID = 'owner_id'
+
+OWNER_ID = 'rest_owner_id'
 RESTAURANT_ID = 'restaurant_id'
 
 REST_NAME = 'rest_name'
@@ -41,11 +43,17 @@ def _get_test_zipcode():
     return random_zip
 
 
+def _get_test_OWNER_ID():
+    owner_id = random.randint(0, BIG_NUM)
+    return owner_id
+
+
 def get_test_restaurant():
     test_rest = {}
     test_rest[REST_NAME] = 'TEST_NAME'
     test_rest[REST_ADDRESS] = _get_test_address()
     test_rest[REST_ZIPCODE] = _get_test_zipcode()
+    test_rest[OWNER_ID] = _get_test_OWNER_ID()
     return test_rest
 
 
