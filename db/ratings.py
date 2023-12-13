@@ -64,7 +64,7 @@ def exists(restaurant_id: int) -> bool:
 
 def get_all_ratings(restaurant_id: int):
     if exists(restaurant_id):
-        return dbc.fetch_one(RATING_COLLECT, {RESTAURANT_ID: restaurant_id})
+        return dbc.fetch_all_by_key(RATING_COLLECT, {RESTAURANT_ID: restaurant_id})
     raise ValueError(f'Get failure: {restaurant_id} not found.')
 
 
@@ -103,22 +103,20 @@ def add_restaurant_rating(restaurant_id: int, user_id: int,
     }
 
 
-def update_review_text(restaurant_id: int, review_id: int, text: str):
-    if rest_exists(restaurant_id) and review_exists(review_id):
-        dbc.up_one(
+def update_review_text(review_id: int, text: str):
+    if review_exists(review_id):
+        return dbc.up_one(
             RATING_COLLECT,
-            {RESTAURANT_ID: restaurant_id, REVIEW_ID: review_id},
+            {REVIEW_ID: review_id},
             {"$set": {TEXT: text}}
         )
-    raise ValueError(f'Update failure: MenuID: {review_id}' +
-                     f'and/or RestaurantID: {restaurant_id} not in database.')
+    raise ValueError(f'Update failure: Review: {review_id} not in database.')
 
 
-def del_rating(restaurant_id: int, review_id: int):
-    if rest_exists(restaurant_id) and review_exists(review_id):
+def del_rating(review_id: int):
+    if review_exists(review_id):
         return dbc.del_one(
             RATING_COLLECT,
-            {RESTAURANT_ID: restaurant_id, REVIEW_ID: review_id}
+            {REVIEW_ID: review_id}
         )
-    raise ValueError(f'Delete failure: MenuID: {review_id} ' +
-                     f'and/or RestaurantID: {restaurant_id} not in database.')
+    raise ValueError(f'Delete failure: Review: {review_id} not in database.')
