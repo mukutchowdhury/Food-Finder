@@ -236,3 +236,109 @@
 #                 "SYSTEM_STATUS": "FAILED",
 #                 "ERROR_MESSAGE": str(error)
 #             }, 406
+
+
+# class WriteReview(Resource):
+#     """
+#     Handles clients writing reviews on restaurants
+#     """
+
+#     @api.expect(restaurant_data)
+#     @api.response(HTTPStatus.OK, 'Success')
+#     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
+#     def post(self):
+#         """
+#         update ratings with custumer reviews
+#         """
+#         data = request.json
+#         restuarant_name = data.get('restaurant_name')
+#         user_id = data.get('user_id')
+#         review = data.get('review')
+#         star = data.get('star')
+
+#         restratings = ratings.get_ratings()
+
+#         if (not isinstance(restuarant_name, str) and
+#                 not isinstance(user_id, int) and
+#                 not isinstance(review, str) and
+#                 not isinstance(star, int)):
+#             return {'Please enter valid information'}, 400
+#         if restuarant_name not in restratings:
+#             return {'the restaurant is not on our server'}, 404
+#         else:
+#             try:
+#                 new_id = ratings.add_restaurant_rating(
+#                     restuarant_name,
+#                     user_id,
+#                     review,
+#                     star)
+#                 if new_id is None:
+#                     raise wz.ServiceUnavailable('We have a technical problem.')
+#                 return {'review added successfully!'}, 201
+#             except ValueError as e:
+#                 raise wz.NotAcceptable(f'{str(e)}')
+
+
+# # WORKING ON ALL BELOW HERE
+# # Set options for restaurant
+# @api.route(f'{SET_RESTAURANT_OPTIONS}')
+# class SetRestaurantHours(Resource):
+#     """
+#     set the options for the restaurant
+#     """
+#     @api.expect(restaurant_data)
+#     def post(self):
+#         data = request.json
+#         rest_name = data.get('rest_name')
+#         rest_address = data.get('rest_address')
+#         rest_hours = data.get('rest_hours')
+
+#         # reservation_list = reservations.get_rest_reservation(rest_name)
+#         restaurant_list = restaurants.get_restaurants
+
+#         if rest_name not in restaurant_list:
+#             return (
+#                 'Restaurant not found in server'), 404
+#         reservations.make_reservation(rest_name, rest_address)
+#         return {'Reservation made for' + rest_name + 'at time' + rest_hours +
+#                 'added successfully!'}, 201
+
+
+# @api.route(f'{MAKE_RESERVATION}')
+# class SetReservation(Resource):
+#     """
+#     users can reserve a table at a restaurant
+#     """
+#     def post(self):
+#         data = request.json
+#         rest_name = data.get('rest_name')
+#         username = data.get('username')
+#         time = data.get('time')
+#         party_size = data.get('party_size')
+
+#         # reservation_list = reservations.get_rest_reservation(rest_name)
+#         restaurant_list = restaurants.get_restaurants
+
+#         if rest_name not in restaurant_list:
+#             return (
+#                 'Restaurant not found in server'), 404
+#         reservations.make_reservation(rest_name, username, time, party_size)
+#         return {'Reservation made for' + rest_name + 'successfully!'}, 201
+
+
+# @api.route(f'{REMOVE_RESTAURANT_RESERVATIONS}')
+# class RemoveResturantReservations(Resource):
+#     """
+#     users can cancel all restaurant reservations
+#     """
+#     def post(self):
+#         data = request.json
+#         rest_name = data.get('rest_owner_id')
+
+#         reservation_list = reservations.get_all_reservations
+
+#         if rest_name not in reservation_list:
+#             return (
+#                 'Restaurant not found in server'), 404
+#         reservations.del_reservations(rest_name)
+#         return {'Cancelled' + rest_name + 'reservations successfully!'}, 201
