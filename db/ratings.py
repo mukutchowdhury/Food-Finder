@@ -5,81 +5,120 @@ import random
 
 import db.db_connect as dbc
 
-BIG_NUM = 100_000_000_000_000_000_000
+BIG_NUM = 1_000_000_000
 ID_LEN = 12
 
 MOCK_ID = '0' * ID_LEN
 
-RESTAURANT_NAME = 'restaurant_name'
+REVIEW_ID = 'review_id'
+RESTAURANT_ID = 'restaurant_id'
 USER_ID = 'user_id'
-REVIEW = 'review'
+TEXT = 'text'
 STAR = 'star'
 
 RATING_COLLECT = 'ratings'
 RATING_DB = 'ratingsdb'
 
+REST_COLLECT = 'restaurants'
+
 ratings = {}
-# ratings = {
-#     'Terrific Tacos': {
-#         USER_ID: 1,
-#         REVIEW: 'The tacos were bad',
-#         STAR: 2,
-#     },
-#     RESTAURANT_NAME: {
-#         USER_ID: 2,
-#         REVIEW: 'I liked the food',
-#         STAR: 5,
-#     },
-# }
 
 
-def _get_test_name():
-    name = 'test'
-    new_part = random.randint(0, BIG_NUM)
-    return name + str(new_part)
+# def _get_test_name():
+#     name = 'test'
+#     new_part = random.randint(0, BIG_NUM)
+#     return name + str(new_part)
 
 
-def get_test_rating():
-    test_review = {}
-    test_review[RESTAURANT_NAME] = _get_test_name()
-    test_review[USER_ID] = 1000
-    test_review[REVIEW] = 'cool'
-    test_review[STAR] = 2
-    return test_review
+# def get_test_rating():
+#     test_review = {}
+#     test_review[RESTAURANT_NAME] = _get_test_name()
+#     test_review[USER_ID] = 1000
+#     test_review[REVIEW] = 'cool'
+#     test_review[STAR] = 2
+#     return test_review
 
 
-def get_ratings():
+# def _gen_id() -> str:
+#     _id = random.randint(0, BIG_NUM)
+#     _id = str(_id)
+#     _id = _id.rjust(ID_LEN, '0')
+#     return _id
+
+# GOOD
+
+def review_exists(review_id: int) -> bool:
     dbc.connect_db()
-    return dbc.fetch_all_as_dict(RESTAURANT_NAME, RATING_COLLECT, RATING_DB)
+    return dbc.fetch_one(RATING_COLLECT, {REVIEW_ID: review_id})
 
 
-def _gen_id() -> str:
-    _id = random.randint(0, BIG_NUM)
-    _id = str(_id)
-    _id = _id.rjust(ID_LEN, '0')
-    return _id
-
-
-def add_restaurant_rating(store_name: str,
-                          user_id: int,
-                          review: str,
-                          star: int):
-    newstar = int(star)
-    if store_name is None or store_name == '' or store_name in ratings:
-        raise ValueError('Fill out the restaurant name')
-    if review is None or review == '':
-        raise ValueError('Please provide a review')
-    if newstar < 0:
-        raise ValueError('Plese enter a positive number of stars')
-    ratings[store_name] = {USER_ID: user_id,
-                           REVIEW: review,
-                           STAR: newstar}
+def rest_exists(restaurant_id: int) -> bool:
     dbc.connect_db()
-    _id = dbc.insert_one(RATING_COLLECT, ratings[store_name], RATING_DB)
-    return _id is not None
+    return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})
 
 
-def exists(restaurant_name: str) -> bool:
+def exists(restaurant_id: int) -> bool:
     dbc.connect_db()
-    return dbc.fetch_one(RATING_COLLECT, {RESTAURANT_NAME: restaurant_name},
-                         RATING_DB)
+    return dbc.fetch_one(RATING_COLLECT, {RESTAURANT_ID: restaurant_id})
+
+
+def get_all_ratings(restaurant_id: int):
+    if exists(restaurant_id):
+        return dbc.fetch_one(RATING_COLLECT, {RESTAURANT_ID: restaurant_id})
+    raise ValueError(f'Get failure: {restaurant_id} not found.')
+
+
+def add_restaurant_rating(restaurant_id: int, user_id: int,
+                          text: str, star: int):
+
+    if not rest_exists(restaurant_id):
+        raise ValueError(f'Post failure: {restaurant_id} not found.')
+
+    if not (restaurant_id and user_id and text and star):
+        raise ValueError("All attributes must be filled out")
+
+    review_id = random.randint(0, BIG_NUM)
+    while review_exists(review_id):
+        review_id = random.randint(0, BIG_NUM)
+
+    if star <= 1:
+        star = 1
+    elif star >= 5:
+        star = 5
+
+    rating = {
+        REVIEW_ID: review_id,
+        RESTAURANT_ID: restaurant_id,
+        USER_ID: user_id,
+        TEXT: text,
+        STAR: star
+    }
+
+    dbc.connect_db()
+    _id = dbc.insert_one(RATING_COLLECT, rating)
+
+    return {
+        'status': _id is not None,
+        'review_id': review_id
+    }
+
+
+def update_review_text(restaurant_id: int, review_id: int, text: str):
+    if rest_exists(restaurant_id) and review_exists(review_id):
+        dbc.up_one(
+            RATING_COLLECT,
+            {RESTAURANT_ID: restaurant_id, REVIEW_ID: review_id},
+            {"$set": {TEXT: text}}
+        )
+    raise ValueError(f'Update failure: MenuID: {review_id}' +
+                     f'and/or RestaurantID: {restaurant_id} not in database.')
+
+
+def del_rating(restaurant_id: int, review_id: int):
+    if rest_exists(restaurant_id) and review_exists(review_id):
+        return dbc.del_one(
+            RATING_COLLECT,
+            {RESTAURANT_ID: restaurant_id, REVIEW_ID: review_id}
+        )
+    raise ValueError(f'Delete failure: MenuID: {review_id} ' +
+                     f'and/or RestaurantID: {restaurant_id} not in database.')
