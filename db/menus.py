@@ -135,22 +135,20 @@ def add_item_to_menu(restaurant_id: int, item_info: dict):
     }
 
 
-def del_item_from_menu(restaurant_id: int, menuitem_id: int) -> None:
-    if rest_exists(restaurant_id) and menu_exists(menuitem_id):
+def del_item_from_menu(menuitem_id: int) -> None:
+    if menu_exists(menuitem_id):
         return dbc.del_one(
             MENU_COLLECT,
-            {RESTAURANT_ID: restaurant_id, MENUITEM_ID: menuitem_id}
+            {MENUITEM_ID: menuitem_id}
         )
-    raise ValueError(f'Delete failure: MenuID: {menuitem_id} ' +
-                     f'and/or RestaurantID: {restaurant_id} not in database.')
+    raise ValueError(f'Delete failure: MenuID: {menuitem_id} not in database.')
 
 
-def update_item_price(restaurant_id: int, menuitem_id: int, new_price: float):
-    if rest_exists(restaurant_id) and menu_exists(menuitem_id):
-        dbc.up_one(
+def update_item_price(menuitem_id: int, new_price: float):
+    if menu_exists(menuitem_id):
+        return dbc.up_one(
             MENU_COLLECT,
-            {RESTAURANT_ID: restaurant_id, MENUITEM_ID: menuitem_id},
+            {MENUITEM_ID: menuitem_id},
             {"$set": {ITEM_PRICE: new_price}}
         )
-    raise ValueError(f'Update failure: MenuID: {menuitem_id}' +
-                     f'and/or RestaurantID: {restaurant_id} not in database.')
+    raise ValueError(f'Update failure: MenuID: {menuitem_id} not in database.')
