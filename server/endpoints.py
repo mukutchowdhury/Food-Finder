@@ -14,7 +14,7 @@ import db.menus as menus
 import db.ratings as ratings
 # import db.reservations as reservations
 import db.restaurants as restaurants
-import db.users as users
+# import db.users as users
 import db.options as options
 
 app = Flask(__name__)
@@ -455,7 +455,7 @@ class RestaurantHoursEP(Resource):
         try:
             options.delete_restaurant_time(restaurant_id)
             return {'restaurant_hours':
-                     f'Deleted time from {restaurant_id}'}
+                    f'Deleted time from {restaurant_id}'}
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
 

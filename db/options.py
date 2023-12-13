@@ -31,7 +31,7 @@ def _adjust_time(time: dict) -> str:
     hour = max(0, min(23, time['hour']))
     minute = max(0, min(59, time['minute']))
     return f'{hour}:{minute}'
-    
+
 
 def insert_restaurant_hour(restaurant_id: int,
                            open: dict, close: dict) -> int:
@@ -45,8 +45,8 @@ def insert_restaurant_hour(restaurant_id: int,
     open_time = _adjust_time(open)
     close_time = _adjust_time(close)
 
-    hour = {RESTAURANT_ID: restaurant_id, 
-            OPEN_TIME: open_time, 
+    hour = {RESTAURANT_ID: restaurant_id,
+            OPEN_TIME: open_time,
             CLOSE_TIME: close_time}
 
     dbc.connect_db()
@@ -66,7 +66,7 @@ def update_restaurant_time(restaurant_id: int,
             {RESTAURANT_ID: restaurant_id},
             {"$set": {OPEN_TIME: open_time, CLOSE_TIME: close_time}}
         )
-    raise ValueError('PUT failure: ' + 
+    raise ValueError('PUT failure: ' +
                      f'{restaurant_id} has no existing time')
 
 
