@@ -5,7 +5,7 @@ The endpoint called `endpoints` will return all available endpoints.
 
 from http import HTTPStatus
 
-import bcrypt
+# import bcrypt
 import werkzeug.exceptions as wz
 from flask import Flask, request
 from flask_restx import Api, Resource, fields
@@ -15,6 +15,7 @@ import db.ratings as ratings
 # import db.reservations as reservations
 import db.restaurants as restaurants
 import db.users as users
+import db.options as options
 
 app = Flask(__name__)
 api = Api(app)
@@ -129,133 +130,12 @@ edit_text = api.model('text_change', {
     'text': fields.String,
 })
 
-reservation_data = api.model('reservations', {
-    'rest_name': fields.String,
-    'username': fields.String,
-    'time': fields.String,
-    'party_size': fields.String
+restaurant_hour_option = api.model('hour_option', {
+    'open_hour': fields.Integer,
+    'open_minute': fields.Integer,
+    'close_hour': fields.Integer,
+    'close_minute': fields.Integer
 })
-
-rest_info_data = api.model('restaurant_info', {
-    'rest_name': fields.String
-})
-
-
-@api.route(f'{LOGIN_SYSTEM}')
-class LoginSystem(Resource):
-    """
-    This class handles user authentication using database
-    """
-    @api.expect(login_data)
-    def post(self):
-        """
-        Handles user login by checking the provided credentials
-        """
-
-        data = request.get_json()
-        user_email = data.get("user_email")
-        user_password = data.get("user_password")
-
-        try:
-            if (not isinstance(user_email, str) and
-               not isinstance(user_password, str)):
-                # no feedback will do until we start working with the front-end
-                raise TypeError(
-                    "One or more parameters for "
-                    "registration are not of type string"
-                    )
-
-            # Hardcoded User Database #
-            db_users = users.get_users()
-
-            # use bcrypt to hash user_password #
-            byte_password = user_password.encode('utf-8')
-
-            for users_key in db_users:
-                user_info = db_users[users_key]
-                if (user_info[users.EMAIL] == user_email and
-                   bcrypt.checkpw(byte_password, user_info[users.PASSWORD])):
-                    # return a token, some cookie, or create a session for user
-                    # load onto a new route
-                    return {
-                        "SYSTEM_STATUS": "PASSED"
-                    }, 200
-
-            return {
-                "SYSTEM_STATUS": "FAILED"
-            }, 200
-
-        except Exception as error:
-            return {
-                "SYSTEM_STATUS": "FAILED",
-                "ERROR_MESSAGE": str(error)
-            }, 406
-
-
-@api.route(f'{REGISTRATION_SYSTEM}')
-class RegistrationSystem(Resource):
-    """
-    This class handles registration
-    """
-
-    @api.expect(registration_data)
-    def post(self):
-        """
-        Takes care of login information with the entered data information
-        """
-
-        data = request.get_json()
-        user_email = data.get("user_email")
-        user_password = data.get("user_password")
-        user_confirm_password = data.get("user_confirm_password")
-
-        try:
-            if (not isinstance(user_email, str) and
-               not isinstance(user_password, str) and
-               not isinstance(user_confirm_password, str)):
-                # no feedback will do until we start working with the front-end
-                raise TypeError(
-                    "One or more parameters for "
-                    "registration are not of type string"
-                    )
-
-            if user_password != user_confirm_password:
-                raise Exception("Passwords don't match")
-
-            # Hardcoded User Database #
-            db_users = users.get_users()
-
-            # use bcrypt to hash user_password #
-            # byte_password = user_password.encode('utf-8')
-            # hashed_password = bcrypt.hashpw(byte_password, bcrypt.gensalt())
-
-            for users_key in db_users:
-                user_info = db_users[users_key]
-                if (user_info[users.EMAIL] == user_email):
-                    return {
-                        "SYSTEM_STATUS": "FAILED"
-                    }, 200
-
-            # Create a new record in database once that's up
-            # Store user_email and hased_password
-
-            byte_password = user_password.encode('utf-8')
-            hashed_password = bcrypt.hashpw(byte_password, bcrypt.gensalt())
-            users.add_user(user_email, hashed_password)
-
-            return {
-                "SYSTEM_STATUS": "PASSED"
-            }, 200
-        except TypeError as error:
-            return {
-                "SYSTEM_STATUS": "FAILED",
-                "ERROR_MESSAGE": str(error)
-            }, 406
-        except Exception as error:
-            return {
-                "SYSTEM_STATUS": "FAILED",
-                "ERROR_MESSAGE": str(error)
-            }, 406
 
 
 # CLIENT ENDPOINTS #
@@ -507,16 +387,77 @@ class RestaurantHoursEP(Resource):
     """
     get restaurant time
     """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
     def get(self, restaurant_id):
-        pass
+        try:
+            data = options.get_restaurant_hour(restaurant_id)
+            return data
+        except ValueError as e:
+            raise wz.NotFound(f'{str(e)}')
 
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
+    @api.expect(restaurant_hour_option)
     def post(self, restaurant_id):
-        pass
+        """
+        sets restaurant time
+        """
+        try:
+            data = request.json
+            open = {
+                'hour': data['open_hour'],
+                'minute': data['open_minute']
+            }
+            close = {
+                'hour': data['close_hour'],
+                'minute': data['close_minute']
+            }
 
+            status = options.insert_restaurant_hour(restaurant_id,
+                                                    open, close)
+            if status is None:
+                raise wz.ServiceUnavailable('We have a technical problem.')
+            return {'restaurant_hours':
+                    f'Time Set for {restaurant_id}'}
+        except ValueError as e:
+            raise wz.NotAcceptable(f'{str(e)}')
+
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    @api.expect(restaurant_hour_option)
     def put(self, restaurant_id):
-        pass
+        """
+        updates restaurant time
+        """
+        try:
+            data = request.json
+            open = {
+                'hour': data['open_hour'],
+                'minute': data['open_minute']
+            }
+            close = {
+                'hour': data['close_hour'],
+                'minute': data['close_minute']
+            }
+            options.update_restaurant_time(restaurant_id, open, close)
+            return {'restaurant_hours':
+                    f'Time update for {restaurant_id}'}
+        except ValueError as e:
+            raise wz.NotAcceptable(f'{str(e)}')
 
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
     def delete(self, restaurant_id):
-        pass
+        """
+        deletes restaurant time
+        """
+        try:
+            options.delete_restaurant_time(restaurant_id)
+            return {'restaurant_hours':
+                     f'Deleted time from {restaurant_id}'}
+        except ValueError as e:
+            raise wz.NotFound(f'{str(e)}')
+
 
 # Online Orders
