@@ -152,5 +152,5 @@ def update_item_price(restaurant_id: int, menuitem_id: int, new_price: float):
             {RESTAURANT_ID: restaurant_id, MENUITEM_ID: menuitem_id},
             {"$set": {ITEM_PRICE: new_price}}
         )
-    return ValueError(f'Update failure: MenuID: {menuitem_id}' +
-                      f'and/or RestaurantID: {restaurant_id} not in database.')
+    raise ValueError(f'Update failure: MenuID: {menuitem_id}' +
+                     f'and/or RestaurantID: {restaurant_id} not in database.')
