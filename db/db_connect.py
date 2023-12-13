@@ -59,7 +59,7 @@ def fetch_one(collection, filt, db=REST_DB):
             # Convert mongo ID to a string so it works as JSON
             doc[MONGO_ID] = str(doc[MONGO_ID])
         return doc
-    
+
 
 def fetch_all_by_key(collection, filt, db=REST_DB):
     """

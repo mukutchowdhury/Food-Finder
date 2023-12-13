@@ -319,7 +319,7 @@ class ReviewEP(Resource):
             return data
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
-        
+
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
     @api.expect(review_data)

@@ -64,7 +64,8 @@ def exists(restaurant_id: int) -> bool:
 
 def get_all_ratings(restaurant_id: int):
     if exists(restaurant_id):
-        return dbc.fetch_all_by_key(RATING_COLLECT, {RESTAURANT_ID: restaurant_id})
+        return dbc.fetch_all_by_key(RATING_COLLECT,
+                                    {RESTAURANT_ID: restaurant_id})
     raise ValueError(f'Get failure: {restaurant_id} not found.')
 
 
