@@ -122,6 +122,7 @@ menuitem_price = api.model('menu_price', {
 })
 
 review_data = api.model('ratings', {
+    'user_id': fields.Integer,
     'text': fields.String,
     'star': fields.Integer
 })
@@ -272,50 +273,63 @@ class MenuEP(Resource):
             raise wz.NotAcceptable(f'{str(e)}')
 
 
-@api.route('/menu/<int:restaurant_id>/<int:menuitem_id>')
+@api.route('/menu/<int:menuitem_id>')
 class MenuItemEP(Resource):
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
     @api.expect(menuitem_price)
-    def put(self, restaurant_id, menuitem_id):
+    def put(self, menuitem_id):
         """
         Updates the price of an existing menu item
         """
         try:
             data = request.json
             item_price = data['new_price']
-            menus.update_item_price(restaurant_id, menuitem_id, item_price)
-            return {menuitem_id: f'Updated From {restaurant_id}'}
+            menus.update_item_price(menuitem_id, item_price)
+            return {'menuitem': f'Updated {menuitem_id}'}
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
 
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
-    def delete(self, restaurant_id, menuitem_id):
+    def delete(self, menuitem_id):
         """
         Deletes a menuitem from a restaurant
         """
         try:
-            menus.del_item_from_menu(restaurant_id, menuitem_id)
-            return {menuitem_id: f'Deleted From {restaurant_id}'}
+            menus.del_item_from_menu(menuitem_id)
+            return {'menuitem': f'Deleted From {menuitem_id}'}
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
 
 
-@api.route('/review/<int:restaurant_id>/<int:user_id>')
+@api.route('/review/<int:restaurant_id>')
 class ReviewEP(Resource):
     """
     Handles clients writing reviews on restaurants
     """
     @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    def get(self, restaurant_id):
+        """
+        Returns all reviews of a restaurant
+        """
+        try:
+            data = ratings.get_all_ratings(restaurant_id)
+            return data
+        except ValueError as e:
+            raise wz.NotFound(f'{str(e)}')
+        
+    @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
     @api.expect(review_data)
-    def post(self, restaurant_id, user_id):
+    def post(self, restaurant_id):
         """
         Adds a review of restaurant
         """
         try:
             data = request.json
+            user_id = data['user_id']
             text = data['text']
             star = data['star']
             data = ratings.add_restaurant_rating(
@@ -331,7 +345,7 @@ class ReviewEP(Resource):
             raise wz.NotAcceptable(f'{str(e)}')
 
 
-@api.route('/review/<int:restaurant_id>/<int:review_id>')
+@api.route('/review/<int:review_id>')
 class ReviewEdit(Resource):
     """
     Handles clients writing reviews on restaurants
@@ -339,45 +353,27 @@ class ReviewEdit(Resource):
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
     @api.expect(edit_text)
-    def put(self, restaurant_id, review_id):
+    def put(self, review_id):
         """
         Updates a review of restaurant
         """
         try:
             data = request.json
             text = data['text']
-            ratings.update_review_text(restaurant_id, review_id, text)
-            return {review_id: f'Updated From {restaurant_id}'}
+            ratings.update_review_text(review_id, text)
+            return {'review': f'Updated review {review_id}'}
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
 
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
-    def delete(self, restaurant_id, review_id):
+    def delete(self, review_id):
         """
         deletes a review of restaurant
         """
         try:
-            ratings.del_rating(restaurant_id, review_id)
-            return {review_id: f'Deleted From {restaurant_id}'}
-        except ValueError as e:
-            raise wz.NotFound(f'{str(e)}')
-
-
-@api.route('/review/<int:restaurant_id>')
-class GetAllReview(Resource):
-    """
-    Handles returning all reviews of a restaurant
-    """
-    @api.response(HTTPStatus.OK, 'Success')
-    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
-    def get(self, restaurant_id):
-        """
-        Returns all reviews of a restaurant
-        """
-        try:
-            data = ratings.get_all_ratings(restaurant_id)
-            return data
+            ratings.del_rating(review_id)
+            return {'review': f'Deleted From {review_id}'}
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
 
