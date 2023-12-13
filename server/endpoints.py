@@ -12,7 +12,7 @@ from flask_restx import Api, Resource, fields
 
 import db.menus as menus
 import db.ratings as ratings
-import db.reservations as reservations
+# import db.reservations as reservations
 import db.restaurants as restaurants
 import db.users as users
 
