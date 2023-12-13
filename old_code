@@ -342,3 +342,122 @@
 #                 'Restaurant not found in server'), 404
 #         reservations.del_reservations(rest_name)
 #         return {'Cancelled' + rest_name + 'reservations successfully!'}, 201
+
+
+
+
+# @api.route(f'{LOGIN_SYSTEM}')
+# class LoginSystem(Resource):
+#     """
+#     This class handles user authentication using database
+#     """
+#     @api.expect(login_data)
+#     def post(self):
+#         """
+#         Handles user login by checking the provided credentials
+#         """
+
+#         data = request.get_json()
+#         user_email = data.get("user_email")
+#         user_password = data.get("user_password")
+
+#         try:
+#             if (not isinstance(user_email, str) and
+#                not isinstance(user_password, str)):
+#                 # no feedback will do until we start working with the front-end
+#                 raise TypeError(
+#                     "One or more parameters for "
+#                     "registration are not of type string"
+#                     )
+
+#             # Hardcoded User Database #
+#             db_users = users.get_users()
+
+#             # use bcrypt to hash user_password #
+#             byte_password = user_password.encode('utf-8')
+
+#             for users_key in db_users:
+#                 user_info = db_users[users_key]
+#                 if (user_info[users.EMAIL] == user_email and
+#                    bcrypt.checkpw(byte_password, user_info[users.PASSWORD])):
+#                     # return a token, some cookie, or create a session for user
+#                     # load onto a new route
+#                     return {
+#                         "SYSTEM_STATUS": "PASSED"
+#                     }, 200
+
+#             return {
+#                 "SYSTEM_STATUS": "FAILED"
+#             }, 200
+
+#         except Exception as error:
+#             return {
+#                 "SYSTEM_STATUS": "FAILED",
+#                 "ERROR_MESSAGE": str(error)
+#             }, 406
+
+
+# @api.route(f'{REGISTRATION_SYSTEM}')
+# class RegistrationSystem(Resource):
+#     """
+#     This class handles registration
+#     """
+
+#     @api.expect(registration_data)
+#     def post(self):
+#         """
+#         Takes care of login information with the entered data information
+#         """
+
+#         data = request.get_json()
+#         user_email = data.get("user_email")
+#         user_password = data.get("user_password")
+#         user_confirm_password = data.get("user_confirm_password")
+
+#         try:
+#             if (not isinstance(user_email, str) and
+#                not isinstance(user_password, str) and
+#                not isinstance(user_confirm_password, str)):
+#                 # no feedback will do until we start working with the front-end
+#                 raise TypeError(
+#                     "One or more parameters for "
+#                     "registration are not of type string"
+#                     )
+
+#             if user_password != user_confirm_password:
+#                 raise Exception("Passwords don't match")
+
+#             # Hardcoded User Database #
+#             db_users = users.get_users()
+
+#             # use bcrypt to hash user_password #
+#             # byte_password = user_password.encode('utf-8')
+#             # hashed_password = bcrypt.hashpw(byte_password, bcrypt.gensalt())
+
+#             for users_key in db_users:
+#                 user_info = db_users[users_key]
+#                 if (user_info[users.EMAIL] == user_email):
+#                     return {
+#                         "SYSTEM_STATUS": "FAILED"
+#                     }, 200
+
+#             # Create a new record in database once that's up
+#             # Store user_email and hased_password
+
+#             byte_password = user_password.encode('utf-8')
+#             hashed_password = bcrypt.hashpw(byte_password, bcrypt.gensalt())
+#             users.add_user(user_email, hashed_password)
+
+#             return {
+#                 "SYSTEM_STATUS": "PASSED"
+#             }, 200
+#         except TypeError as error:
+#             return {
+#                 "SYSTEM_STATUS": "FAILED",
+#                 "ERROR_MESSAGE": str(error)
+#             }, 406
+#         except Exception as error:
+#             return {
+#                 "SYSTEM_STATUS": "FAILED",
+#                 "ERROR_MESSAGE": str(error)
+#             }, 406
