@@ -2,3 +2,5 @@
 {"_id":{"$oid":"656a6d112a10340adfb20c87"},"restaurant_id":2,"name":"test2","address":"tes_add","zipcode":"10000","owner_id":4}
 {"_id":{"$oid":"656c2869b86f0645a482e167"},"restaurant_id":1,"name":"another","address":"some","zipcode":"10000","owner_id":1}
 {"_id":{"$oid":"65760f5377e3ef1fe8c2cd66"},"restaurant_id":164820837,"name":"mcDonalds","address":"123 spring st","zipcode":"12345","owner_id":2}
+{"_id":{"$oid":"657ec0c808a2bb6d3e6c0182"},"restaurant_id":705400572,"name":"test884321187","address":"748126538TEST","zipcode":96764,"rest_owner_id":954064424}
+{"_id":{"$oid":"657ec0c808a2bb6d3e6c0183"},"restaurant_id":854316869,"name":"test183049451","address":"57900789TEST","zipcode":53933,"rest_owner_id":343642190}
