@@ -27,7 +27,9 @@ def test_fetch_one_not_there(temp_rec):
     ret = dbc.fetch_one(TEST_COLLECT, {TEST_NAME: 'not a field value in db!'})
     assert ret is None
 
-def test_update_doc(temp_rec):
-    dbc.update_doc(TEST_COLLECT, {TEST_NAME: TEST_NAME}, {TEST_NAME: UPDATE})
+
+def test_up_one(temp_rec):
+    # Assuming dbc is an instance of your database client
+    dbc.up_one(TEST_COLLECT, {TEST_NAME: TEST_NAME}, {'$set': {TEST_NAME: UPDATE}})
     ret = dbc.fetch_one(TEST_COLLECT, {TEST_NAME: UPDATE})
     assert ret is not None
