@@ -30,6 +30,12 @@ REST_COLLECT = 'restaurants'
 restaurants = {}
 
 
+def _get_test_name():
+    name = 'test'
+    rand_part = random.randint(0, BIG_NUM)
+    return name + str(rand_part)
+
+
 def _get_test_address():
     address_text = 'TEST'
     address_nummber = str(random.randint(0, BIG_NUM)) + address_text
@@ -50,9 +56,9 @@ def _get_test_OWNER_ID():
 
 def get_test_restaurant():
     test_rest = {}
-    test_rest[REST_NAME] = 'TEST_NAME'
-    test_rest[REST_ADDRESS] = _get_test_address()
-    test_rest[REST_ZIPCODE] = _get_test_zipcode()
+    test_rest[NAME] = _get_test_name()
+    test_rest[ADDRESS] = _get_test_address()
+    test_rest[ZIPCODE] = _get_test_zipcode()
     test_rest[OWNER_ID] = _get_test_OWNER_ID()
     return test_rest
 
