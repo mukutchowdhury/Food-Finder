@@ -54,8 +54,14 @@ def _get_test_OWNER_ID():
     return owner_id
 
 
+def _get_test_rest_id():
+    restaurant_id = random.randint(0, BIG_NUM)
+    return restaurant_id
+
+
 def get_test_restaurant():
     test_rest = {}
+    test_rest[RESTAURANT_ID] = _get_test_rest_id()
     test_rest[NAME] = _get_test_name()
     test_rest[ADDRESS] = _get_test_address()
     test_rest[ZIPCODE] = _get_test_zipcode()
@@ -90,15 +96,16 @@ def del_restaurant(restaurant_id: int):
     raise ValueError(f'Delete failure: {restaurant_id} not found.')
 
 
-def add_restaurant(store_name: str,  store_address: str,
+def add_restaurant(restaurant_id: int, store_name: str,  store_address: str,
                    store_zipcode: str, owner_id: int) -> dict:
-
-    if not (store_name and store_address and store_zipcode and owner_id):
+    if exists(restaurant_id):
+        raise ValueError(f'Duplicate restaurant id: {restaurant_id=}')
+    if not (restaurant_id
+            and store_name
+            and store_address
+            and store_zipcode
+            and owner_id):
         raise ValueError("All attributes must be filled out")
-
-    restaurant_id = random.randint(0, BIG_NUM)
-    while exists(restaurant_id):
-        restaurant_id = random.randint(0, BIG_NUM)
 
     restaurant = {
         RESTAURANT_ID: restaurant_id,

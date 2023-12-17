@@ -12,35 +12,68 @@ import db.restaurants as rest
 
 @pytest.fixture(scope='function')
 def test_data():
-    test_restaurant = rest.get_test_restaurant()
+    test_rest = rest.get_test_restaurant()
     added_restaurant = rest.add_restaurant(
-        test_restaurant[NAME],
-        test_restaurant[ADDRESS],
-        test_restaurant[ZIPCODE],
-        test_restaurant[OWNER_ID]
+        test_rest[RESTAURANT_ID],
+        test_rest[NAME],
+        test_rest[ADDRESS],
+        test_rest[ZIPCODE],
+        test_rest[OWNER_ID]
     )
-    yield added_restaurant
+    yield test_rest
 
-    if rest.exists(added_restaurant["restaurant_id"]):
+    if test_rest:
         rest.del_restaurant(added_restaurant["restaurant_id"])
 
 
-def test_get_restaurants(test_data):
+def test_get_rest(test_data):
     added_restaurant_id = test_data["restaurant_id"]
     restaurants = rest.get_restaurants()
+    assert len(restaurants) > 0
+    for rest_id in restaurants:
+        assert isinstance(rest_id, int)
+        assert isinstance(restaurants[rest_id], dict)
     assert added_restaurant_id in restaurants
 
 
-# def test_get_restaurant(test_data):
-#     temp_restaurant_id = test_data["restaurant_id"]
-#     temp_rest = rest.get_restuarant(temp_restaurant_id)
-#     assert isinstance(temp_rest, dict)
+def test_add_dup_name(test_data):
+    """
+    Make sure a duplicate restaurant id raises a ValueError.
+    """
+    with pytest.raises(ValueError):
+        rest.add_restaurant(test_data[RESTAURANT_ID],
+                            test_data[NAME],
+                            test_data[ADDRESS],
+                            test_data[ZIPCODE],
+                            test_data[OWNER_ID])
 
-#     if temp_rest is not None:
-#         assert temp_rest.get(NAME) == test_restaurant[NAME]
-#         assert temp_rest.get('address') == test_restaurant[ADDRESS]
-#         assert temp_rest.get('zipcode') == test_restaurant[ZIPCODE]
-#         assert temp_rest.get('rest_owner_id') == test_restaurant[OWNER_ID]
+def test_add_blank_name(test_data):
+    """
+    Make sure a blank id raises a ValueError.
+    """
+    with pytest.raises(ValueError):
+        rest.add_restaurant('',
+                            test_data[NAME],
+                            test_data[ADDRESS],
+                            test_data[ZIPCODE],
+                            test_data[OWNER_ID])
+
+
+def test_add_rest():
+    new_rest = rest.get_test_restaurant()
+    ret = rest.add_restaurant(new_rest[RESTAURANT_ID],
+                              new_rest[NAME],
+                              new_rest[ADDRESS],
+                              new_rest[ZIPCODE],
+                              new_rest[OWNER_ID])
+    assert rest.exists(new_rest[RESTAURANT_ID])
+    rest.del_restaurant(new_rest[RESTAURANT_ID])
+
+
+# def test_del_rest(test_data):
+#     print(test_data)
+#     rest.del_restaurant(test_data["restaurant_id"])
+#     assert not rest.exists(test_data["restaurant_id"])
 
 
 # def test_get_nearby_restaurants():
