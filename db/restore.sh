@@ -1,3 +1,4 @@
+#!/bin/bash
 # Script to backup production database to JSON files.
 
 . ./common.sh
