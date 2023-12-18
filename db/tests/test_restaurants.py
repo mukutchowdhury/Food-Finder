@@ -22,8 +22,8 @@ def test_data():
     )
     yield test_rest
 
-    if test_rest:
-        rest.del_restaurant(added_restaurant["restaurant_id"])
+    if rest.exists(test_rest[RESTAURANT_ID]):
+        rest.del_restaurant(test_rest[RESTAURANT_ID])
 
 
 def test_get_rest(test_data):
@@ -70,10 +70,10 @@ def test_add_rest():
     rest.del_restaurant(new_rest[RESTAURANT_ID])
 
 
-# def test_del_rest(test_data):
-#     print(test_data)
-#     rest.del_restaurant(test_data["restaurant_id"])
-#     assert not rest.exists(test_data["restaurant_id"])
+def test_del_rest(test_data):
+    print(test_data)
+    rest.del_restaurant(test_data["restaurant_id"])
+    assert not rest.exists(test_data["restaurant_id"])
 
 
 # def test_get_nearby_restaurants():

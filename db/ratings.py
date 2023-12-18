@@ -24,19 +24,40 @@ REST_COLLECT = 'restaurants'
 ratings = {}
 
 
-# def _get_test_name():
-#     name = 'test'
-#     new_part = random.randint(0, BIG_NUM)
-#     return name + str(new_part)
+def _get_test_review_id():
+    review_id = random.randint(0, BIG_NUM)
+    return review_id
 
 
-# def get_test_rating():
-#     test_review = {}
-#     test_review[RESTAURANT_NAME] = _get_test_name()
-#     test_review[USER_ID] = 1000
-#     test_review[REVIEW] = 'cool'
-#     test_review[STAR] = 2
-#     return test_review
+def _get_test_rest_id():
+    rest_id = random.randint(0, BIG_NUM)
+    return rest_id
+
+
+def _get_test_user_id():
+    user_id = random.randint(0, BIG_NUM)
+    return user_id
+
+
+def _get_test_text():
+    review = 'test review'
+    add = random.randint(0, BIG_NUM)
+    return review + str(add)
+
+
+def _get_test_star():
+    star = random.randint(1, 5)
+    return star
+
+
+def _get_test_rating():
+    test_review = {}
+    test_review[REVIEW_ID] = _get_test_review_id()
+    test_review[RESTAURANT_ID] = 1
+    test_review[USER_ID] = _get_test_user_id()
+    test_review[TEXT] = _get_test_text()
+    test_review[STAR] = _get_test_star
+    return test_review
 
 
 # def _gen_id() -> str:
@@ -46,6 +67,7 @@ ratings = {}
 #     return _id
 
 # GOOD
+
 
 def review_exists(review_id: int) -> bool:
     dbc.connect_db()
@@ -69,8 +91,10 @@ def get_all_ratings(restaurant_id: int):
     raise ValueError(f'Get failure: {restaurant_id} not found.')
 
 
-def add_restaurant_rating(restaurant_id: int, user_id: int,
+def add_restaurant_rating(review_id: int, restaurant_id: int, user_id: int,
                           text: str, star: int):
+    if exists(review_id):
+        raise ValueError(f'Duplicate review id: {review_id=}')
 
     if not rest_exists(restaurant_id):
         raise ValueError(f'Post failure: {restaurant_id} not found.')
@@ -78,9 +102,9 @@ def add_restaurant_rating(restaurant_id: int, user_id: int,
     if not (restaurant_id and user_id and text and star):
         raise ValueError("All attributes must be filled out")
 
-    review_id = random.randint(0, BIG_NUM)
-    while review_exists(review_id):
-        review_id = random.randint(0, BIG_NUM)
+    # review_id = random.randint(0, BIG_NUM)
+    # while review_exists(review_id):
+    #     review_id = random.randint(0, BIG_NUM)
 
     if star <= 1:
         star = 1

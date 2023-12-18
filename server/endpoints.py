@@ -111,6 +111,7 @@ registration_data = api.model('Registration', {
 })
 
 restaurant_data = api.model('restaurant_ep_post', {
+    "rest_id": fields.Integer,
     "rest_name": fields.String,
     "rest_address": fields.String,
     "rest_zipcode": fields.String,
@@ -184,11 +185,13 @@ class AddRestaurant(Resource):
         """
         try:
             data = request.get_json()
+            rest_id = data.get("rest_id")
             rest_name = data.get("rest_name")
             rest_address = data.get("rest_address")
             rest_location_zip = data.get("rest_zipcode")
             rest_owner_id = data.get("rest_owner_id")
             rest_id = restaurants.add_restaurant(
+                rest_id,
                 rest_name,
                 rest_address,
                 rest_location_zip,
