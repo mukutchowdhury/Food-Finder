@@ -301,14 +301,14 @@ def test_delete_get_restaurant_id(mock_add):
     resp = TEST_CLIENT.post(ep.Restaurant_EP, json=rest.del_restaurant)
     assert resp.status_code == OK or 500
 
-@pytest.mark.skip('skip this test, come back to it later')
+# @pytest.mark.skip('skip this test, come back to it later')
 @patch('db.restaurants.add_restaurant', side_effect=None, autospec=True)
 def test_register_add_restaurant(mock_add):
     """
     Testing with a restaurant entry
 
     """
-    resp = TEST_CLIENT.post(ep.Add_Restaurant, json=rest.get_test_restaurant)
+    resp = TEST_CLIENT.post('/add-restaurant', json=rest.get_test_restaurant())
     assert resp.status_code == OK
 
 
