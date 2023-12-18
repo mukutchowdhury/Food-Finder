@@ -11,6 +11,15 @@ OPTIONS_COLLECT = 'options'
 REST_COLLECT = 'restaurants'
 
 
+def get_test_hour():
+    hour = {}
+    hour['open_hour'] = 1
+    hour['open_minute'] = 32
+    hour['close_hour'] = 12
+    hour['close_minute'] = 43
+    return hour
+
+
 def hour_exist(restaurant_id: int) -> bool:
     dbc.connect_db()
     return dbc.fetch_one(OPTIONS_COLLECT, {RESTAURANT_ID: restaurant_id})
