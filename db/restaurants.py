@@ -25,6 +25,8 @@ REST_ZIPCODE = 'rest_zipcode'
 
 REST_COLLECT = 'restaurants'
 
+MOCK_ID = 123123123123
+
 # Make a list of all restaruant for all users; for now,
 # one restaurant per user
 restaurants = {}
@@ -61,10 +63,10 @@ def _get_test_rest_id():
 
 def get_test_restaurant():
     test_rest = {}
-    test_rest[RESTAURANT_ID] = _get_test_rest_id()
-    test_rest[NAME] = _get_test_name()
-    test_rest[ADDRESS] = _get_test_address()
-    test_rest[ZIPCODE] = _get_test_zipcode()
+    test_rest[RESTAURANT_ID] = MOCK_ID
+    test_rest[REST_NAME] = 'TEST_NAME'
+    test_rest[REST_ADDRESS] = _get_test_address()
+    test_rest[REST_ZIPCODE] = _get_test_zipcode()
     test_rest[OWNER_ID] = _get_test_OWNER_ID()
     return test_rest
 
@@ -117,10 +119,7 @@ def add_restaurant(restaurant_id: int, store_name: str,  store_address: str,
 
     dbc.connect_db()
     _id = dbc.insert_one(REST_COLLECT, restaurant)
-    return {
-        "status": _id is not None,
-        "restaurant_id": restaurant_id
-    }
+    return _id is not None
 
 
 def get_restaurants():

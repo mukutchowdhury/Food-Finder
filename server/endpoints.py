@@ -52,6 +52,12 @@ PROVIDE_REVIEW = '/Provide_Review'
 GET_RESTAURANT_INFO = '/Get_Restaurant_Info'
 MAKE_RESERVATION = '/Make_Reservation'
 
+
+ADD_RESTAURANT = '/restaurant/register'
+RESTAURANT_EP = '/restaurant'
+RESTAURANT_ALL = '/restaurant/all'
+
+
 TYPE = 'Type'
 DATA = 'Data'
 TITLE = 'Title'
@@ -111,6 +117,7 @@ registration_data = api.model('Registration', {
 })
 
 restaurant_data = api.model('restaurant_ep_post', {
+    "restaurant_id": fields.Integer,
     "rest_name": fields.String,
     "rest_address": fields.String,
     "rest_zipcode": fields.String,
@@ -140,7 +147,7 @@ restaurant_hour_option = api.model('hour_option', {
 
 
 # CLIENT ENDPOINTS #
-@api.route('/restaurant/<int:restaurant_id>')
+@api.route(f'{RESTAURANT_EP}/<int:restaurant_id>')
 class RestaurantEP(Resource):
     """
     Handles restaurant get and delete
@@ -170,7 +177,7 @@ class RestaurantEP(Resource):
             raise wz.NotFound(f'{str(e)}')
 
 
-@api.route('/restaurant/register')
+@api.route(f'{ADD_RESTAURANT}')
 class AddRestaurant(Resource):
     """
     Handles restaurant creation
@@ -184,24 +191,27 @@ class AddRestaurant(Resource):
         """
         try:
             data = request.get_json()
+            rest_id = data.get("restaurant_id")
             rest_name = data.get("rest_name")
             rest_address = data.get("rest_address")
             rest_location_zip = data.get("rest_zipcode")
             rest_owner_id = data.get("rest_owner_id")
-            rest_id = restaurants.add_restaurant(
+
+            rest_data = restaurants.add_restaurant(
+                rest_id,
                 rest_name,
                 rest_address,
                 rest_location_zip,
                 rest_owner_id
             )
-            if rest_id['status'] is None:
+            if rest_data is None:
                 raise wz.ServiceUnavailable('We have a technical problem.')
-            return {'restaurant_id': rest_id['restaurant_id']}
+            return {'restaurant_id': rest_id}
         except ValueError as e:
             raise wz.NotAcceptable(f'{str(e)}')
 
 
-@api.route('/restaurant/all')
+@api.route(f'{RESTAURANT_ALL}')
 class GetRestaurants(Resource):
     """
     Handles get restaurants
@@ -212,21 +222,6 @@ class GetRestaurants(Resource):
         """
         rest_data = restaurants.get_restaurants()
         return rest_data
-
-
-@api.route('/restaurants/by-zipcode/<int:zipcode>')
-class GetRestaurantsByZipcode(Resource):
-    """
-    Handles get on nearby restaurants
-    NOT FINISHED - GIANFRANCO
-    """
-    def get(self, zipcode):
-        """
-        Returns restaurants based on a given zip code
-        """
-        # rest_data = restaurants.get_nearby_restaurants(zipcode)
-        # return {'data': 'Offline'}
-        pass
 
 
 @api.route('/menu/<int:restaurant_id>')
