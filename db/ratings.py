@@ -24,26 +24,13 @@ REST_COLLECT = 'restaurants'
 ratings = {}
 
 
-# def _get_test_name():
-#     name = 'test'
-#     new_part = random.randint(0, BIG_NUM)
-#     return name + str(new_part)
+def get_test_rating():
+    test_review = {}
+    test_review[USER_ID] = random.randint(0, BIG_NUM)
+    test_review[TEXT] = "HEllo TEST"
+    test_review[STAR] = 5
+    return test_review
 
-
-# def get_test_rating():
-#     test_review = {}
-#     test_review[RESTAURANT_NAME] = _get_test_name()
-#     test_review[USER_ID] = 1000
-#     test_review[REVIEW] = 'cool'
-#     test_review[STAR] = 2
-#     return test_review
-
-
-# def _gen_id() -> str:
-#     _id = random.randint(0, BIG_NUM)
-#     _id = str(_id)
-#     _id = _id.rjust(ID_LEN, '0')
-#     return _id
 
 # GOOD
 
@@ -98,10 +85,7 @@ def add_restaurant_rating(restaurant_id: int, user_id: int,
     dbc.connect_db()
     _id = dbc.insert_one(RATING_COLLECT, rating)
 
-    return {
-        'status': _id is not None,
-        'review_id': review_id
-    }
+    return _id is not None
 
 
 def update_review_text(review_id: int, text: str):
