@@ -76,6 +76,36 @@ def test_get_all_restaurant():
     assert isinstance(resp_json, dict)
 
 
+@patch('db.menus.get_restuarant_menu', return_value=None, autospec=True)
+def test_get_menu(mock_get):
+    resp = TEST_CLIENT.get(f'{ep.Menu_EP}/123')
+    assert resp.status_code == OK
+
+
+@patch('db.menus.get_restuarant_menu', side_effect=ValueError, autospec=True)
+def test_bad_get_menu(mock_get):
+    resp = TEST_CLIENT.get(f'{ep.Menu_EP}/123')
+    assert resp.status_code == NOT_FOUND
+
+
+# @patch('db.menus.add_item_to_menu', return_value=rest.MOCK_ID, autospec=True)
+# def test_add_menu(mock_add):
+#     resp = TEST_CLIENT.post(f'{ep.Menu_EP}/123', json=menus.get_test_menu())
+#     assert resp.status_code == OK
+
+
+@patch('db.menus.add_item_to_menu', side_effect=ValueError, autospec=True)
+def test_bad_add_menu(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.Menu_EP}/123', json=menus.get_test_menu())
+    assert resp.status_code == NOT_ACCEPTABLE
+
+
+# @patch('db.menus.add_item_to_menu', return_value=None)
+# def test_menu_add_db_failure(mock_add):
+#     resp = TEST_CLIENT.post(f'{ep.Menu_EP}/123', json=menus.get_test_menu())
+#     assert resp.status_code == SERVICE_UNAVAILABLE
+
+
 # ### Add Menu Tests ###
 # @pytest.mark.skip('skip this test, come back to it later')
 # @patch('db.menus.add_item_to_menu', side_effect=None, autospec=True)

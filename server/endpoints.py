@@ -56,7 +56,7 @@ MAKE_RESERVATION = '/Make_Reservation'
 ADD_RESTAURANT = '/restaurant/register'
 RESTAURANT_EP = '/restaurant'
 RESTAURANT_ALL = '/restaurant/all'
-
+Menu_EP = '/menu'
 
 TYPE = 'Type'
 DATA = 'Data'
@@ -224,7 +224,7 @@ class GetRestaurants(Resource):
         return rest_data
 
 
-@api.route('/menu/<int:restaurant_id>')
+@api.route(f'{Menu_EP}/<int:restaurant_id>')
 class MenuEP(Resource):
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
