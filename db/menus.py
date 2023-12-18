@@ -3,6 +3,7 @@ menus.py: the menu of our restaurant
 """
 
 import random
+
 import db.db_connect as dbc
 
 BIG_NUM = 1_000_000_000

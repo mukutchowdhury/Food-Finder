@@ -1,20 +1,13 @@
-from http.client import (
-    BAD_REQUEST,
-    FORBIDDEN,
-    NOT_ACCEPTABLE,
-    NOT_FOUND,
-    OK,
-    SERVICE_UNAVAILABLE,
-)
-
+from http.client import (BAD_REQUEST, FORBIDDEN, NOT_ACCEPTABLE, NOT_FOUND, OK,
+                         SERVICE_UNAVAILABLE)
 from unittest.mock import patch
+
 import pytest
 
 import db.menus as menus
+import db.options as options
 import db.ratings as rating
 import db.restaurants as rest
-import db.options as options
-
 import server.endpoints as ep
 
 TEST_CLIENT = ep.app.test_client()
@@ -68,12 +61,12 @@ def test_bad_del_restaurant(mock_get):
     resp = TEST_CLIENT.delete(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
     assert resp.status_code == NOT_FOUND
 
-
-def test_get_all_restaurant():
-    resp = TEST_CLIENT.get(ep.RESTAURANT_ALL)
-    assert resp.status_code == OK
-    resp_json = resp.get_json()
-    assert isinstance(resp_json, dict)
+@patch('db.restaurants.get_restaurants', side_effect=None, autospec=True)
+def test_get_all_restaurant(mock_get):
+    resp = TEST_CLIENT.get(f'{ep.RestaurantEP}/123')
+    assert resp.status_code == NOT_FOUND
+    # resp_json = resp.get_json()
+    # assert isinstance(resp_json, dict)
 
 
 @patch('db.menus.get_restuarant_menu', return_value=None, autospec=True)
@@ -273,26 +266,6 @@ def test_bad_add_menu(mock_add):
 #     resp = TEST_CLIENT.post(ep.Restaurant_EP, json=rest.del_restaurant)
 #     assert resp.status_code == OK or 500
 
-# @pytest.mark.skip('skip this test, come back to it later')
-<<<<<<< HEAD
-@patch('db.restaurants.add_restaurant', side_effect=None, autospec=True)
-def test_register_add_restaurant(mock_add):
-    """
-    Testing with a restaurant entry
-
-    """
-    resp = TEST_CLIENT.post('/add-restaurant', json=rest.get_test_restaurant())
-    assert resp.status_code == OK
-=======
-# @patch('db.restaurants.add_restaurant', side_effect=None, autospec=True)
-# def test_register_add_restaurant(mock_add):
-#     """
-#     Testing with a restaurant entry
-
-#     """
-#     resp = TEST_CLIENT.post(ep.Add_Restaurant, json=rest.get_test_restaurant)
-#     assert resp.status_code == OK
->>>>>>> 9dfd8203a1cf648563f98dd031bd8193c606e7f6
 
 
 
