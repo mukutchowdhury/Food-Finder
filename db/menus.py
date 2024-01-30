@@ -73,7 +73,7 @@ def _get_test_restaurant_id():
 
 def get_test_menu():
     test_menu = {}
-    test_menu[RESTAURANT_ID] = _get_test_restaurant_id()
+    # test_menu[RESTAURANT_ID] = _get_test_restaurant_id()
     test_menu[ITEM_NAME] = 'TEST'
     test_menu[ITEM_DESCRIPTION] = 'TEST'
     test_menu[ITEM_PRICE] = 9.99
@@ -129,11 +129,7 @@ def add_item_to_menu(restaurant_id: int, item_info: dict):
 
     dbc.connect_db()
     _id = dbc.insert_one(MENU_COLLECT, menu)
-    return {
-        "status": _id is not None,
-        "restaurant_id": restaurant_id,
-        "menuitem_id": menuitem_id
-    }
+    return _id is not None
 
 
 def del_item_from_menu(menuitem_id: int) -> None:
