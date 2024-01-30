@@ -61,6 +61,7 @@ def test_bad_del_restaurant(mock_get):
     resp = TEST_CLIENT.delete(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
     assert resp.status_code == NOT_FOUND
 
+
 @patch('db.restaurants.get_restaurants', side_effect=None, autospec=True)
 def test_get_all_restaurant(mock_get):
     resp = TEST_CLIENT.get(f'{ep.RestaurantEP}/123')
