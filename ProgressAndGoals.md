@@ -10,7 +10,8 @@ and hosted our server on PythonAnywhere
 MongoDB Cloud integration
 
 ## Goals 
-
+- Develop an interactive frontend -> using good practices and testing procedures as part
+  of our automated testing requirement
 
 
 
