@@ -4,7 +4,7 @@
 
 ## Progress & Goals
 
-[a link](https://github.com/mukutchowdhury/Food-Finder/blob/master/ProgressAndGoals.md)
+[Our Progress and Goals](https://github.com/mukutchowdhury/Food-Finder/blob/master/ProgressAndGoals.md)
 
 ---
 
