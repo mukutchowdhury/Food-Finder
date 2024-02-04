@@ -2,6 +2,12 @@
 
 ---
 
+## Progress & Goals
+
+[a link](https://github.com/mukutchowdhury/Food-Finder/blob/master/ProgressAndGoals.md)
+
+---
+
 ## Project Description
 
 Food Finder is a platform designed to help users discover and explore local restaurants and food establishments. It promises to provide a great user experience by offering up-to-date menus and establishment ratings. Users are also able to create an account for themselves to keep track of restaurants, ratings, dashboards, bookings, and more!
