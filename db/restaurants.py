@@ -30,12 +30,6 @@ REST_COLLECT = 'restaurants'
 restaurants = {}
 
 
-def _get_test_name():
-    name = 'test'
-    rand_part = random.randint(0, BIG_NUM)
-    return name + str(rand_part)
-
-
 def _get_test_address():
     address_text = 'TEST'
     address_nummber = str(random.randint(0, BIG_NUM)) + address_text
@@ -62,24 +56,11 @@ def _get_test_rest_id():
 def get_test_restaurant():
     test_rest = {}
     test_rest[RESTAURANT_ID] = _get_test_rest_id()
-    test_rest[NAME] = _get_test_name()
+    test_rest[NAME] = 'TEST_NAME'
     test_rest[ADDRESS] = _get_test_address()
     test_rest[ZIPCODE] = _get_test_zipcode()
     test_rest[OWNER_ID] = _get_test_OWNER_ID()
     return test_rest
-
-
-def get_nearby_restaurants(zip_code: str):
-    # completion = client.chat.completions.create(
-    #     model="gpt-3.5-turbo",
-    #     messages=[
-    #         {"role": "system", "content": "You provide nearby zipcode" +
-    #          "using the zipcode the user provides as reference"},
-    #         {"role": "user", "content": f'{zip_code}'}
-    #     ]
-    # )
-    # return completion.choices[0].message
-    pass
 
 
 # GOOD #

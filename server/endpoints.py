@@ -52,6 +52,14 @@ PROVIDE_REVIEW = '/Provide_Review'
 GET_RESTAURANT_INFO = '/Get_Restaurant_Info'
 MAKE_RESERVATION = '/Make_Reservation'
 
+
+ADD_RESTAURANT = '/restaurant/register'
+RESTAURANT_EP = '/restaurant'
+RESTAURANT_ALL = '/restaurant/all'
+Menu_EP = '/menu'
+REVIEW_EP = '/review'
+HOUR_EP = '/hour'
+
 TYPE = 'Type'
 DATA = 'Data'
 TITLE = 'Title'
@@ -266,17 +274,16 @@ class MenuEP(Resource):
                 'item_price': item_price,
                 'item_category': item_category
             })
-            if menu_data['status'] is None:
+            if menu_data is None:
                 raise wz.ServiceUnavailable('We have a technical problem.')
             return {
-                'restaurant_id': menu_data['restaurant_id'],
-                'menuitem_id': menu_data['menuitem_id']
+                'Added_menu_to_restaurant': restaurant_id,
             }
         except ValueError as e:
             raise wz.NotAcceptable(f'{str(e)}')
 
 
-@api.route('/menu/<int:menuitem_id>')
+@api.route(f'{Menu_EP}/<int:menuitem_id>')
 class MenuItemEP(Resource):
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
@@ -306,7 +313,7 @@ class MenuItemEP(Resource):
             raise wz.NotFound(f'{str(e)}')
 
 
-@api.route('/review/<int:restaurant_id>')
+@api.route(f'{REVIEW_EP}/<int:restaurant_id>')
 class ReviewEP(Resource):
     """
     Handles clients writing reviews on restaurants
@@ -341,14 +348,14 @@ class ReviewEP(Resource):
                 text,
                 star
             )
-            if data['status'] is None:
+            if data is None:
                 raise wz.ServiceUnavailable('We have a technical problem.')
-            return {'review_id': data['review_id']}
+            return {'added_review_to_restaurant': restaurant_id}
         except ValueError as e:
             raise wz.NotAcceptable(f'{str(e)}')
 
 
-@api.route('/review/<int:review_id>')
+@api.route(f'{REVIEW_EP}/<int:review_id>')
 class ReviewEdit(Resource):
     """
     Handles clients writing reviews on restaurants
@@ -381,7 +388,7 @@ class ReviewEdit(Resource):
             raise wz.NotFound(f'{str(e)}')
 
 
-@api.route('/hours/<int:restaurant_id>')
+@api.route(f'{HOUR_EP}/<int:restaurant_id>')
 class RestaurantHoursEP(Resource):
     """
     get restaurant time
@@ -443,7 +450,7 @@ class RestaurantHoursEP(Resource):
             return {'restaurant_hours':
                     f'Time update for {restaurant_id}'}
         except ValueError as e:
-            raise wz.NotAcceptable(f'{str(e)}')
+            raise wz.NotFound(f'{str(e)}')
 
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')

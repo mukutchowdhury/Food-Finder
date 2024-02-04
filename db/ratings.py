@@ -24,47 +24,13 @@ REST_COLLECT = 'restaurants'
 ratings = {}
 
 
-def _get_test_review_id():
-    review_id = random.randint(0, BIG_NUM)
-    return review_id
-
-
-def _get_test_rest_id():
-    rest_id = random.randint(0, BIG_NUM)
-    return rest_id
-
-
-def _get_test_user_id():
-    user_id = random.randint(0, BIG_NUM)
-    return user_id
-
-
-def _get_test_text():
-    review = 'test review'
-    add = random.randint(0, BIG_NUM)
-    return review + str(add)
-
-
-def _get_test_star():
-    star = random.randint(1, 5)
-    return star
-
-
-def _get_test_rating():
+def get_test_rating():
     test_review = {}
-    test_review[REVIEW_ID] = _get_test_review_id()
-    test_review[RESTAURANT_ID] = 1
-    test_review[USER_ID] = _get_test_user_id()
-    test_review[TEXT] = _get_test_text()
-    test_review[STAR] = _get_test_star
+    test_review[USER_ID] = random.randint(0, BIG_NUM)
+    test_review[TEXT] = "HEllo TEST"
+    test_review[STAR] = 5
     return test_review
 
-
-# def _gen_id() -> str:
-#     _id = random.randint(0, BIG_NUM)
-#     _id = str(_id)
-#     _id = _id.rjust(ID_LEN, '0')
-#     return _id
 
 # GOOD
 
@@ -122,10 +88,7 @@ def add_restaurant_rating(review_id: int, restaurant_id: int, user_id: int,
     dbc.connect_db()
     _id = dbc.insert_one(RATING_COLLECT, rating)
 
-    return {
-        'status': _id is not None,
-        'review_id': review_id
-    }
+    return _id is not None
 
 
 def update_review_text(review_id: int, text: str):
