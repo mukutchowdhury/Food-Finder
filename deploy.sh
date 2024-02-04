@@ -1,10 +1,10 @@
 #!/bin/bash
 # This shell script deploys a new version to a server.
 
-PROJ_DIR=Food-Finder
-VENV=FoodFinder
-PA_DOMAIN="FoodFinder.pythonanywhere.com"
-PA_USER='FoodFinder'
+PROJ_DIR=demo-repo4
+VENV=Fall2023
+PA_DOMAIN="Fall2023.pythonanywhere.com"
+PA_USER='Fall2023'
 echo "Project dir = $PROJ_DIR"
 echo "PA domain = $PA_DOMAIN"
 echo "Virtual env = $VENV"
