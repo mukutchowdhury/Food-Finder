@@ -5,6 +5,7 @@ PROJ_DIR=FoodFinder
 VENV=FoodFinder
 PA_DOMAIN="FoodFinder.pythonanywhere.com"
 PA_USER='FoodFinder'
+DEMO_PA_PWD='Softpwd6680'
 echo "Project dir = $PROJ_DIR"
 echo "PA domain = $PA_DOMAIN"
 echo "Virtual env = $VENV"
