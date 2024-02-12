@@ -1,7 +1,7 @@
 #!/bin/bash
 # This shell script deploys a new version to a server.
 
-PROJ_DIR=Food-Finder
+PROJ_DIR=FoodFinder
 VENV=FoodFinder
 PA_DOMAIN="FoodFinder.pythonanywhere.com"
 PA_USER='FoodFinder'
