@@ -1,9 +1,21 @@
 # **FOOD FINDER**
 
 ---
+<<<<<<< HEAD
 ## ProgressAndGoals Link
 
 https://github.com/mukutchowdhury/Food-Finder/blob/master/ProgressAndGoals.md#tasks-completed
+=======
+## Front-End Link
+https://github.com/mukutchowdhury/Food-Finder-Front-End 
+
+
+## Progress & Goals
+
+[Our Progress and Goals](https://github.com/mukutchowdhury/Food-Finder/blob/master/ProgressAndGoals.md)
+
+---
+>>>>>>> 1e3c1048b7cd09d1c734e8fec509e9b768842bfd
 
 ## Project Description
 

@@ -18,4 +18,8 @@ echo "Going to reboot the webserver using $API_TOKEN"
 pa_reload_webapp.py $PA_DOMAIN
 
 touch reboot
+<<<<<<< HEAD
 echo "Finished rebuild."
+=======
+echo "Finished rebuild."
+>>>>>>> 1e3c1048b7cd09d1c734e8fec509e9b768842bfd

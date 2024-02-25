@@ -79,4 +79,8 @@ def test_get_test_address():
 
 def test_get_test_zipcode():
     zipcode = rest._get_test_zipcode()
+<<<<<<< HEAD
     assert isinstance(zipcode, int)
+=======
+    assert isinstance(zipcode, int)
+>>>>>>> 1e3c1048b7cd09d1c734e8fec509e9b768842bfd
