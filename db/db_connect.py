@@ -32,9 +32,9 @@ def connect_db():
             #                         + '@food-finder.ltqe7ym.mongodb.net/'
             #                         + f'?retryWrites=true&w=majority')
 
-            client = pm.MongoClient(f'mongodb+srv://Franco:Romani20'
+            client = pm.MongoClient('mongodb+srv://Franco:Romani20'
                                     + '@food-finder.ltqe7ym.mongodb.net/'
-                                    + f'?retryWrites=true&w=majority')
+                                    + '?retryWrites=true&w=majority')
 
             # PA recommends these settings:
             # + 'connectTimeoutMS=30000&'
