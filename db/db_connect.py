@@ -32,7 +32,7 @@ def connect_db():
             #                         + '@food-finder.ltqe7ym.mongodb.net/'
             #                         + f'?retryWrites=true&w=majority')
 
-            client = pm.MongoClient('mongodb+srv://Franco:Romani20'
+            client = pm.MongoClient(f'mongodb+srv://Franco:{password}'
                                     + '@food-finder.ltqe7ym.mongodb.net/'
                                     + '?retryWrites=true&w=majority')
 
