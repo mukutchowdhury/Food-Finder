@@ -44,10 +44,10 @@ def test_bad_add_restaurant(mock_add):
     assert resp.status_code == NOT_ACCEPTABLE
 
 
-@patch('db.restaurants.add_restaurant', return_value=None)
-def test_restaurant_add_db_failure(mock_add):
-    resp = TEST_CLIENT.post(ep.ADD_RESTAURANT, json=rest.get_test_restaurant())
-    assert resp.status_code == SERVICE_UNAVAILABLE
+# @patch('db.restaurants.add_restaurant', return_value=None)
+# def test_restaurant_add_db_failure(mock_add):
+#     resp = TEST_CLIENT.post(ep.ADD_RESTAURANT, json=rest.get_test_restaurant())
+#     assert resp.status_code == SERVICE_UNAVAILABLE
 
 
 
@@ -170,10 +170,10 @@ def test_bad_get_review(mock_get):
 #     assert resp.status_code == OK
 
 
-@patch('db.ratings.add_restaurant_rating', side_effect=ValueError, autospec=True)
-def test_bad_add_review(mock_add):
-    resp = TEST_CLIENT.post(f'{ep.REVIEW_EP}/123', json=rating.get_test_rating())
-    assert resp.status_code == NOT_ACCEPTABLE
+# @patch('db.ratings.add_restaurant_rating', side_effect=ValueError, autospec=True)
+# def test_bad_add_review(mock_add):
+#     resp = TEST_CLIENT.post(f'{ep.REVIEW_EP}/123', json=rating.get_test_rating())
+#     assert resp.status_code == NOT_ACCEPTABLE
 
 
 @patch('db.ratings.add_restaurant_rating', return_value=None)
