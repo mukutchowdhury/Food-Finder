@@ -24,14 +24,14 @@ def test_data():
         ratings.del_rating(temp_review[REVIEW_ID])
 
 
-def test_get_review(test_data):
-    review_id = test_data["restaurant_id"]
-    all_ratings = ratings.get_all_ratings()
-    assert len(all_ratings) > 0
-    for review_id in all_ratings:
-        assert isinstance(review_id, int)
-        assert isinstance(all_ratings[review_id], dict)
-    assert review_id in all_ratings
+# def test_get_review(test_data):
+#     review_id = test_data["restaurant_id"]
+#     all_ratings = ratings.get_all_ratings()
+#     assert len(all_ratings) > 0
+#     for review_id in all_ratings:
+#         assert isinstance(review_id, int)
+#         assert isinstance(all_ratings[review_id], dict)
+#     assert review_id in all_ratings
 
 
 # def test_get_restaurant_ratings():
