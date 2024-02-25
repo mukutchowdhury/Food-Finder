@@ -70,6 +70,16 @@ def get_restuarant(restaurant_id: int):
     raise ValueError(f'Get failure: {restaurant_id} not found.')
 
 
+def get_restaurants_by_zipcode(zipcode):
+    dbc.connect_db()
+    data = dbc.fetch_all_as_dict(RESTAURANT_ID, REST_COLLECT)
+    filteredData = {}
+    for restaurant in data:
+        if (data[restaurant]["zipcode"] == str(zipcode)):
+            filteredData[restaurant] = data[restaurant]
+    return filteredData
+
+
 def del_restaurant(restaurant_id: int):
     if exists(restaurant_id):
         return dbc.del_one(REST_COLLECT,
