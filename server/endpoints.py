@@ -237,9 +237,8 @@ class GetRestaurantsByZipcode(Resource):
         """
         Returns restaurants based on a given zip code
         """
-        # rest_data = restaurants.get_nearby_restaurants(zipcode)
-        # return {'data': 'Offline'}
-        pass
+        rest_data = restaurants.get_restaurants_by_zipcode(zipcode)
+        return rest_data
 
 
 @api.route('/menu/<int:restaurant_id>')
