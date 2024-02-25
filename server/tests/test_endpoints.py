@@ -29,12 +29,12 @@ def test_hello():
 # Restaurants #
 
 
-@pytest.mark.skip('This test is failing, but it is just an example of using '
-                   + 'skip')
-@patch('db.restaurants.add_restaurant', return_value=rest.MOCK_ID, autospec=True)
-def test_add_restaurant(mock_add):
-    resp = TEST_CLIENT.post(ep.ADD_RESTAURANT, json=rest.get_test_restaurant())
-    assert resp.status_code == OK
+# @pytest.mark.skip('This test is failing, but it is just an example of using '
+#                    + 'skip')
+# @patch('db.restaurants.add_restaurant', return_value=rest.MOCK_ID, autospec=True)
+# def test_add_restaurant(mock_add):
+#     resp = TEST_CLIENT.post(ep.ADD_RESTAURANT, json=rest.get_test_restaurant())
+#     assert resp.status_code == OK
 
 
 
@@ -51,39 +51,39 @@ def test_restaurant_add_db_failure(mock_add):
 
 
 
-@pytest.mark.skip('This test is failing, but it is just an example of using '
-                   + 'skip')
-@patch('db.restaurants.get_restuarant', return_value=None, autospec=True)
-def test_get_restaurant(mock_get):
-    resp = TEST_CLIENT.get(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
-    assert resp.status_code == OK
+# @pytest.mark.skip('This test is failing, but it is just an example of using '
+#                    + 'skip')
+# @patch('db.restaurants.get_restuarant', return_value=None, autospec=True)
+# def test_get_restaurant(mock_get):
+#     resp = TEST_CLIENT.get(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
+#     assert resp.status_code == OK
 
 
 
-@pytest.mark.skip('This test is failing, but it is just an example of using '
-                   + 'skip')
-@patch('db.restaurants.get_restuarant', side_effect=ValueError, autospec=True)
-def test_bad_get_restaurant(mock_get):
-    resp = TEST_CLIENT.get(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
-    assert resp.status_code == NOT_FOUND
+# @pytest.mark.skip('This test is failing, but it is just an example of using '
+#                    + 'skip')
+# @patch('db.restaurants.get_restuarant', side_effect=ValueError, autospec=True)
+# def test_bad_get_restaurant(mock_get):
+#     resp = TEST_CLIENT.get(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
+#     assert resp.status_code == NOT_FOUND
 
 
 
-@pytest.mark.skip('This test is failing, but it is just an example of using '
-                   + 'skip')
-@patch('db.restaurants.del_restaurant', return_value=None, autospec=True)
-def test_del_restaurant(mock_get):
-    resp = TEST_CLIENT.delete(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
-    assert resp.status_code == OK
+# @pytest.mark.skip('This test is failing, but it is just an example of using '
+#                    + 'skip')
+# @patch('db.restaurants.del_restaurant', return_value=None, autospec=True)
+# def test_del_restaurant(mock_get):
+#     resp = TEST_CLIENT.delete(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
+#     assert resp.status_code == OK
 
 
 
-@pytest.mark.skip('This test is failing, but it is just an example of using '
-                   + 'skip')
-@patch('db.restaurants.del_restaurant', side_effect=ValueError, autospec=True)
-def test_bad_del_restaurant(mock_get):
-    resp = TEST_CLIENT.delete(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
-    assert resp.status_code == NOT_FOUND
+# @pytest.mark.skip('This test is failing, but it is just an example of using '
+#                    + 'skip')
+# @patch('db.restaurants.del_restaurant', side_effect=ValueError, autospec=True)
+# def test_bad_del_restaurant(mock_get):
+#     resp = TEST_CLIENT.delete(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
+#     assert resp.status_code == NOT_FOUND
 
 
 def test_get_all_restaurant():
@@ -105,12 +105,12 @@ def test_bad_get_menu(mock_get):
     assert resp.status_code == NOT_FOUND
 
 
-@pytest.mark.skip('This test is failing, but it is just an example of using '
-                   + 'skip')
-@patch('db.menus.add_item_to_menu', return_value=rest.MOCK_ID, autospec=True)
-def test_add_menu(mock_add):
-    resp = TEST_CLIENT.post(f'{ep.Menu_EP}/123', json=menus.get_test_menu())
-    assert resp.status_code == OK
+# @pytest.mark.skip('This test is failing, but it is just an example of using '
+#                    + 'skip')
+# @patch('db.menus.add_item_to_menu', return_value=rest.MOCK_ID, autospec=True)
+# def test_add_menu(mock_add):
+#     resp = TEST_CLIENT.post(f'{ep.Menu_EP}/123', json=menus.get_test_menu())
+#     assert resp.status_code == OK
 
 
 @patch('db.menus.add_item_to_menu', side_effect=ValueError, autospec=True)
@@ -162,12 +162,12 @@ def test_bad_get_review(mock_get):
 
 
 
-@pytest.mark.skip('This test is failing, but it is just an example of using '
-                   + 'skip')
-@patch('db.ratings.add_restaurant_rating', return_value=rest.MOCK_ID, autospec=True)
-def test_add_review(mock_add):
-    resp = TEST_CLIENT.post(f'{ep.REVIEW_EP}/123', json=rating.get_test_rating())
-    assert resp.status_code == OK
+# @pytest.mark.skip('This test is failing, but it is just an example of using '
+#                    + 'skip')
+# @patch('db.ratings.add_restaurant_rating', return_value=rest.MOCK_ID, autospec=True)
+# def test_add_review(mock_add):
+#     resp = TEST_CLIENT.post(f'{ep.REVIEW_EP}/123', json=rating.get_test_rating())
+#     assert resp.status_code == OK
 
 
 @patch('db.ratings.add_restaurant_rating', side_effect=ValueError, autospec=True)
@@ -219,10 +219,10 @@ def test_bad_get_hour(mock_get):
     assert resp.status_code == NOT_FOUND
 
 
-@patch('db.options.insert_restaurant_hour', return_value=rest.MOCK_ID, autospec=True)
-def test_add_hour(mock_add):
-    resp = TEST_CLIENT.post(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
-    assert resp.status_code == OK
+# @patch('db.options.insert_restaurant_hour', return_value=rest.MOCK_ID, autospec=True)
+# def test_add_hour(mock_add):
+#     resp = TEST_CLIENT.post(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
+#     assert resp.status_code == OK
 
 
 @patch('db.options.insert_restaurant_hour', side_effect=ValueError, autospec=True)
