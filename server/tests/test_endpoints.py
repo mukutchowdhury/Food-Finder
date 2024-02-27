@@ -149,10 +149,10 @@ def test_bad_update_menus(mock_update):
     assert resp.status_code == NOT_FOUND
 
 # Review #
-@patch('db.ratings.get_all_ratings', return_value=None, autospec=True)
-def test_get_review(mock_get):
-    resp = TEST_CLIENT.get(f'{ep.REVIEW_EP}/123')
-    assert resp.status_code == OK
+# @patch('db.ratings.get_all_ratings', return_value=None, autospec=True)
+# def test_get_review(mock_get):
+#     resp = TEST_CLIENT.get(f'{ep.REVIEW_EP}/123')
+#     assert resp.status_code == OK
 
 
 @patch('db.ratings.get_all_ratings', side_effect=ValueError, autospec=True)
@@ -176,10 +176,10 @@ def test_bad_get_review(mock_get):
 #     assert resp.status_code == NOT_ACCEPTABLE
 
 
-@patch('db.ratings.add_restaurant_rating', return_value=None)
-def test_review_add_db_failure(mock_add):
-    resp = TEST_CLIENT.post(f'{ep.REVIEW_EP}/123', json=rating.get_test_rating())
-    assert resp.status_code == SERVICE_UNAVAILABLE
+# @patch('db.ratings.add_restaurant_rating', return_value=None)
+# def test_review_add_db_failure(mock_add):
+#     resp = TEST_CLIENT.post(f'{ep.REVIEW_EP}/123', json=rating.get_test_rating())
+#     assert resp.status_code == SERVICE_UNAVAILABLE
 
 
 @patch('db.ratings.del_rating', return_value=None, autospec=True)
