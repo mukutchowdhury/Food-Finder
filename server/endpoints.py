@@ -125,7 +125,8 @@ restaurant_data = api.model('restaurant_ep_post', {
     "rest_name": fields.String,
     "rest_address": fields.String,
     "rest_zipcode": fields.String,
-    "rest_owner_id": fields.Integer
+    "rest_owner_id": fields.Integer,
+    "rest_image": fields.String,
 })
 
 menuitem_price = api.model('menu_price', {
@@ -133,6 +134,7 @@ menuitem_price = api.model('menu_price', {
 })
 
 review_data = api.model('ratings', {
+    'review_id': fields.Integer,
     'user_id': fields.Integer,
     'text': fields.String,
     'star': fields.Integer
@@ -200,12 +202,14 @@ class AddRestaurant(Resource):
             rest_address = data.get("rest_address")
             rest_location_zip = data.get("rest_zipcode")
             rest_owner_id = data.get("rest_owner_id")
+            rest_image = data.get("rest_image")
             rest_id = restaurants.add_restaurant(
                 rest_id,
                 rest_name,
                 rest_address,
                 rest_location_zip,
-                rest_owner_id
+                rest_owner_id,
+                rest_image
             )
             if rest_id['status'] is None:
                 raise wz.ServiceUnavailable('We have a technical problem.')
@@ -327,7 +331,9 @@ class ReviewEP(Resource):
         """
         try:
             data = ratings.get_all_ratings(restaurant_id)
-            return data
+            total_star = sum(int(singleData['star']) for singleData in data) / len(data)
+
+            return { 'review': data, 'total': total_star }
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
 
@@ -340,10 +346,12 @@ class ReviewEP(Resource):
         """
         try:
             data = request.json
+            review_id = data['review_id']
             user_id = data['user_id']
             text = data['text']
             star = data['star']
             data = ratings.add_restaurant_rating(
+                review_id,
                 restaurant_id,
                 user_id,
                 text,
