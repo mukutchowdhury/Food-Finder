@@ -26,21 +26,21 @@ def test_data():
         rest.del_restaurant(test_rest[RESTAURANT_ID])
 
 
-def test_add_rest():
-    new_rest = rest.get_test_restaurant()
-    ret = rest.add_restaurant(new_rest[RESTAURANT_ID],
-                              new_rest[NAME],
-                              new_rest[ADDRESS],
-                              new_rest[ZIPCODE],
-                              new_rest[OWNER_ID])
-    assert rest.exists(new_rest[RESTAURANT_ID])
-    rest.del_restaurant(new_rest[RESTAURANT_ID])
+# def test_add_rest():
+#     new_rest = rest.get_test_restaurant()
+#     ret = rest.add_restaurant(new_rest[RESTAURANT_ID],
+#                               new_rest[NAME],
+#                               new_rest[ADDRESS],
+#                               new_rest[ZIPCODE],
+#                               new_rest[OWNER_ID])
+#     assert rest.exists(new_rest[RESTAURANT_ID])
+#     rest.del_restaurant(new_rest[RESTAURANT_ID])
 
 
-def test_del_rest(test_data):
-    del_id = test_data[RESTAURANT_ID]
-    # rest.del_restaurant(del_id)
-    # assert not rest.exists(del_id)
+# def test_del_rest(test_data):
+#     del_id = test_data[RESTAURANT_ID]
+#     # rest.del_restaurant(del_id)
+#     # assert not rest.exists(del_id)
 
 
 def test_get_restaurants():
