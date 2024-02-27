@@ -22,6 +22,7 @@ RESTAURANT_ID = 'restaurant_id'
 REST_NAME = 'rest_name'
 REST_ADDRESS = 'rest_address'
 REST_ZIPCODE = 'rest_zipcode'
+REST_IMAGE = 'rest_image'
 
 REST_COLLECT = 'restaurants'
 
@@ -88,14 +89,15 @@ def del_restaurant(restaurant_id: int):
 
 
 def add_restaurant(restaurant_id: int, store_name: str,  store_address: str,
-                   store_zipcode: str, owner_id: int) -> dict:
+                   store_zipcode: str, owner_id: int, rest_image: str) -> dict:
     if exists(restaurant_id):
         raise ValueError(f'Duplicate restaurant id: {restaurant_id=}')
     if not (restaurant_id
             and store_name
             and store_address
             and store_zipcode
-            and owner_id):
+            and owner_id
+            and rest_image):
         raise ValueError("All attributes must be filled out")
 
     restaurant = {
@@ -103,7 +105,8 @@ def add_restaurant(restaurant_id: int, store_name: str,  store_address: str,
         NAME: store_name,
         ADDRESS: store_address,
         ZIPCODE: store_zipcode,
-        OWNER_ID: owner_id
+        OWNER_ID: owner_id,
+        REST_IMAGE: rest_image
     }
 
     dbc.connect_db()
