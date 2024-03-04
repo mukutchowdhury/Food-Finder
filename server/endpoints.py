@@ -120,13 +120,16 @@ registration_data = api.model('Registration', {
     "user_confirm_password": fields.String
 })
 
+# UPDATE SCHEMA #
 restaurant_data = api.model('restaurant_ep_post', {
-    "rest_id": fields.Integer,
-    "rest_name": fields.String,
-    "rest_address": fields.String,
-    "rest_zipcode": fields.String,
-    "rest_owner_id": fields.Integer,
-    "rest_image": fields.String,
+    "name": fields.String,
+    "address": fields.String,
+    "zipcode": fields.String,
+    "owner_id": fields.Integer,
+    "image": fields.String,
+    "phone": fields.String,
+    "cuisine": fields.List(fields.String),
+    "keywords": fields.List(fields.String)
 })
 
 menuitem_price = api.model('menu_price', {
@@ -195,24 +198,12 @@ class AddRestaurant(Resource):
         """
         Create a restaurant entry
         """
+        data = request.get_json()
         try:
-            data = request.get_json()
-            rest_id = data.get("rest_id")
-            rest_name = data.get("rest_name")
-            rest_address = data.get("rest_address")
-            rest_location_zip = data.get("rest_zipcode")
-            rest_owner_id = data.get("rest_owner_id")
-            rest_image = data.get("rest_image")
-            rest_id = restaurants.add_restaurant(
-                rest_id,
-                rest_name,
-                rest_address,
-                rest_location_zip,
-                rest_owner_id,
-                rest_image
-            )
+            rest_id = restaurants.add_restaurant(data)
             if rest_id['status'] is None:
                 raise wz.ServiceUnavailable('We have a technical problem.')
+            ratings.add_restaurant_rating(ratings.gen_review_id(), rest_id['restaurant_id'], 1, "new_entry", 5)
             return {'restaurant_id': rest_id['restaurant_id']}
         except ValueError as e:
             raise wz.NotAcceptable(f'{str(e)}')
@@ -330,9 +321,9 @@ class ReviewEP(Resource):
         Returns all reviews of a restaurant
         """
         try:
-            data = ratings.get_all_ratings(restaurant_id)
+            data = ratings.get_all_ratings(restaurant_id)[1:]
             total_star = sum(int(singleData['star'])
-                             for singleData in data) / len(data)
+                             for singleData in data[1:]) / len(data)
 
             return {'review': data, 'total': total_star}
         except ValueError as e:
