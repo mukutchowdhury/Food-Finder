@@ -32,14 +32,12 @@ def get_test_rating():
     return test_review
 
 
-
 def gen_review_id():
     review_id = random.randint(0, BIG_NUM)
     return review_id
 
+
 # GOOD
-
-
 def review_exists(review_id: int) -> bool:
     dbc.connect_db()
     return dbc.fetch_one(RATING_COLLECT, {REVIEW_ID: review_id})
