@@ -204,8 +204,8 @@ class AddRestaurant(Resource):
             if rest_id['status'] is None:
                 raise wz.ServiceUnavailable('We have a technical problem.')
             ratings.add_restaurant_rating(ratings.gen_review_id(),
-                                          rest_id['restaurant_id'], 1
-                                          , "new_entry", 5)
+                                          rest_id['restaurant_id'],
+                                          1, "new_entry", 5)
             return {'restaurant_id': rest_id['restaurant_id']}
         except ValueError as e:
             raise wz.NotAcceptable(f'{str(e)}')
