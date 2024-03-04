@@ -12,17 +12,16 @@ import db.db_connect as dbc
 
 BIG_NUM = 1_000_000_000
 
-ADDRESS = 'address'
-ZIPCODE = 'zipcode'
-NAME = 'name'
-
-OWNER_ID = 'rest_owner_id'
+OWNER_ID = 'owner_id'
 RESTAURANT_ID = 'restaurant_id'
 
-REST_NAME = 'rest_name'
-REST_ADDRESS = 'rest_address'
-REST_ZIPCODE = 'rest_zipcode'
-REST_IMAGE = 'rest_image'
+NAME = 'name'
+ADDRESS = 'address'
+ZIPCODE = 'zipcode'
+IMAGE = 'image'
+PHONE = 'phone'
+CUISINE = 'cuisine'
+KEYWORDS = 'keywords'
 
 REST_COLLECT = 'restaurants'
 
@@ -88,25 +87,18 @@ def del_restaurant(restaurant_id: int):
     raise ValueError(f'Delete failure: {restaurant_id} not found.')
 
 
-def add_restaurant(restaurant_id: int, store_name: str,  store_address: str,
-                   store_zipcode: str, owner_id: int, rest_image: str) -> dict:
-    if exists(restaurant_id):
-        raise ValueError(f'Duplicate restaurant id: {restaurant_id=}')
-    if not (restaurant_id
-            and store_name
-            and store_address
-            and store_zipcode
-            and owner_id
-            and rest_image):
-        raise ValueError("All attributes must be filled out")
-
+def add_restaurant(data: dict) -> dict:
+    restaurant_id = _get_test_rest_id()
     restaurant = {
         RESTAURANT_ID: restaurant_id,
-        NAME: store_name,
-        ADDRESS: store_address,
-        ZIPCODE: store_zipcode,
-        OWNER_ID: owner_id,
-        REST_IMAGE: rest_image
+        NAME: data.get('name'),
+        ADDRESS: data.get('address'),
+        ZIPCODE: data.get('zipcode'),
+        OWNER_ID: data.get('owner_id'),
+        IMAGE: data.get('image'),
+        PHONE: data.get('phone'),
+        CUISINE: data.get('cuisine'),
+        KEYWORDS: data.get('keywords')
     }
 
     dbc.connect_db()
