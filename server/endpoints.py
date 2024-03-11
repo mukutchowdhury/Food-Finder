@@ -15,7 +15,7 @@ import db.menus as menus
 import db.ratings as ratings
 # import db.reservations as reservations
 import db.restaurants as restaurants
-# import db.users as users
+import db.users as users
 import db.options as options
 
 app = Flask(__name__)
@@ -153,6 +153,66 @@ restaurant_hour_option = api.model('hour_option', {
     'close_hour': fields.Integer,
     'close_minute': fields.Integer
 })
+
+user_signup = api.model('user_signup', {
+    'email': fields.String,
+    'password': fields.String,
+    'fname': fields.String,
+    'lname': fields.String
+})
+
+user_login = api.model('user_login', {
+    'email': fields.String,
+    'password': fields.String
+})
+
+
+# USER AUTHENTICATION #
+
+@api.route('/user/signup')
+class UserSignupEP(Resource):
+    """
+    Handles Signup
+    """
+    @api.expect(user_signup)
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
+    def post(self):
+        """
+        Returns Success Status
+        """
+        data = request.json
+        email = data.get('email')
+        password = data.get('password')
+        fname = data.get('fname')
+        lname = data.get('lname')
+        try:
+            users.add_user(email, password, fname, lname)
+            return {'status': 'ok'}
+        except ValueError as e:
+            return {'status': str(e)}
+
+
+@api.route('/user/login')
+class UserLoginEP(Resource):
+    """
+    Handles Login Authentication
+    """
+    @api.expect(user_login)
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
+    def post(self):
+        """
+        Returns Success Status
+        """
+        data = request.json
+        email = data.get('email')
+        password = data.get('password')
+        try:
+            result = users.get_user(email, password)
+            return {'status': 'ok', 'userid': result}
+        except ValueError as e:
+            return {'status': str(e)}
 
 
 # CLIENT ENDPOINTS #
