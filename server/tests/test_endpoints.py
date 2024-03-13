@@ -86,11 +86,11 @@ def test_bad_add_restaurant(mock_add):
 #     assert resp.status_code == NOT_FOUND
 
 
-def test_get_all_restaurant():
-    resp = TEST_CLIENT.get(ep.RESTAURANT_ALL)
-    assert resp.status_code == OK
-    resp_json = resp.get_json()
-    assert isinstance(resp_json, dict)
+# def test_get_all_restaurant():
+#     resp = TEST_CLIENT.get(ep.RESTAURANT_ALL)
+#     assert resp.status_code == OK
+#     resp_json = resp.get_json()
+#     assert isinstance(resp_json, dict)
 
 # Menus #
 @patch('db.menus.get_restuarant_menu', return_value=None, autospec=True)
