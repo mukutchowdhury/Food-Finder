@@ -215,6 +215,22 @@ class UserLoginEP(Resource):
             return {'status': str(e)}
 
 
+@api.route('/user/<int:id>')
+class UserDataEP(Resource):
+    """
+    Handles retrieving user data
+    """
+    def get(self, id: int):
+        """
+        Gets user data.
+        """
+        result = users.get_userdata(id)
+        return {
+            "fname": result['fname'],
+            "lname": result['lname']
+        }
+
+
 # CLIENT ENDPOINTS #
 @api.route('/restaurant/<int:restaurant_id>')
 class RestaurantEP(Resource):
