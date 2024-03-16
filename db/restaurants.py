@@ -22,6 +22,7 @@ IMAGE = 'image'
 PHONE = 'phone'
 CUISINE = 'cuisine'
 KEYWORDS = 'keywords'
+CATEGORY = 'category'
 
 REST_COLLECT = 'restaurants'
 
@@ -98,7 +99,8 @@ def add_restaurant(data: dict) -> dict:
         IMAGE: data.get('image'),
         PHONE: data.get('phone'),
         CUISINE: data.get('cuisine'),
-        KEYWORDS: data.get('keywords')
+        KEYWORDS: data.get('keywords'),
+        CATEGORY: data.get('category')
     }
 
     dbc.connect_db()
