@@ -17,6 +17,7 @@ import db.ratings as ratings
 import db.restaurants as restaurants
 import db.users as users
 import db.options as options
+import db.categories as categories
 
 app = Flask(__name__)
 CORS(app)
@@ -129,7 +130,8 @@ restaurant_data = api.model('restaurant_ep_post', {
     "image": fields.String,
     "phone": fields.String,
     "cuisine": fields.List(fields.String),
-    "keywords": fields.List(fields.String)
+    "keywords": fields.List(fields.String),
+    "category": fields.List(fields.String)
 })
 
 menuitem_price = api.model('menu_price', {
@@ -164,6 +166,11 @@ user_signup = api.model('user_signup', {
 user_login = api.model('user_login', {
     'email': fields.String,
     'password': fields.String
+})
+
+category = api.model('category', {
+    'name': fields.String,
+    'description': fields.String
 })
 
 
@@ -545,4 +552,32 @@ class RestaurantHoursEP(Resource):
             raise wz.NotFound(f'{str(e)}')
 
 
-# Online Orders
+@api.route('/category')
+class CategoryEP(Resource):
+    """
+    Handles all actions related category
+    """
+    def get(self):
+        """
+        Returns all categories
+        """
+        result = categories.getCategories()
+        return result
+
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    @api.expect(category)
+    def post(self):
+        """
+        Creates a new category entry
+        """
+        try:
+            data = request.json
+            name = data.get('name')
+            description = data.get('description')
+            result = categories.addCategory(name, description)
+            if result is None:
+                raise wz.ServiceUnavailable('We have a technical problem.')
+            return {'Created': name}
+        except ValueError as e:
+            raise wz.NotAcceptable(f'{str(e)}')
