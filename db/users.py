@@ -25,7 +25,8 @@ def _gen_user_id():
     return user_id
 
 
-def add_user(email: str, password: str, fname: str, lname: str, pimage: str = ""):
+def add_user(email: str, password: str, fname: str,
+             lname: str, pimage: str = ""):
     if (exists(email)):
         raise ValueError('1B')
     byte_password = password.encode('utf-8')
