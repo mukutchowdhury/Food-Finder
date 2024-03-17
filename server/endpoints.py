@@ -235,6 +235,7 @@ class UserDataEP(Resource):
         """
         result = users.get_userdata(id)
         return {
+            "email": result["email"],
             "fname": result['fname'],
             "lname": result['lname'],
             "pimage": result['pimage']
@@ -584,3 +585,21 @@ class CategoryEP(Resource):
             return {'Created': name}
         except ValueError as e:
             raise wz.NotAcceptable(f'{str(e)}')
+
+
+@api.route('/category/<string:name>')
+class CategoryDeleteEP(Resource):
+    """
+    Handles deletion of category
+    """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    def delete(self, name):
+        """
+        deletes a category
+        """
+        try:
+            categories.delete_category(name)
+            return {'Deleted': name}
+        except ValueError as e:
+            raise wz.NotFound(f'{str(e)}')
