@@ -22,3 +22,9 @@ def getCategories():
 def exists(name: str) -> bool:
     dbc.connect_db()
     return dbc.fetch_one(CATEGORY_COLLECTION, {NAME: name})
+
+
+def delete_category(name: str):
+    if exists(name):
+        return dbc.del_one(CATEGORY_COLLECTION, {NAME: name})
+    raise ValueError(f'Delete failure: {name} not found.')
