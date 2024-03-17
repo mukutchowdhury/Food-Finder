@@ -13,6 +13,7 @@ USERS_COLLECT = 'users'
 FNAME = 'fname'
 LNAME = 'lname'
 PIMAGE = 'pimage'
+PRIVILEGE = 'privilege'
 
 
 def exists(email: str) -> bool:
@@ -26,14 +27,14 @@ def _gen_user_id():
 
 
 def add_user(email: str, password: str, fname: str,
-             lname: str, pimage: str = ""):
+             lname: str, pimage: str = "", privilege: int = 0):
     if (exists(email)):
         raise ValueError('1B')
     byte_password = password.encode('utf-8')
     hashed_password = bcrypt.hashpw(byte_password, bcrypt.gensalt())
     user_id = _gen_user_id()
     USER = {USER_ID: user_id, EMAIL: email, PASSWORD: hashed_password,
-            FNAME: fname, LNAME: lname, PIMAGE: pimage}
+            FNAME: fname, LNAME: lname, PIMAGE: pimage, PRIVILEGE: privilege}
     dbc.connect_db()
     _id = dbc.insert_one(USERS_COLLECT, USER)
     return _id is not None

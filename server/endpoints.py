@@ -161,7 +161,8 @@ user_signup = api.model('user_signup', {
     'password': fields.String,
     'fname': fields.String,
     'lname': fields.String,
-    'pimage': fields.String
+    'pimage': fields.String,
+    'privilege': fields.Integer
 })
 
 user_login = api.model('user_login', {
@@ -195,8 +196,9 @@ class UserSignupEP(Resource):
         fname = data.get('fname')
         lname = data.get('lname')
         pimage = data.get('pimage')
+        privilege = data.get('privilege')
         try:
-            users.add_user(email, password, fname, lname, pimage)
+            users.add_user(email, password, fname, lname, pimage, privilege)
             return {'status': 'ok'}
         except ValueError as e:
             return {'status': str(e)}
@@ -238,7 +240,8 @@ class UserDataEP(Resource):
             "email": result["email"],
             "fname": result['fname'],
             "lname": result['lname'],
-            "pimage": result['pimage']
+            "pimage": result['pimage'],
+            "privilege": result['privilege']
         }
 
 
