@@ -9,6 +9,7 @@ REST_DB = 'restaurantDB'
 client = None
 
 MONGO_ID = '_id'
+PASSWORD = 'password'
 
 
 def connect_db():
@@ -67,15 +68,16 @@ def fetch_one(collection, filt, db=REST_DB):
         return doc
 
 
-# def fetch_one_as_dict(collection, filt, db=REST_DB):
-#     ret = {}
-#     doc = client[db][collection].find_one(filt)
-#     del doc[MONGO_ID]
-#     if doc:
-#         for key in doc:
-#             print(doc[key])
-#             ret[key] = doc[key]
-#     return ret
+def fetch_one_as_dict(collection, filt, db=REST_DB):
+    ret = {}
+    doc = client[db][collection].find_one(filt)
+    del doc[MONGO_ID]
+    del doc[PASSWORD]
+    if doc:
+        for key in doc:
+            print(doc[key])
+            ret[key] = doc[key]
+    return ret
 
 
 def fetch_all_by_key(collection, filt, db=REST_DB):
