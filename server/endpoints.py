@@ -195,8 +195,12 @@ class UserSignupEP(Resource):
         password = data.get('password')
         fname = data.get('fname')
         lname = data.get('lname')
+
         pimage = data.get('pimage')
+        pimage = "" if pimage is None else pimage
+
         privilege = data.get('privilege')
+        privilege = 0 if privilege is None else privilege
         try:
             users.add_user(email, password, fname, lname, pimage, privilege)
             return {'status': 'ok'}
@@ -236,13 +240,7 @@ class UserDataEP(Resource):
         Gets user data.
         """
         result = users.get_userdata(id)
-        return {
-            "email": result["email"],
-            "fname": result['fname'],
-            "lname": result['lname'],
-            "pimage": result['pimage'],
-            "privilege": result['privilege']
-        }
+        return result
 
 
 # CLIENT ENDPOINTS #
