@@ -53,5 +53,5 @@ def get_user(email: str, password: str):
 
 def get_userdata(id: int):
     dbc.connect_db()
-    result = dbc.fetch_one(USERS_COLLECT, {USER_ID: id})
+    result = dbc.fetch_one_as_dict(USERS_COLLECT, {USER_ID: id})
     return result
