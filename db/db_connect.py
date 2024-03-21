@@ -75,7 +75,6 @@ def fetch_one_as_dict(collection, filt, db=REST_DB):
     del doc[PASSWORD]
     if doc:
         for key in doc:
-            print(doc[key])
             ret[key] = doc[key]
     return ret
 
