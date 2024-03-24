@@ -1,26 +1,74 @@
-# import db.users as usrs
+import pytest
+
+import db.users as users
+
+test_obj = {
+    users.EMAIL: 'test@test.com',
+    users.PASSWORD: 'password',
+    users.FNAME: 'test',
+    users.LNAME: 'test',
+    users.PIMAGE: '',
+    users.PRIVILEGE: 0
+}
 
 
-# def test_get_users():
-#     users = usrs.get_users()
-#     assert isinstance(users, dict)
-#     assert len(users) > 0  
-#     for key in users:
-#         assert isinstance(key, str)
-#         assert len(key) >= usrs.MIN_USER_NAME_LEN
-#         user = users[key]
-#         assert isinstance(user, dict)
-#         assert usrs.EMAIL in user
-#         assert usrs.PASSWORD in user
-#         assert isinstance(user[usrs.EMAIL], str)
-#         assert isinstance(user[usrs.PASSWORD], bytes)
-#         assert len(user[usrs.EMAIL]) >= usrs.MIN_EMAIL_LEN
-#         # Password is hashed, so we can't check for length here
+@pytest.fixture(scope='function')
+def temp_user():
+    user = users.add_user(test_obj[users.EMAIL], test_obj[users.PASSWORD],
+                          test_obj[users.FNAME], test_obj[users.LNAME],
+                          test_obj[users.PIMAGE], test_obj[users.PRIVILEGE])  
+      
+    user_id = users.get_user(test_obj[users.EMAIL], test_obj[users.PASSWORD])
+
+    yield user_id
+
+    if users._id_exists(user_id):
+        users.delete_user(user_id)
 
 
-# ACCOUNT_EMAIL = "Root@root.com"
-# ACCOUNT_PASSWORD = "rooted_admin"
-# def test_add_users():
-#     usrs.add_user(ACCOUNT_EMAIL, ACCOUNT_PASSWORD)
-#     new_user = f'User_{len(usrs.get_users())}'
-#     assert new_user in usrs.get_users()
+def test_gen_user_id():
+    _id = users._gen_user_id()
+    assert isinstance(_id, int)
+
+
+def test_get_user(temp_user):
+    user = users.get_user(test_obj[users.EMAIL], test_obj[users.PASSWORD])
+    assert isinstance(user, int)
+    assert temp_user == user
+
+
+def test_get_userdata(temp_user):
+    id = temp_user
+    user_data = users.get_userdata(id)
+    assert isinstance(user_data, dict)
+    assert users._id_exists(id)
+
+
+def test_add_user():
+    ret = users.add_user(test_obj[users.EMAIL], test_obj[users.PASSWORD],
+                          test_obj[users.FNAME], test_obj[users.LNAME],
+                          test_obj[users.PIMAGE], test_obj[users.PRIVILEGE])  
+    id = users.get_user(test_obj[users.EMAIL], test_obj[users.PASSWORD])
+    assert isinstance(id, int)
+    assert users._email_exists(test_obj[users.EMAIL])
+    assert isinstance(ret, bool)
+    users.delete_user(id)
+
+
+def test_add_user_dup_email(temp_user):
+    with pytest.raises(ValueError):
+        ret = users.add_user(test_obj[users.EMAIL], test_obj[users.PASSWORD],
+                          test_obj[users.FNAME], test_obj[users.LNAME],
+                          test_obj[users.PIMAGE], test_obj[users.PRIVILEGE]) 
+
+
+def test_del_user(temp_user):
+    user_id = temp_user
+    users.delete_user(user_id)
+    assert not users._id_exists(user_id)
+
+
+def test_del_user_not_there():
+    id = users._gen_user_id()
+    with pytest.raises(ValueError):
+        users.delete_user(id)

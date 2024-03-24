@@ -16,9 +16,14 @@ PIMAGE = 'pimage'
 PRIVILEGE = 'privilege'
 
 
-def exists(email: str) -> bool:
+def _email_exists(email: str) -> bool:
     dbc.connect_db()
     return dbc.fetch_one(USERS_COLLECT, {EMAIL: email})
+
+
+def _id_exists(id: str) -> bool:
+    dbc.connect_db()
+    return dbc.fetch_one(USERS_COLLECT, {USER_ID: id})
 
 
 def _gen_user_id():
@@ -28,7 +33,7 @@ def _gen_user_id():
 
 def add_user(email: str, password: str, fname: str,
              lname: str, pimage: str = "", privilege: int = 0):
-    if (exists(email)):
+    if (_email_exists(email)):
         raise ValueError('1B')
     byte_password = password.encode('utf-8')
     hashed_password = bcrypt.hashpw(byte_password, bcrypt.gensalt())
@@ -41,7 +46,7 @@ def add_user(email: str, password: str, fname: str,
 
 
 def get_user(email: str, password: str):
-    if (exists(email)):
+    if (_email_exists(email)):
         result = dbc.fetch_one(USERS_COLLECT, {EMAIL: email})
         byte_password = password.encode('utf-8')
         if not bcrypt.checkpw(byte_password, result[PASSWORD]):
@@ -53,5 +58,11 @@ def get_user(email: str, password: str):
 
 def get_userdata(id: int):
     dbc.connect_db()
-    result = dbc.fetch_one(USERS_COLLECT, {USER_ID: id})
+    result = dbc.fetch_one_as_dict(USERS_COLLECT, {USER_ID: id})
     return result
+
+
+def delete_user(id: int):
+    if (_id_exists(id)):
+        return dbc.del_one(USERS_COLLECT, {USER_ID: id})
+    raise ValueError('1D')
