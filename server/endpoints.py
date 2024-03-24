@@ -8,16 +8,16 @@ from http import HTTPStatus
 # import bcrypt
 import werkzeug.exceptions as wz
 from flask import Flask, request
-from flask_restx import Api, Resource, fields
 from flask_cors import CORS
+from flask_restx import Api, Resource, fields
 
+import db.categories as categories
 import db.menus as menus
+import db.options as options
 import db.ratings as ratings
 # import db.reservations as reservations
 import db.restaurants as restaurants
 import db.users as users
-import db.options as options
-import db.categories as categories
 
 app = Flask(__name__)
 CORS(app)
@@ -195,8 +195,12 @@ class UserSignupEP(Resource):
         password = data.get('password')
         fname = data.get('fname')
         lname = data.get('lname')
+
         pimage = data.get('pimage')
+        pimage = "" if pimage is None else pimage
+
         privilege = data.get('privilege')
+        privilege = 0 if privilege is None else privilege
         try:
             users.add_user(email, password, fname, lname, pimage, privilege)
             return {'status': 'ok'}
@@ -236,13 +240,7 @@ class UserDataEP(Resource):
         Gets user data.
         """
         result = users.get_userdata(id)
-        return {
-            "email": result["email"],
-            "fname": result['fname'],
-            "lname": result['lname'],
-            "pimage": result['pimage'],
-            "privilege": result['privilege']
-        }
+        return result
 
 
 # CLIENT ENDPOINTS #
@@ -414,8 +412,10 @@ class ReviewEP(Resource):
         """
         try:
             data = ratings.get_all_ratings(restaurant_id)[1:]
-            total_star = sum(int(singleData['star'])
-                             for singleData in data[1:]) / len(data)
+            total_star = 4.5
+            if (len(data) != 0):
+                total_star = sum(int(singleData['star'])
+                                 for singleData in data[1:]) / len(data)
 
             return {'review': data, 'total': total_star}
         except ValueError as e:
