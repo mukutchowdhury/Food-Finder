@@ -3,6 +3,10 @@ import bcrypt
 import random
 
 # 1E => Account Exists
+# 1C => Password Do Not Match
+# 1A => Get Email Not Found
+# 1D => Delete Id Not Found
+# 1B => Add Email Exists
 
 BIG_NUM = 1_000_000_000
 
