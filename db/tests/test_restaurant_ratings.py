@@ -1,27 +1,27 @@
-import pytest
+# import pytest
 
-import db.ratings as ratings
+# import db.ratings as ratings
 
-from db.ratings import (
-    REVIEW_ID,
-    RESTAURANT_ID,
-    USER_ID,
-    TEXT,
-    STAR)
+# from db.ratings import (
+#     REVIEW_ID,
+#     RESTAURANT_ID,
+#     USER_ID,
+#     TEXT,
+#     STAR)
 
-@pytest.fixture(scope='function')
-def test_data():
-    temp_review = ratings._get_test_rating()
-    ret = ratings.add_restaurant_rating(
-        temp_review[REVIEW_ID],
-        temp_review[RESTAURANT_ID],
-        temp_review[USER_ID],
-        temp_review[TEXT],
-        temp_review[STAR])
-    yield temp_review
+# @pytest.fixture(scope='function')
+# def test_data():
+#     temp_review = ratings._get_test_rating()
+#     ret = ratings.add_restaurant_rating(
+#         temp_review[REVIEW_ID],
+#         temp_review[RESTAURANT_ID],
+#         temp_review[USER_ID],
+#         temp_review[TEXT],
+#         temp_review[STAR])
+#     yield temp_review
 
-    if ratings.exists(temp_review[REVIEW_ID]):
-        ratings.del_rating(temp_review[REVIEW_ID])
+#     if ratings.exists(temp_review[REVIEW_ID]):
+#         ratings.del_rating(temp_review[REVIEW_ID])
 
 
 # def test_get_review(test_data):
