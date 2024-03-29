@@ -602,7 +602,7 @@ class CategoryDeleteEP(Resource):
         deletes a category
         """
         try:
-            categories.delete_category(name)
+            categories.deleteCategory(name)
             return {'Deleted': name}
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
