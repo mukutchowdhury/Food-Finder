@@ -1,20 +1,10 @@
-"""
-restaurants.py: the interface to our restaurant data.
-"""
-
 import random
-
 import db.db_connect as dbc
-
-# from openai import OpenAI
-# client = OpenAI()
-
 
 BIG_NUM = 1_000_000_000
 
 OWNER_ID = 'owner_id'
 RESTAURANT_ID = 'restaurant_id'
-
 NAME = 'name'
 ADDRESS = 'address'
 ZIPCODE = 'zipcode'
@@ -23,12 +13,7 @@ PHONE = 'phone'
 CUISINE = 'cuisine'
 KEYWORDS = 'keywords'
 CATEGORY = 'category'
-
 REST_COLLECT = 'restaurants'
-
-# Make a list of all restaruant for all users; for now,
-# one restaurant per user
-restaurants = {}
 
 
 def _get_test_address():
@@ -111,7 +96,7 @@ def add_restaurant(data: dict) -> dict:
     }
 
 
-def get_restaurants():
+def get_all_restaurants():
     dbc.connect_db()
     return dbc.fetch_all_as_dict(RESTAURANT_ID, REST_COLLECT)
 
