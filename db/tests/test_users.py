@@ -36,6 +36,20 @@ def test_get_user(temp_user):
     assert isinstance(user, int)
     assert temp_user == user
 
+def test_get_user_notFound():
+    RANDOM_USER = 'RANDOM_USER'
+    RANDOM_PASS = 'RANDOM_PASS'
+    assert not users._email_exists(RANDOM_USER)
+    with pytest.raises(ValueError):
+        user = users.get_user(RANDOM_USER, RANDOM_PASS)
+
+
+def test_get_user_passwordError(temp_user):
+    RANDOM_PASS = 'RANDOM_PASS'
+    user_data = users.get_userdata(temp_user)
+    with pytest.raises(ValueError):
+        user = users.get_user(user_data[users.EMAIL], RANDOM_PASS)
+
 
 def test_get_userdata(temp_user):
     id = temp_user
