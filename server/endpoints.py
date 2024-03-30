@@ -195,10 +195,8 @@ class UserSignupEP(Resource):
         password = data.get('password')
         fname = data.get('fname')
         lname = data.get('lname')
-
         pimage = data.get('pimage')
         pimage = "" if pimage is None else pimage
-
         privilege = data.get('privilege')
         privilege = 0 if privilege is None else privilege
         try:
@@ -291,7 +289,7 @@ class AddRestaurant(Resource):
             rest_id = restaurants.add_restaurant(data)
             if rest_id['status'] is None:
                 raise wz.ServiceUnavailable('We have a technical problem.')
-            ratings.add_restaurant_rating(ratings.gen_review_id(),
+            ratings.add_restaurant_rating(ratings.gen_reviewId(),
                                           rest_id['restaurant_id'],
                                           1, "new_entry", 5)
             return {'restaurant_id': rest_id['restaurant_id']}
@@ -416,7 +414,6 @@ class ReviewEP(Resource):
             if (len(data) != 0):
                 total_star = sum(int(singleData['star'])
                                  for singleData in data[1:]) / len(data)
-
             return {'review': data, 'total': total_star}
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
@@ -430,18 +427,11 @@ class ReviewEP(Resource):
         """
         try:
             data = request.json
-            review_id = data['review_id']
-            user_id = data['user_id']
-            text = data['text']
-            star = data['star']
+            usrid, text, star = data['user_id'], data['text'], data['star']
             data = ratings.add_restaurant_rating(
-                review_id,
-                restaurant_id,
-                user_id,
-                text,
-                star
+                restaurant_id, usrid, text, star
             )
-            if data is None:
+            if data['status'] is None:
                 raise wz.ServiceUnavailable('We have a technical problem.')
             return {'added_review_to_restaurant': restaurant_id}
         except ValueError as e:
