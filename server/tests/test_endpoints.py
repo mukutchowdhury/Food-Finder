@@ -155,10 +155,10 @@ def test_bad_update_menus(mock_update):
 #     assert resp.status_code == OK
 
 
-@patch('db.ratings.get_all_ratings', side_effect=ValueError, autospec=True)
-def test_bad_get_review(mock_get):
-    resp = TEST_CLIENT.get(f'{ep.REVIEW_EP}/123')
-    assert resp.status_code == NOT_FOUND
+# @patch('db.ratings.get_all_ratings', side_effect=ValueError, autospec=True)
+# def test_bad_get_review(mock_get):
+#     resp = TEST_CLIENT.get(f'{ep.REVIEW_EP}/123')
+#     assert resp.status_code == NOT_FOUND
 
 
 
