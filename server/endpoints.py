@@ -305,7 +305,7 @@ class GetRestaurants(Resource):
         """
         Returns all recorded restaurants
         """
-        rest_data = restaurants.get_restaurants()
+        rest_data = restaurants.get_all_restaurants()
         return rest_data
 
 
@@ -408,7 +408,7 @@ class ReviewEP(Resource):
         Returns all reviews of a restaurant
         """
         try:
-            data = ratings.get_all_ratings(restaurant_id)[1:]
+            data = ratings.get_restaurant_ratings(restaurant_id)[1:]
             total_star = 4.5
             if (len(data) != 0):
                 total_star = sum(int(singleData['star'])
