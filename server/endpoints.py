@@ -139,7 +139,6 @@ menuitem_price = api.model('menu_price', {
 })
 
 review_data = api.model('ratings', {
-    'review_id': fields.Integer,
     'user_id': fields.Integer,
     'text': fields.String,
     'star': fields.Integer
