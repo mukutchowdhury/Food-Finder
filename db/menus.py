@@ -91,7 +91,7 @@ def get_special_test_menu():
 # GOOD
 def get_restuarant_menu(restaurant_id: int) -> dict:
     if rest_exists(restaurant_id):
-        return dbc.fetch_one(MENU_COLLECT, {RESTAURANT_ID: restaurant_id})
+        return dbc.fetch_all_by_key(MENU_COLLECT, {RESTAURANT_ID: restaurant_id})
     raise ValueError(f'Get failure: {restaurant_id} not found.')
 
 
