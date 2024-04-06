@@ -5,95 +5,27 @@ menus.py: the menu of our restaurant
 import random
 import db.db_connect as dbc
 
-BIG_NUM = 1_000_000_000
+ID_LEN = 24
+BIG_NUM = 100_000_000_000_000_000_000
 
+MOCK_ID = '0' * ID_LEN
+
+MENUITEM_ID = 'menuitem_id'
 RESTAURANT_ID = 'restaurant_id'
-ITEM_NAME = 'item_name'
-ITEM_DESCRIPTION = 'item_description'
-ITEM_PRICE = 'item_price'
-ITEM_CATEGORY = 'item_category'
+NAME = 'name'
+DESCRIPTION = 'description'
+PRICE = 'price'
+CATEGORY = 'category'
 
 MENU_COLLECT = 'menus'
 REST_COLLECT = 'restaurants'
 
-MENU_DB = 'menudb'
 
-MENUITEM_ID = 'menuitem_id'
-
-
-menu_items = {}
-
-# menu_items = {
-#     1: {
-#         "Burger": {
-#             ITEM_DESCRIPTION: "Delicious burger with cheese and onions",
-#             ITEM_PRICE: 9.99,
-#             ITEM_CATEGORY: "Burgers"
-#         },
-#         "Pizza": {
-#             ITEM_DESCRIPTION: "Margherita pizza with fresh ingredients",
-#             ITEM_PRICE: 13.99,
-#             ITEM_CATEGORY: "Pizza"
-#         },
-#         "Salad": {
-#             ITEM_DESCRIPTION: "Salad with dressing",
-#             ITEM_PRICE: 4.99,
-#             ITEM_CATEGORY: "Salads"
-#         },
-#         "Expensive Dog Food": {
-#             ITEM_DESCRIPTION: "It's in the name",
-#             ITEM_PRICE: 99.99,
-#             ITEM_CATEGORY: "NO"
-#         }
-#     },
-#     2: {
-#         "Tacos": {
-#             ITEM_DESCRIPTION: "Delicious meat with toppings",
-#             ITEM_PRICE: 2.99,
-#             ITEM_CATEGORY: "Tacos"
-#         },
-#         "Pasta": {
-#             ITEM_DESCRIPTION: "Spaghetti with tomato sauce",
-#             ITEM_PRICE: 8.99,
-#             ITEM_CATEGORY: "Pizza"
-#         },
-#         "Gyro": {
-#             ITEM_DESCRIPTION: "Chicken over rice",
-#             ITEM_PRICE: 12.00,
-#             ITEM_CATEGORY: "Gyro"
-#         }
-#     }
-# }
-
-
-def _get_test_restaurant_id():
-    return random.randint(0, BIG_NUM)
-
-
-def get_test_menu():
-    test_menu = {}
-    # test_menu[RESTAURANT_ID] = _get_test_restaurant_id()
-    test_menu[ITEM_NAME] = 'TEST'
-    test_menu[ITEM_DESCRIPTION] = 'TEST'
-    test_menu[ITEM_PRICE] = 9.99
-    test_menu[ITEM_CATEGORY] = 'TEST'
-    return test_menu
-
-
-def get_special_test_menu():
-    test_menu = {}
-    test_menu[RESTAURANT_ID] = _get_test_restaurant_id()
-    test_menu[ITEM_NAME] = 'TEST'
-    test_menu[ITEM_PRICE] = 2.99
-    return test_menu
-
-
-# GOOD
-def get_restuarant_menu(restaurant_id: int) -> dict:
-    if rest_exists(restaurant_id):
-        return dbc.fetch_all_by_key(MENU_COLLECT,
-                                    {RESTAURANT_ID: restaurant_id})
-    raise ValueError(f'Get failure: {restaurant_id} not found.')
+def _gen_menuitemId() -> str:
+    _id = random.randint(0, BIG_NUM)
+    _id = str(_id)
+    _id = _id.rjust(ID_LEN, '0')
+    return _id
 
 
 def menu_exists(menuitem_id: int) -> bool:
@@ -101,38 +33,43 @@ def menu_exists(menuitem_id: int) -> bool:
     return dbc.fetch_one(MENU_COLLECT, {MENUITEM_ID: menuitem_id})
 
 
-def rest_exists(restaurant_id: int) -> bool:
+def restaurant_exists(restaurant_id: int) -> bool:
     dbc.connect_db()
     return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})
 
 
+def get_restuarant_menu(restaurant_id: int) -> dict:
+    if restaurant_exists(restaurant_id):
+        return dbc.fetch_all_by_key(MENU_COLLECT,
+                                    {RESTAURANT_ID: restaurant_id})
+    raise ValueError(f'Get failure: {restaurant_id} not found.')
+
+
 def add_item_to_menu(restaurant_id: int, item_info: dict):
-    if not rest_exists(restaurant_id):
+    if not restaurant_exists(restaurant_id):
         raise ValueError(f'Post failure: {restaurant_id} not found.')
-
-    if not (item_info['item_name'] and item_info['item_description']
-            and item_info['item_price'] and item_info['item_category']):
+    if not (item_info[NAME] and item_info[PRICE]):
         raise ValueError("All attributes must be filled out")
-
-    menuitem_id = random.randint(0, BIG_NUM)
+    menuitem_id = _gen_menuitemId()
     while menu_exists(menuitem_id):
-        menuitem_id = random.randint(0, BIG_NUM)
-
+        menuitem_id = _gen_menuitemId()
     menu = {
         RESTAURANT_ID: restaurant_id,
         MENUITEM_ID: menuitem_id,
-        ITEM_NAME: item_info['item_name'],
-        ITEM_DESCRIPTION: item_info['item_description'],
-        ITEM_PRICE: item_info['item_price'],
-        ITEM_CATEGORY: item_info['item_category']
+        NAME: item_info[NAME],
+        DESCRIPTION: item_info[DESCRIPTION],
+        PRICE: item_info[PRICE],
+        CATEGORY: item_info[CATEGORY]
     }
-
     dbc.connect_db()
     _id = dbc.insert_one(MENU_COLLECT, menu)
-    return _id is not None
+    return {
+        "status": _id is not None,
+        "menuitem_id": menuitem_id
+    }
 
 
-def del_item_from_menu(menuitem_id: int) -> None:
+def del_item_from_menu(menuitem_id: int):
     if menu_exists(menuitem_id):
         return dbc.del_one(
             MENU_COLLECT,
@@ -141,11 +78,11 @@ def del_item_from_menu(menuitem_id: int) -> None:
     raise ValueError(f'Delete failure: MenuID: {menuitem_id} not in database.')
 
 
-def update_item_price(menuitem_id: int, new_price: float):
+def update_price(menuitem_id: int, new_price: float):
     if menu_exists(menuitem_id):
         return dbc.up_one(
             MENU_COLLECT,
             {MENUITEM_ID: menuitem_id},
-            {"$set": {ITEM_PRICE: new_price}}
+            {"$set": {PRICE: new_price}}
         )
     raise ValueError(f'Update failure: MenuID: {menuitem_id} not in database.')
