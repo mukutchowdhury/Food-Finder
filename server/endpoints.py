@@ -352,12 +352,12 @@ class MenuEP(Resource):
             item_category = data['item_category']
 
             menu_data = menus.add_item_to_menu(restaurant_id, {
-                'item_name': item_name,
-                'item_description': item_description,
-                'item_price': item_price,
-                'item_category': item_category
+                'name': item_name,
+                'description': item_description,
+                'price': item_price,
+                'category': item_category
             })
-            if menu_data is None:
+            if menu_data['status'] is None:
                 raise wz.ServiceUnavailable('We have a technical problem.')
             return {
                 'Added_menu_to_restaurant': restaurant_id,
