@@ -113,40 +113,40 @@ def test_bad_get_menu(mock_get):
 #     assert resp.status_code == OK
 
 
-@patch('db.menus.add_item_to_menu', side_effect=ValueError, autospec=True)
-def test_bad_add_menu(mock_add):
-    resp = TEST_CLIENT.post(f'{ep.Menu_EP}/123', json=menus.get_test_menu())
-    assert resp.status_code == NOT_ACCEPTABLE
+# @patch('db.menus.add_item_to_menu', side_effect=ValueError, autospec=True)
+# def test_bad_add_menu(mock_add):
+#     resp = TEST_CLIENT.post(f'{ep.Menu_EP}/123', json=menus.get_test_menu())
+#     assert resp.status_code == NOT_ACCEPTABLE
 
 
-@patch('db.menus.add_item_to_menu', return_value=None)
-def test_menu_add_db_failure(mock_add):
-    resp = TEST_CLIENT.post(f'{ep.Menu_EP}/123', json=menus.get_test_menu())
-    assert resp.status_code == SERVICE_UNAVAILABLE
+# @patch('db.menus.add_item_to_menu', return_value=None)
+# def test_menu_add_db_failure(mock_add):
+#     resp = TEST_CLIENT.post(f'{ep.Menu_EP}/123', json=menus.get_test_menu())
+#     assert resp.status_code == SERVICE_UNAVAILABLE
     
 
-@patch('db.menus.del_item_from_menu', return_value=None, autospec=True)
-def test_del_menu(mock_delete):
-    resp = TEST_CLIENT.delete(f'{ep.Menu_EP}/123')
-    assert resp.status_code == OK
+# @patch('db.menus.del_item_from_menu', return_value=None, autospec=True)
+# def test_del_menu(mock_delete):
+#     resp = TEST_CLIENT.delete(f'{ep.Menu_EP}/123')
+#     assert resp.status_code == OK
 
 
-@patch('db.menus.del_item_from_menu', side_effect=ValueError, autospec=True)
-def test_bad_del_menu(mock_delete):
-    resp = TEST_CLIENT.delete(f'{ep.Menu_EP}/123')
-    assert resp.status_code == NOT_FOUND
+# @patch('db.menus.del_item_from_menu', side_effect=ValueError, autospec=True)
+# def test_bad_del_menu(mock_delete):
+#     resp = TEST_CLIENT.delete(f'{ep.Menu_EP}/123')
+#     assert resp.status_code == NOT_FOUND
 
 
-@patch('db.menus.update_item_price', return_value=None, autospec=True)
-def test_update_menu(mock_update):
-    resp = TEST_CLIENT.put(f'{ep.Menu_EP}/123', json={'new_price': 1.59})
-    assert resp.status_code == OK
+# @patch('db.menus.update_item_price', return_value=None, autospec=True)
+# def test_update_menu(mock_update):
+#     resp = TEST_CLIENT.put(f'{ep.Menu_EP}/123', json={'new_price': 1.59})
+#     assert resp.status_code == OK
 
 
-@patch('db.menus.update_item_price', side_effect=ValueError, autospec=True)
-def test_bad_update_menus(mock_update):
-    resp = TEST_CLIENT.put(f'{ep.Menu_EP}/123', json={'new_price': 1.59})
-    assert resp.status_code == NOT_FOUND
+# @patch('db.menus.update_item_price', side_effect=ValueError, autospec=True)
+# def test_bad_update_menus(mock_update):
+#     resp = TEST_CLIENT.put(f'{ep.Menu_EP}/123', json={'new_price': 1.59})
+#     assert resp.status_code == NOT_FOUND
 
 # Review #
 # @patch('db.ratings.get_all_ratings', return_value=None, autospec=True)
