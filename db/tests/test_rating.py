@@ -64,7 +64,7 @@ def test_add_restaurant_rating(temp_review):
 def test_add_restaurant_rating_Blank(temp_review):
     restaurantid, _reviewid = temp_review
     with pytest.raises(ValueError):
-        ratings.add_restaurant_rating(restaurantid, '', '', 0 )
+        ratings.add_restaurant_rating(restaurantid, '', '', 0)
 
 
 def test_add_restaurant_rating_NotFound():
