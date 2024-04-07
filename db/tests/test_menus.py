@@ -20,7 +20,8 @@ TEST_MENUITEM = {
     menu.NAME: 'Test',
     menu.DESCRIPTION: 'Test Description',
     menu.PRICE: 9.99,
-    menu.CATEGORY: 'Test'
+    menu.CATEGORY: 'Test',
+    menu.IMAGE: ''
 }
 
 RESTAURANT_ID = 'restaurant_id'
@@ -78,7 +79,8 @@ def test_add_item_to_menu_Blank(temp_menu):
             menu.NAME: '',
             menu.DESCRIPTION: '',
             menu.PRICE: 0,
-            menu.CATEGORY: ''
+            menu.CATEGORY: '',
+            menu.IMAGE: '',
         })
 
 

@@ -108,6 +108,7 @@ menu_item_data = api.model('menu', {
     "item_description": fields.String,
     "item_price": fields.Float,
     "item_category": fields.String,
+    "item_image": fields.String,
 })
 
 login_data = api.model('Authentication', {
@@ -350,12 +351,14 @@ class MenuEP(Resource):
             item_description = data['item_description']
             item_price = data['item_price']
             item_category = data['item_category']
+            item_image = data['item_image']
 
             menu_data = menus.add_item_to_menu(restaurant_id, {
                 'name': item_name,
                 'description': item_description,
                 'price': item_price,
-                'category': item_category
+                'category': item_category,
+                'image': item_image,
             })
             if menu_data['status'] is None:
                 raise wz.ServiceUnavailable('We have a technical problem.')

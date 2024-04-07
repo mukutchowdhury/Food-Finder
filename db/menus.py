@@ -16,6 +16,7 @@ NAME = 'name'
 DESCRIPTION = 'description'
 PRICE = 'price'
 CATEGORY = 'category'
+IMAGE = 'image'
 
 MENU_COLLECT = 'menus'
 REST_COLLECT = 'restaurants'
@@ -59,7 +60,8 @@ def add_item_to_menu(restaurant_id: int, item_info: dict):
         NAME: item_info[NAME],
         DESCRIPTION: item_info[DESCRIPTION],
         PRICE: item_info[PRICE],
-        CATEGORY: item_info[CATEGORY]
+        CATEGORY: item_info[CATEGORY],
+        IMAGE: item_info[IMAGE]
     }
     dbc.connect_db()
     _id = dbc.insert_one(MENU_COLLECT, menu)
