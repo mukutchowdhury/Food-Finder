@@ -577,11 +577,11 @@ class CategoryEP(Resource):
             result = categories.addCategory(name, description)
             if result is None:
                 raise wz.ServiceUnavailable('We have a technical problem.')
-            
+
             category_links = {
-                'self': '/category',  # Link to this endpoint (GET and POST)
-                'all_categories': '/categories',  # Link to endpoint listing all categories (GET)
-                'delete': f'/category/{name}'  # Link to delete this category (DELETE)
+                'self': '/category',
+                'all_categories': '/categories',
+                'delete': f'/category/{name}'
             }
             response = {
                 'Created': name,
