@@ -30,26 +30,26 @@ BY_ZIPCODE = '/by_zipcode'
 ALL = '/all'
 REGISTER = '/register'
 
-# HOUR
-HOUR_EP = '/hour'
-
 USER_NS = 'user'
 RESTAURANT_NS = 'restaurant'
 MENU_NS = 'menu'
 REVIEW_NS = 'review'
 CATEGORY_NS = 'category'
+HOUR_NS = 'hour'
 
 user = Namespace(USER_NS, 'User')
 restaurant = Namespace(RESTAURANT_NS, 'Restaurant')
 menu = Namespace(MENU_NS, 'Menu')
 review = Namespace(REVIEW_NS, 'Review')
 category = Namespace(CATEGORY_NS, 'Category')
+hour = Namespace(HOUR_NS, 'Hour')
 
 api.add_namespace(user)
 api.add_namespace(restaurant)
 api.add_namespace(menu)
 api.add_namespace(review)
 api.add_namespace(category)
+api.add_namespace(hour)
 
 
 menu_item_data = api.model('menu', {
@@ -417,7 +417,7 @@ class ReviewEdit(Resource):
             raise wz.NotFound(f'{str(e)}')
 
 
-@api.route(f'{HOUR_EP}/<int:restaurant_id>')
+@hour.route('/<int:restaurant_id>')
 class RestaurantHoursEP(Resource):
     """
     get restaurant time
