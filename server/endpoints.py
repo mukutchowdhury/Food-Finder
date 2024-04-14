@@ -5,17 +5,15 @@ The endpoint called `endpoints` will return all available endpoints.
 
 from http import HTTPStatus
 
-# import bcrypt
 import werkzeug.exceptions as wz
 from flask import Flask, request
 from flask_cors import CORS
-from flask_restx import Api, Resource, fields
+from flask_restx import Api, Resource, fields, Namespace
 
 import db.categories as categories
 import db.menus as menus
 import db.options as options
 import db.ratings as ratings
-# import db.reservations as reservations
 import db.restaurants as restaurants
 import db.users as users
 
@@ -23,85 +21,36 @@ app = Flask(__name__)
 CORS(app)
 api = Api(app)
 
-HELLO_EP = '/hello'
-HELLO_RESP = 'hello'
+# USER
+SIGN_UP = '/signup'
+LOGIN = '/login'
 
-# MENUS
-MAIN_MENU = '/MainMenu'
-MAIN_MENU_NM = "Welcome to Food Finder!"
-LOGIN_PAGE = '/LoginPage'
-LOGIN_SCREEN_MSG = 'Please Login or Register'
+# RESTAURANT
+BY_ZIPCODE = '/by_zipcode'
+ALL = '/all'
+REGISTER = '/register'
 
-# ENDPOINTS
-LOGIN_SYSTEM = '/LoginSystem'
-REGISTRATION_SYSTEM = '/RegistrationSystem'
-
-# RESTAURANT_RELATED ENDPOINTS
-RESTAURANT_REGISTRATION = '/Restaurant_Registration'
-ADD_RESTAURANT_MENUITEM = '/Add_Restaurant_MenuItem'
-REMOVE_RESTAURANT = '/Remove_Restaurant'
-REMOVE_RESTAURANT_RESERVATIONS = '/Remove_Restaurant_Reservations'
-REMOVE_RESTAURANT_MENUITEM = '/Remove_Restaurant_MenuItem'
-SET_RESTAURANT_HOURS = '/Set_Restaurant_Hours'
-GET_RESTAURANT_REVIEWS = '/Get_Restaurant_Reviews'
-SET_RESTAURANT_OPTIONS = '/Set_Restaurant_Options'
-RESTAURANT_SPECIAL_MEALS = '/Restaurant_Special_Meals'
-
-
-# CLIENT_RELATED ENDPOINTS
-GET_RESTAURANT_LIST = '/Get_Restaurant_List'
-GET_TRENDING_RESTAURANT_LIST = '/Get_Trending_Restaurant_List'
-PROVIDE_REVIEW = '/Provide_Review'
-GET_RESTAURANT_INFO = '/Get_Restaurant_Info'
-MAKE_RESERVATION = '/Make_Reservation'
-
-
-ADD_RESTAURANT = '/restaurant/register'
-RESTAURANT_EP = '/restaurant'
-RESTAURANT_ALL = '/restaurant/all'
-Menu_EP = '/menu'
-REVIEW_EP = '/review'
+# HOUR
 HOUR_EP = '/hour'
 
-TYPE = 'Type'
-DATA = 'Data'
-TITLE = 'Title'
-RETURN = 'Return'
-MENU = 'menu'
+USER_NS = 'user'
+RESTAURANT_NS = 'restaurant'
+MENU_NS = 'menu'
+REVIEW_NS = 'review'
+CATEGORY_NS = 'category'
 
-USER_MENU_EP = '/user_menu'
-MAIN_MENU_EP = '/MainMenu'
+user = Namespace(USER_NS, 'User')
+restaurant = Namespace(RESTAURANT_NS, 'Restaurant')
+menu = Namespace(MENU_NS, 'Menu')
+review = Namespace(REVIEW_NS, 'Review')
+category = Namespace(CATEGORY_NS, 'Category')
 
+api.add_namespace(user)
+api.add_namespace(restaurant)
+api.add_namespace(menu)
+api.add_namespace(review)
+api.add_namespace(category)
 
-@api.route('/hello')
-class HelloWorld(Resource):
-    """
-    The purpose of the HelloWorld class is to have a simple test to see if the
-    app is working at all.
-    """
-    def get(self):
-        """
-        A trivial endpoint to see if the server is running.
-        It just answers with "hello world."
-        """
-        return {'hello': 'world'}
-
-
-@api.route('/endpoints')
-class Endpoints(Resource):
-    """
-    This class will serve as live, fetchable documentation of what endpoints
-    are available in the system.
-    """
-    def get(self):
-        """
-        The `get()` method will return a list of available endpoints.
-        """
-        endpoints = sorted(rule.rule for rule in api.app.url_map.iter_rules())
-        return {"Available endpoints": endpoints}
-
-
-# START OF PROJECT #
 
 menu_item_data = api.model('menu', {
     "item_name": fields.String,
@@ -122,7 +71,6 @@ registration_data = api.model('Registration', {
     "user_confirm_password": fields.String
 })
 
-# UPDATE SCHEMA #
 restaurant_data = api.model('restaurant_ep_post', {
     "name": fields.String,
     "address": fields.String,
@@ -170,15 +118,13 @@ user_login = api.model('user_login', {
     'password': fields.String
 })
 
-category = api.model('category', {
+category_model = api.model('category', {
     'name': fields.String,
     'description': fields.String
 })
 
 
-# USER AUTHENTICATION #
-
-@api.route('/user/signup')
+@user.route(f'{SIGN_UP}')
 class UserSignupEP(Resource):
     """
     Handles Signup
@@ -206,7 +152,7 @@ class UserSignupEP(Resource):
             return {'status': str(e)}
 
 
-@api.route('/user/login')
+@user.route(f'{LOGIN}')
 class UserLoginEP(Resource):
     """
     Handles Login Authentication
@@ -228,7 +174,7 @@ class UserLoginEP(Resource):
             return {'status': str(e)}
 
 
-@api.route('/user/<int:id>')
+@user.route('/<int:id>')
 class UserDataEP(Resource):
     """
     Handles retrieving user data
@@ -241,8 +187,7 @@ class UserDataEP(Resource):
         return result
 
 
-# CLIENT ENDPOINTS #
-@api.route('/restaurant/<int:restaurant_id>')
+@restaurant.route('/<int:restaurant_id>')
 class RestaurantEP(Resource):
     """
     Handles restaurant get and delete
@@ -272,7 +217,7 @@ class RestaurantEP(Resource):
             raise wz.NotFound(f'{str(e)}')
 
 
-@api.route('/restaurant/register')
+@restaurant.route(f'{REGISTER}')
 class AddRestaurant(Resource):
     """
     Handles restaurant creation
@@ -297,7 +242,7 @@ class AddRestaurant(Resource):
             raise wz.NotAcceptable(f'{str(e)}')
 
 
-@api.route('/restaurant/all')
+@restaurant.route(f'{ALL}')
 class GetRestaurants(Resource):
     """
     Handles get restaurants
@@ -310,11 +255,10 @@ class GetRestaurants(Resource):
         return rest_data
 
 
-@api.route('/restaurants/by-zipcode/<int:zipcode>')
+@restaurant.route(f'{BY_ZIPCODE}/<int:zipcode>')
 class GetRestaurantsByZipcode(Resource):
     """
     Handles get on nearby restaurants
-    NOT FINISHED - GIANFRANCO
     """
     def get(self, zipcode):
         """
@@ -324,7 +268,7 @@ class GetRestaurantsByZipcode(Resource):
         return rest_data
 
 
-@api.route('/menu/<int:restaurant_id>')
+@menu.route('/<int:restaurant_id>')
 class MenuEP(Resource):
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
@@ -369,7 +313,7 @@ class MenuEP(Resource):
             raise wz.NotAcceptable(f'{str(e)}')
 
 
-@api.route(f'{Menu_EP}/<int:menuitem_id>')
+@menu.route('/<int:menuitem_id>')
 class MenuItemEP(Resource):
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
@@ -399,7 +343,7 @@ class MenuItemEP(Resource):
             raise wz.NotFound(f'{str(e)}')
 
 
-@api.route(f'{REVIEW_EP}/<int:restaurant_id>')
+@review.route('/<int:restaurant_id>')
 class ReviewEP(Resource):
     """
     Handles clients writing reviews on restaurants
@@ -440,7 +384,7 @@ class ReviewEP(Resource):
             raise wz.NotAcceptable(f'{str(e)}')
 
 
-@api.route(f'{REVIEW_EP}/<int:review_id>')
+@review.route('/<int:review_id>')
 class ReviewEdit(Resource):
     """
     Handles clients writing reviews on restaurants
@@ -551,7 +495,8 @@ class RestaurantHoursEP(Resource):
             raise wz.NotFound(f'{str(e)}')
 
 
-@api.route('/category')
+# PATH /category
+@category.route('')
 class CategoryEP(Resource):
     """
     Handles all actions related category
@@ -565,7 +510,7 @@ class CategoryEP(Resource):
 
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
-    @api.expect(category)
+    @api.expect(category_model)
     def post(self):
         """
         Creates a new category entry
@@ -592,7 +537,7 @@ class CategoryEP(Resource):
             raise wz.NotAcceptable(f'{str(e)}')
 
 
-@api.route('/category/<string:name>')
+@category.route('/<string:name>')
 class CategoryDeleteEP(Resource):
     """
     Handles deletion of category
