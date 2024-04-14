@@ -30,6 +30,8 @@ BY_ZIPCODE = '/by_zipcode'
 ALL = '/all'
 REGISTER = '/register'
 
+HOUR_EP = '/hour'
+
 USER_NS = 'user'
 RESTAURANT_NS = 'restaurant'
 MENU_NS = 'menu'
