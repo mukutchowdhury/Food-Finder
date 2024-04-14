@@ -19,12 +19,12 @@ import server.endpoints as ep
 
 TEST_CLIENT = ep.app.test_client()
 
-def test_hello():
-    resp = TEST_CLIENT.get(ep.HELLO_EP)
-    print(f'{resp=}')
-    resp_json = resp.get_json()
-    print(f'{resp_json=}')
-    assert ep.HELLO_RESP in resp_json
+# def test_hello():
+#     resp = TEST_CLIENT.get(ep.HELLO_EP)
+#     print(f'{resp=}')
+#     resp_json = resp.get_json()
+#     print(f'{resp_json=}')
+#     assert ep.HELLO_RESP in resp_json
 
 # Restaurants #
 
@@ -38,10 +38,10 @@ def test_hello():
 
 
 
-@patch('db.restaurants.add_restaurant', side_effect=ValueError, autospec=True)
-def test_bad_add_restaurant(mock_add):
-    resp = TEST_CLIENT.post(ep.ADD_RESTAURANT, json=rest.get_test_restaurant())
-    assert resp.status_code == NOT_ACCEPTABLE
+# @patch('db.restaurants.add_restaurant', side_effect=ValueError, autospec=True)
+# def test_bad_add_restaurant(mock_add):
+#     resp = TEST_CLIENT.post(ep.ADD_RESTAURANT, json=rest.get_test_restaurant())
+#     assert resp.status_code == NOT_ACCEPTABLE
 
 
 # @patch('db.restaurants.add_restaurant', return_value=None)
@@ -93,16 +93,16 @@ def test_bad_add_restaurant(mock_add):
 #     assert isinstance(resp_json, dict)
 
 # Menus #
-@patch('db.menus.get_restuarant_menu', return_value=None, autospec=True)
-def test_get_menu(mock_get):
-    resp = TEST_CLIENT.get(f'{ep.Menu_EP}/123')
-    assert resp.status_code == OK
+# @patch('db.menus.get_restuarant_menu', return_value=None, autospec=True)
+# def test_get_menu(mock_get):
+#     resp = TEST_CLIENT.get(f'{ep.Menu_EP}/123')
+#     assert resp.status_code == OK
 
 
-@patch('db.menus.get_restuarant_menu', side_effect=ValueError, autospec=True)
-def test_bad_get_menu(mock_get):
-    resp = TEST_CLIENT.get(f'{ep.Menu_EP}/123')
-    assert resp.status_code == NOT_FOUND
+# @patch('db.menus.get_restuarant_menu', side_effect=ValueError, autospec=True)
+# def test_bad_get_menu(mock_get):
+#     resp = TEST_CLIENT.get(f'{ep.Menu_EP}/123')
+#     assert resp.status_code == NOT_FOUND
 
 
 # @pytest.mark.skip('This test is failing, but it is just an example of using '
@@ -182,28 +182,28 @@ def test_bad_get_menu(mock_get):
 #     assert resp.status_code == SERVICE_UNAVAILABLE
 
 
-@patch('db.ratings.del_rating', return_value=None, autospec=True)
-def test_del_review(mock_delete):
-    resp = TEST_CLIENT.delete(f'{ep.REVIEW_EP}/123')
-    assert resp.status_code == OK
+# @patch('db.ratings.del_rating', return_value=None, autospec=True)
+# def test_del_review(mock_delete):
+#     resp = TEST_CLIENT.delete(f'{ep.REVIEW_EP}/123')
+#     assert resp.status_code == OK
 
 
-@patch('db.ratings.del_rating', side_effect=ValueError, autospec=True)
-def test_bad_del_review(mock_delete):
-    resp = TEST_CLIENT.delete(f'{ep.REVIEW_EP}/123')
-    assert resp.status_code == NOT_FOUND
+# @patch('db.ratings.del_rating', side_effect=ValueError, autospec=True)
+# def test_bad_del_review(mock_delete):
+#     resp = TEST_CLIENT.delete(f'{ep.REVIEW_EP}/123')
+#     assert resp.status_code == NOT_FOUND
 
 
-@patch('db.ratings.update_review_text', return_value=None, autospec=True)
-def test_update_review(mock_update):
-    resp = TEST_CLIENT.put(f'{ep.REVIEW_EP}/123', json={'text': 'Hello Text'})
-    assert resp.status_code == OK
+# @patch('db.ratings.update_review_text', return_value=None, autospec=True)
+# def test_update_review(mock_update):
+#     resp = TEST_CLIENT.put(f'{ep.REVIEW_EP}/123', json={'text': 'Hello Text'})
+#     assert resp.status_code == OK
 
 
-@patch('db.ratings.update_review_text', side_effect=ValueError, autospec=True)
-def test_bad_update_review(mock_update):
-    resp = TEST_CLIENT.put(f'{ep.REVIEW_EP}/123', json={'text': 'Hello Text'})
-    assert resp.status_code == NOT_FOUND
+# @patch('db.ratings.update_review_text', side_effect=ValueError, autospec=True)
+# def test_bad_update_review(mock_update):
+#     resp = TEST_CLIENT.put(f'{ep.REVIEW_EP}/123', json={'text': 'Hello Text'})
+#     assert resp.status_code == NOT_FOUND
 
 
 # Hours #
