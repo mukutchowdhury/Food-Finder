@@ -1,7 +1,10 @@
 import random
 import db.db_connect as dbc
 
-BIG_NUM = 1_000_000_000
+ID_LEN = 24
+BIG_NUM = 100_000_000_000_000_000_000
+
+MOCK_ID = '0' * ID_LEN
 
 OWNER_ID = 'owner_id'
 RESTAURANT_ID = 'restaurant_id'
@@ -16,41 +19,19 @@ CATEGORY = 'category'
 REST_COLLECT = 'restaurants'
 
 
-def _get_test_address():
-    address_text = 'TEST'
-    address_nummber = str(random.randint(0, BIG_NUM)) + address_text
-    return address_nummber
+def exists(restaurant_id: str) -> bool:
+    dbc.connect_db()
+    return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})
 
 
-def _get_test_zipcode():
-    min_zip = 10000
-    max_zip = 99999
-    random_zip = random.randint(min_zip, max_zip)
-    return random_zip
+def _get_test_rest_id() -> str:
+    _id = random.randint(0, BIG_NUM)
+    _id = str(_id)
+    _id = _id.rjust(ID_LEN, '0')
+    return _id
 
 
-def _get_test_OWNER_ID():
-    owner_id = random.randint(0, BIG_NUM)
-    return owner_id
-
-
-def _get_test_rest_id():
-    restaurant_id = random.randint(0, BIG_NUM)
-    return restaurant_id
-
-
-def get_test_restaurant():
-    test_rest = {}
-    test_rest[RESTAURANT_ID] = _get_test_rest_id()
-    test_rest[NAME] = 'TEST_NAME'
-    test_rest[ADDRESS] = _get_test_address()
-    test_rest[ZIPCODE] = _get_test_zipcode()
-    test_rest[OWNER_ID] = _get_test_OWNER_ID()
-    return test_rest
-
-
-# GOOD #
-def get_restuarant(restaurant_id: int):
+def get_restuarant(restaurant_id: str):
     if exists(restaurant_id):
         return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})
     raise ValueError(f'Get failure: {restaurant_id} not found.')
@@ -66,7 +47,7 @@ def get_restaurants_by_zipcode(zipcode):
     return filteredData
 
 
-def del_restaurant(restaurant_id: int):
+def del_restaurant(restaurant_id: str):
     if exists(restaurant_id):
         return dbc.del_one(REST_COLLECT,
                            {RESTAURANT_ID: restaurant_id})
@@ -74,6 +55,9 @@ def del_restaurant(restaurant_id: int):
 
 
 def add_restaurant(data: dict) -> dict:
+    if (not (data.get('name') and data.get('address')
+       and data.get('zipcode') and data.get('owner_id'))):
+        raise ValueError('Values have not been filled in!')
     restaurant_id = _get_test_rest_id()
     restaurant = {
         RESTAURANT_ID: restaurant_id,
@@ -87,7 +71,6 @@ def add_restaurant(data: dict) -> dict:
         KEYWORDS: data.get('keywords'),
         CATEGORY: data.get('category')
     }
-
     dbc.connect_db()
     _id = dbc.insert_one(REST_COLLECT, restaurant)
     return {
@@ -99,8 +82,3 @@ def add_restaurant(data: dict) -> dict:
 def get_all_restaurants():
     dbc.connect_db()
     return dbc.fetch_all_as_dict(RESTAURANT_ID, REST_COLLECT)
-
-
-def exists(restaurant_id: int) -> bool:
-    dbc.connect_db()
-    return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})
