@@ -17,6 +17,8 @@ import db.ratings as ratings
 import db.restaurants as restaurants
 import db.users as users
 
+import examples.form as fm
+
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
@@ -187,6 +189,15 @@ class UserDataEP(Resource):
         """
         result = users.get_userdata(id)
         return result
+    
+
+@user.route('/signup-form')
+class UserForm(Resource):
+    """
+    Handles retrieving user signup form
+    """
+    def get(self):
+        return fm.get_form()
 
 
 @restaurant.route('/<int:restaurant_id>')
