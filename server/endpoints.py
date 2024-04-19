@@ -33,7 +33,7 @@ REGISTER = '/register'
 HOUR_EP = '/hour'
 
 USER_NS = 'user'
-RESTAURANT_NS = 'restaurant'
+RESTAURANT_NS = 'restaurants'
 MENU_NS = 'menu'
 REVIEW_NS = 'review'
 CATEGORY_NS = 'category'
