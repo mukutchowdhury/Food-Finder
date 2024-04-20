@@ -34,6 +34,7 @@ REGISTER = '/register'
 HOUR = '/hour'
 
 Category_EP = '/category'
+REVIEW_EP = '/review'
 
 USER_NS = 'user'
 RESTAURANT_NS = 'restaurants'
@@ -175,12 +176,12 @@ class UserLoginEP(Resource):
             return {'status': str(e)}
 
 
-@user.route('/<int:id>')
+@user.route('/<string:id>')
 class UserDataEP(Resource):
     """
     Handles retrieving user data
     """
-    def get(self, id: int):
+    def get(self, id: str):
         """
         Gets user data.
         """
@@ -375,7 +376,7 @@ class MenuItemEP(Resource):
             raise wz.NotFound(f'{str(e)}')
 
 
-@review.route('/<int:restaurant_id>')
+@review.route('/<string:restaurant_id>')
 class ReviewEP(Resource):
     """
     Handles clients writing reviews on restaurants
@@ -416,7 +417,7 @@ class ReviewEP(Resource):
             raise wz.NotAcceptable(f'{str(e)}')
 
 
-@review.route('/<int:review_id>')
+@review.route('/<string:review_id>')
 class ReviewEdit(Resource):
     """
     Handles clients writing reviews on restaurants
