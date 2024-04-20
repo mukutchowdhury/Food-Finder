@@ -24,3 +24,9 @@
 #         """
 #         endpoints = sorted(rule.rule for rule in api.app.url_map.iter_rules())
 #         return {"Available endpoints": endpoints}
+
+
+# def _adjust_time(time: dict) -> str:
+#     hour = max(0, min(23, time['hour']))
+#     minute = max(0, min(59, time['minute']))
+#     return f'{hour}:{minute}'
