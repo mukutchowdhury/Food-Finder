@@ -14,7 +14,7 @@ test_obj = {
 
 @pytest.fixture(scope='function')
 def temp_user():
-    user = users.add_user(test_obj[users.EMAIL], test_obj[users.PASSWORD],
+    users.add_user(test_obj[users.EMAIL], test_obj[users.PASSWORD],
                           test_obj[users.FNAME], test_obj[users.LNAME],
                           test_obj[users.PIMAGE], test_obj[users.PRIVILEGE])  
       
@@ -28,12 +28,12 @@ def temp_user():
 
 def test_gen_user_id():
     _id = users._gen_user_id()
-    assert isinstance(_id, int)
+    assert isinstance(_id, str)
 
 
 def test_get_user(temp_user):
     user = users.get_user(test_obj[users.EMAIL], test_obj[users.PASSWORD])
-    assert isinstance(user, int)
+    assert isinstance(user, str)
     assert temp_user == user
 
 def test_get_user_notFound():
@@ -63,7 +63,7 @@ def test_add_user():
                           test_obj[users.FNAME], test_obj[users.LNAME],
                           test_obj[users.PIMAGE], test_obj[users.PRIVILEGE])  
     id = users.get_user(test_obj[users.EMAIL], test_obj[users.PASSWORD])
-    assert isinstance(id, int)
+    assert isinstance(id, str)
     assert users._email_exists(test_obj[users.EMAIL])
     assert isinstance(ret, bool)
     users.delete_user(id)
