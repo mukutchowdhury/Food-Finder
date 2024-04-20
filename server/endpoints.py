@@ -12,7 +12,6 @@ from flask_restx import Api, Resource, fields, Namespace
 
 import db.categories as categories
 import db.menus as menus
-import db.options as options
 import db.ratings as ratings
 import db.restaurants as restaurants
 import db.users as users
@@ -32,28 +31,25 @@ BY_ZIPCODE = '/by_zipcode'
 ALL = '/all'
 REGISTER = '/register'
 
-HOUR_EP = '/hour'
+HOUR = '/hour'
 
 USER_NS = 'user'
 RESTAURANT_NS = 'restaurants'
 MENU_NS = 'menu'
 REVIEW_NS = 'review'
 CATEGORY_NS = 'category'
-HOUR_NS = 'hour'
 
 user = Namespace(USER_NS, 'User')
 restaurant = Namespace(RESTAURANT_NS, 'Restaurant')
 menu = Namespace(MENU_NS, 'Menu')
 review = Namespace(REVIEW_NS, 'Review')
 category = Namespace(CATEGORY_NS, 'Category')
-hour = Namespace(HOUR_NS, 'Hour')
 
 api.add_namespace(user)
 api.add_namespace(restaurant)
 api.add_namespace(menu)
 api.add_namespace(review)
 api.add_namespace(category)
-api.add_namespace(hour)
 
 
 menu_item_data = api.model('menu', {
@@ -75,6 +71,11 @@ registration_data = api.model('Registration', {
     "user_confirm_password": fields.String
 })
 
+restaurant_hour_option = api.model('hour_option', {
+    'open': fields.String,
+    'close': fields.String
+})
+
 restaurant_data = api.model('restaurant_ep_post', {
     "name": fields.String,
     "address": fields.String,
@@ -84,7 +85,8 @@ restaurant_data = api.model('restaurant_ep_post', {
     "phone": fields.String,
     "cuisine": fields.List(fields.String),
     "keywords": fields.List(fields.String),
-    "category": fields.List(fields.String)
+    "category": fields.List(fields.String),
+    "hours": fields.Nested(restaurant_hour_option),
 })
 
 menuitem_price = api.model('menu_price', {
@@ -99,13 +101,6 @@ review_data = api.model('ratings', {
 
 edit_text = api.model('text_change', {
     'text': fields.String,
-})
-
-restaurant_hour_option = api.model('hour_option', {
-    'open_hour': fields.Integer,
-    'open_minute': fields.Integer,
-    'close_hour': fields.Integer,
-    'close_minute': fields.Integer
 })
 
 user_signup = api.model('user_signup', {
@@ -126,6 +121,24 @@ category_model = api.model('category', {
     'name': fields.String,
     'description': fields.String
 })
+
+
+HELLO_EP = '/hello'
+HELLO_RESP = 'hello'
+
+
+@api.route('/hello')
+class HelloWorld(Resource):
+    """
+    The purpose of the HelloWorld class is to have a simple test to see if the
+    app is working at all.
+    """
+    def get(self):
+        """
+        A trivial endpoint to see if the server is running.
+        It just answers with "hello world."
+        """
+        return {'hello': 'world'}
 
 
 @user.route(f'{SIGN_UP}')
@@ -200,7 +213,7 @@ class UserForm(Resource):
         return fm.get_form()
 
 
-@restaurant.route('/<int:restaurant_id>')
+@restaurant.route('/<string:restaurant_id>')
 class RestaurantEP(Resource):
     """
     Handles restaurant get and delete
@@ -278,6 +291,29 @@ class GetRestaurantsByZipcode(Resource):
         """
         rest_data = restaurants.get_restaurants_by_zipcode(zipcode)
         return rest_data
+
+
+@restaurant.route(f'{HOUR}/<string:restaurant_id>')
+class RestaurantHoursEP(Resource):
+    """
+    Handles updates on restaurant time
+    """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    @api.expect(restaurant_hour_option)
+    def put(self, restaurant_id):
+        """
+        updates restaurant time
+        """
+        try:
+            data = request.json
+            open = data['open']
+            close = data['close']
+            restaurants.update_restaurant_time(restaurant_id, open, close)
+            return {'restaurant_hours':
+                    f'Time update for {restaurant_id}'}
+        except ValueError as e:
+            raise wz.NotFound(f'{str(e)}')
 
 
 @menu.route('/<int:restaurant_id>')
@@ -425,84 +461,6 @@ class ReviewEdit(Resource):
         try:
             ratings.del_rating(review_id)
             return {'review': f'Deleted From {review_id}'}
-        except ValueError as e:
-            raise wz.NotFound(f'{str(e)}')
-
-
-@hour.route('/<int:restaurant_id>')
-class RestaurantHoursEP(Resource):
-    """
-    get restaurant time
-    """
-    @api.response(HTTPStatus.OK, 'Success')
-    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
-    def get(self, restaurant_id):
-        try:
-            data = options.get_restaurant_hour(restaurant_id)
-            return data
-        except ValueError as e:
-            raise wz.NotFound(f'{str(e)}')
-
-    @api.response(HTTPStatus.OK, 'Success')
-    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not Acceptable')
-    @api.expect(restaurant_hour_option)
-    def post(self, restaurant_id):
-        """
-        sets restaurant time
-        """
-        try:
-            data = request.json
-            open = {
-                'hour': data['open_hour'],
-                'minute': data['open_minute']
-            }
-            close = {
-                'hour': data['close_hour'],
-                'minute': data['close_minute']
-            }
-
-            status = options.insert_restaurant_hour(restaurant_id,
-                                                    open, close)
-            if status is None:
-                raise wz.ServiceUnavailable('We have a technical problem.')
-            return {'restaurant_hours':
-                    f'Time Set for {restaurant_id}'}
-        except ValueError as e:
-            raise wz.NotAcceptable(f'{str(e)}')
-
-    @api.response(HTTPStatus.OK, 'Success')
-    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
-    @api.expect(restaurant_hour_option)
-    def put(self, restaurant_id):
-        """
-        updates restaurant time
-        """
-        try:
-            data = request.json
-            open = {
-                'hour': data['open_hour'],
-                'minute': data['open_minute']
-            }
-            close = {
-                'hour': data['close_hour'],
-                'minute': data['close_minute']
-            }
-            options.update_restaurant_time(restaurant_id, open, close)
-            return {'restaurant_hours':
-                    f'Time update for {restaurant_id}'}
-        except ValueError as e:
-            raise wz.NotFound(f'{str(e)}')
-
-    @api.response(HTTPStatus.OK, 'Success')
-    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
-    def delete(self, restaurant_id):
-        """
-        deletes restaurant time
-        """
-        try:
-            options.delete_restaurant_time(restaurant_id)
-            return {'restaurant_hours':
-                    f'Deleted time from {restaurant_id}'}
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
 
