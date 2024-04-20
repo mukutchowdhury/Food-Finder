@@ -8,7 +8,10 @@ import random
 # 1D => Delete Id Not Found
 # 1B => Add Email Exists
 
-BIG_NUM = 1_000_000_000
+ID_LEN = 24
+BIG_NUM = 100_000_000_000_000_000_000
+
+MOCK_ID = '0' * ID_LEN
 
 USER_ID = 'user_id'
 EMAIL = 'email'
@@ -30,9 +33,11 @@ def _id_exists(id: str) -> bool:
     return dbc.fetch_one(USERS_COLLECT, {USER_ID: id})
 
 
-def _gen_user_id():
-    user_id = random.randint(0, BIG_NUM)
-    return user_id
+def _gen_user_id() -> str:
+    _id = random.randint(0, BIG_NUM)
+    _id = str(_id)
+    _id = _id.rjust(ID_LEN, '0')
+    return _id
 
 
 def add_user(email: str, password: str, fname: str,
@@ -60,13 +65,13 @@ def get_user(email: str, password: str):
         raise ValueError('1A')
 
 
-def get_userdata(id: int):
+def get_userdata(id: str):
     dbc.connect_db()
     result = dbc.fetch_one_as_dict(USERS_COLLECT, {USER_ID: id})
     return result
 
 
-def delete_user(id: int):
+def delete_user(id: str):
     if (_id_exists(id)):
         return dbc.del_one(USERS_COLLECT, {USER_ID: id})
     raise ValueError('1D')
