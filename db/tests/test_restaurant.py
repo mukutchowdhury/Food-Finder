@@ -13,7 +13,11 @@ TEST_RESTAURANT = {
     rest.PHONE: 'TEST',
     rest.CUISINE: [],
     rest.KEYWORDS: [],
-    rest.CATEGORY: []
+    rest.CATEGORY: [],
+    rest.HOURS: {
+        rest.OPEN: '12:00PM',
+        rest.CLOSE: '12:00AM',
+    }
 }
 
 TEST_RESTAURANT_BLANK = {
@@ -25,8 +29,15 @@ TEST_RESTAURANT_BLANK = {
     rest.PHONE: 'TEST',
     rest.CUISINE: [],
     rest.KEYWORDS: [],
-    rest.CATEGORY: []
+    rest.CATEGORY: [],
+    rest.HOURS: {
+        rest.OPEN: '',
+        rest.CLOSE: '',
+    }
 }
+
+TEST_OPEN = '11:00AM'
+TEST_CLOSE = '11:00PM'
 
 @pytest.fixture(scope='function')
 def temp_restaurant():
@@ -84,3 +95,14 @@ def test_del_restaurant_NotFound():
 def test_get_all_restaurants():
     all_rests = rest.get_all_restaurants()
     assert isinstance(all_rests, dict)
+
+
+def test_update_restaurant_time(temp_restaurant):
+    rest_id = temp_restaurant
+    rest.update_restaurant_time(temp_restaurant, TEST_OPEN, TEST_CLOSE)
+    assert rest.exists(rest_id)
+
+
+def test_update_restaurant_time_NotFound():
+    with pytest.raises(ValueError):
+        rest.update_restaurant_time('0', TEST_OPEN, TEST_CLOSE)
