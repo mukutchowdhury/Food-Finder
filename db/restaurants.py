@@ -17,6 +17,26 @@ CUISINE = 'cuisine'
 KEYWORDS = 'keywords'
 CATEGORY = 'category'
 REST_COLLECT = 'restaurants'
+HOURS = 'hours'
+OPEN = 'open'
+CLOSE = 'close'
+
+# SCHEMA
+# {
+#     "name": fields.String,
+#     "address": fields.String,
+#     "zipcode": fields.String,
+#     "owner_id": fields.Integer,
+#     "image": fields.String,
+#     "phone": fields.String,
+#     "cuisine": fields.List(fields.String),
+#     "keywords": fields.List(fields.String),
+#     "category": fields.List(fields.String)
+#     "hours": {
+#          open: fields.String,
+#          close: fields.String,
+#      },
+# }
 
 
 def exists(restaurant_id: str) -> bool:
@@ -69,7 +89,8 @@ def add_restaurant(data: dict) -> dict:
         PHONE: data.get('phone'),
         CUISINE: data.get('cuisine'),
         KEYWORDS: data.get('keywords'),
-        CATEGORY: data.get('category')
+        CATEGORY: data.get('category'),
+        HOURS: data.get('hours')
     }
     dbc.connect_db()
     _id = dbc.insert_one(REST_COLLECT, restaurant)
@@ -82,3 +103,13 @@ def add_restaurant(data: dict) -> dict:
 def get_all_restaurants():
     dbc.connect_db()
     return dbc.fetch_all_as_dict(RESTAURANT_ID, REST_COLLECT)
+
+
+# Hours Operations
+def update_restaurant_time(restaurant_id: str,
+                           open: str, close: str):
+    if exists(restaurant_id):
+        return dbc.up_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id},
+                          {"$set": {HOURS: {OPEN: open, CLOSE: close}}})
+    raise ValueError('PUT failure: ' +
+                     f'{restaurant_id} has no existing time')
