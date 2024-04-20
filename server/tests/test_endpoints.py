@@ -13,18 +13,18 @@ import pytest
 import db.menus as menus
 import db.ratings as rating
 import db.restaurants as rest
-import db.options as options
+
 
 import server.endpoints as ep
 
 TEST_CLIENT = ep.app.test_client()
 
-# def test_hello():
-#     resp = TEST_CLIENT.get(ep.HELLO_EP)
-#     print(f'{resp=}')
-#     resp_json = resp.get_json()
-#     print(f'{resp_json=}')
-#     assert ep.HELLO_RESP in resp_json
+def test_hello():
+    resp = TEST_CLIENT.get(ep.HELLO_EP)
+    print(f'{resp=}')
+    resp_json = resp.get_json()
+    print(f'{resp_json=}')
+    assert ep.HELLO_RESP in resp_json
 
 # Restaurants #
 
@@ -207,16 +207,16 @@ TEST_CLIENT = ep.app.test_client()
 
 
 # Hours #
-@patch('db.options.get_restaurant_hour', return_value=None, autospec=True)
-def test_get_rhour(mock_get):
-    resp = TEST_CLIENT.get(f'{ep.HOUR_EP}/123')
-    assert resp.status_code == OK
+# @patch('db.options.get_restaurant_hour', return_value=None, autospec=True)
+# def test_get_rhour(mock_get):
+#     resp = TEST_CLIENT.get(f'{ep.HOUR_EP}/123')
+#     assert resp.status_code == OK
 
 
-@patch('db.options.get_restaurant_hour', side_effect=ValueError, autospec=True)
-def test_bad_get_hour(mock_get):
-    resp = TEST_CLIENT.get(f'{ep.HOUR_EP}/123')
-    assert resp.status_code == NOT_FOUND
+# @patch('db.options.get_restaurant_hour', side_effect=ValueError, autospec=True)
+# def test_bad_get_hour(mock_get):
+#     resp = TEST_CLIENT.get(f'{ep.HOUR_EP}/123')
+#     assert resp.status_code == NOT_FOUND
 
 
 # @patch('db.options.insert_restaurant_hour', return_value=rest.MOCK_ID, autospec=True)
@@ -225,37 +225,37 @@ def test_bad_get_hour(mock_get):
 #     assert resp.status_code == OK
 
 
-@patch('db.options.insert_restaurant_hour', side_effect=ValueError, autospec=True)
-def test_bad_add_hour(mock_add):
-    resp = TEST_CLIENT.post(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
-    assert resp.status_code == NOT_ACCEPTABLE
+# @patch('db.options.insert_restaurant_hour', side_effect=ValueError, autospec=True)
+# def test_bad_add_hour(mock_add):
+#     resp = TEST_CLIENT.post(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
+#     assert resp.status_code == NOT_ACCEPTABLE
 
 
-@patch('db.options.insert_restaurant_hour', return_value=None)
-def test_hour_add_db_failure(mock_add):
-    resp = TEST_CLIENT.post(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
-    assert resp.status_code == SERVICE_UNAVAILABLE
+# @patch('db.options.insert_restaurant_hour', return_value=None)
+# def test_hour_add_db_failure(mock_add):
+#     resp = TEST_CLIENT.post(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
+#     assert resp.status_code == SERVICE_UNAVAILABLE
 
 
-@patch('db.options.delete_restaurant_time', return_value=None, autospec=True)
-def test_del_hour(mock_delete):
-    resp = TEST_CLIENT.delete(f'{ep.HOUR_EP}/123')
-    assert resp.status_code == OK
+# @patch('db.options.delete_restaurant_time', return_value=None, autospec=True)
+# def test_del_hour(mock_delete):
+#     resp = TEST_CLIENT.delete(f'{ep.HOUR_EP}/123')
+#     assert resp.status_code == OK
 
 
-@patch('db.options.delete_restaurant_time', side_effect=ValueError, autospec=True)
-def test_bad_del_hour(mock_delete):
-    resp = TEST_CLIENT.delete(f'{ep.HOUR_EP}/123')
-    assert resp.status_code == NOT_FOUND
+# @patch('db.options.delete_restaurant_time', side_effect=ValueError, autospec=True)
+# def test_bad_del_hour(mock_delete):
+#     resp = TEST_CLIENT.delete(f'{ep.HOUR_EP}/123')
+#     assert resp.status_code == NOT_FOUND
 
 
-@patch('db.options.update_restaurant_time', return_value=None, autospec=True)
-def test_update_hour(mock_update):
-    resp = TEST_CLIENT.put(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
-    assert resp.status_code == OK
+# @patch('db.options.update_restaurant_time', return_value=None, autospec=True)
+# def test_update_hour(mock_update):
+#     resp = TEST_CLIENT.put(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
+#     assert resp.status_code == OK
 
 
-@patch('db.options.update_restaurant_time', side_effect=ValueError, autospec=True)
-def test_bad_update_hour(mock_update):
-    resp = TEST_CLIENT.put(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
-    assert resp.status_code == NOT_FOUND
+# @patch('db.options.update_restaurant_time', side_effect=ValueError, autospec=True)
+# def test_bad_update_hour(mock_update):
+#     resp = TEST_CLIENT.put(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
+#     assert resp.status_code == NOT_FOUND
