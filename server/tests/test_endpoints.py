@@ -144,61 +144,60 @@ TEST_CLIENT = ep.app.test_client()
 #     assert resp.status_code == NOT_FOUND
 
 # Review #
-# @patch('db.ratings.get_all_ratings', return_value=None, autospec=True)
-# def test_get_review(mock_get):
-#     resp = TEST_CLIENT.get(f'{ep.REVIEW_EP}/123')
-#     assert resp.status_code == OK
+@patch('db.ratings.get_restaurant_ratings', return_value=[], autospec=True)
+def test_get_review(mock_get):
+    resp = TEST_CLIENT.get(f'{ep.REVIEW_EP}/AnyId')
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    assert isinstance(resp_json, dict)
 
 
-# @patch('db.ratings.get_all_ratings', side_effect=ValueError, autospec=True)
-# def test_bad_get_review(mock_get):
-#     resp = TEST_CLIENT.get(f'{ep.REVIEW_EP}/123')
-#     assert resp.status_code == NOT_FOUND
+@patch('db.ratings.get_restaurant_ratings', side_effect=ValueError, autospec=True)
+def test_bad_get_review(mock_get):
+    resp = TEST_CLIENT.get(f'{ep.REVIEW_EP}/AnyId')
+    assert resp.status_code == NOT_FOUND
 
 
-
-# @pytest.mark.skip('This test is failing, but it is just an example of using '
-#                    + 'skip')
-# @patch('db.ratings.add_restaurant_rating', return_value=rest.MOCK_ID, autospec=True)
-# def test_add_review(mock_add):
-#     resp = TEST_CLIENT.post(f'{ep.REVIEW_EP}/123', json=rating.get_test_rating())
-#     assert resp.status_code == OK
+@patch('db.ratings.add_restaurant_rating', return_value=rating.get_test_add_return(), autospec=True)
+def test_add_review(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.REVIEW_EP}/AnyId', json=rating.get_test_rating())
+    assert resp.status_code == OK
 
 
-# @patch('db.ratings.add_restaurant_rating', side_effect=ValueError, autospec=True)
-# def test_bad_add_review(mock_add):
-#     resp = TEST_CLIENT.post(f'{ep.REVIEW_EP}/123', json=rating.get_test_rating())
-#     assert resp.status_code == NOT_ACCEPTABLE
+@patch('db.ratings.add_restaurant_rating', side_effect=ValueError, autospec=True)
+def test_bad_add_review(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.REVIEW_EP}/AnyId', json=rating.get_test_rating())
+    assert resp.status_code == NOT_ACCEPTABLE
 
 
-# @patch('db.ratings.add_restaurant_rating', return_value=None)
-# def test_review_add_db_failure(mock_add):
-#     resp = TEST_CLIENT.post(f'{ep.REVIEW_EP}/123', json=rating.get_test_rating())
-#     assert resp.status_code == SERVICE_UNAVAILABLE
+@patch('db.ratings.add_restaurant_rating', return_value=rating.get_test_bad_add_return())
+def test_review_add_db_failure(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.REVIEW_EP}/AnyId', json=rating.get_test_rating())
+    assert resp.status_code == SERVICE_UNAVAILABLE
 
 
-# @patch('db.ratings.del_rating', return_value=None, autospec=True)
-# def test_del_review(mock_delete):
-#     resp = TEST_CLIENT.delete(f'{ep.REVIEW_EP}/123')
-#     assert resp.status_code == OK
+@patch('db.ratings.del_rating', autospec=True)
+def test_del_review(mock_delete):
+    resp = TEST_CLIENT.delete(f'{ep.REVIEW_EP}/AnyId')
+    assert resp.status_code == OK
 
 
-# @patch('db.ratings.del_rating', side_effect=ValueError, autospec=True)
-# def test_bad_del_review(mock_delete):
-#     resp = TEST_CLIENT.delete(f'{ep.REVIEW_EP}/123')
-#     assert resp.status_code == NOT_FOUND
+@patch('db.ratings.del_rating', side_effect=ValueError, autospec=True)
+def test_bad_del_review(mock_delete):
+    resp = TEST_CLIENT.delete(f'{ep.REVIEW_EP}/AnyId')
+    assert resp.status_code == NOT_FOUND
 
 
-# @patch('db.ratings.update_review_text', return_value=None, autospec=True)
-# def test_update_review(mock_update):
-#     resp = TEST_CLIENT.put(f'{ep.REVIEW_EP}/123', json={'text': 'Hello Text'})
-#     assert resp.status_code == OK
+@patch('db.ratings.update_review_text', autospec=True)
+def test_update_review(mock_update):
+    resp = TEST_CLIENT.put(f'{ep.REVIEW_EP}/AnyId', json=rating.get_test_update_rating())
+    assert resp.status_code == OK
 
 
-# @patch('db.ratings.update_review_text', side_effect=ValueError, autospec=True)
-# def test_bad_update_review(mock_update):
-#     resp = TEST_CLIENT.put(f'{ep.REVIEW_EP}/123', json={'text': 'Hello Text'})
-#     assert resp.status_code == NOT_FOUND
+@patch('db.ratings.update_review_text', side_effect=ValueError, autospec=True)
+def test_bad_update_review(mock_update):
+    resp = TEST_CLIENT.put(f'{ep.REVIEW_EP}/AnyId', json=rating.get_test_update_rating())
+    assert resp.status_code == NOT_FOUND
 
 
 # Hours #
