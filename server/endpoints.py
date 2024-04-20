@@ -33,6 +33,8 @@ REGISTER = '/register'
 
 HOUR = '/hour'
 
+Category_EP = '/category'
+
 USER_NS = 'user'
 RESTAURANT_NS = 'restaurants'
 MENU_NS = 'menu'
@@ -121,24 +123,6 @@ category_model = api.model('category', {
     'name': fields.String,
     'description': fields.String
 })
-
-
-HELLO_EP = '/hello'
-HELLO_RESP = 'hello'
-
-
-@api.route('/hello')
-class HelloWorld(Resource):
-    """
-    The purpose of the HelloWorld class is to have a simple test to see if the
-    app is working at all.
-    """
-    def get(self):
-        """
-        A trivial endpoint to see if the server is running.
-        It just answers with "hello world."
-        """
-        return {'hello': 'world'}
 
 
 @user.route(f'{SIGN_UP}')

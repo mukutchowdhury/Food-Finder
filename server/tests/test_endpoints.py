@@ -4,6 +4,7 @@ from http.client import (
     NOT_ACCEPTABLE,
     NOT_FOUND,
     OK,
+    CREATED,
     SERVICE_UNAVAILABLE,
 )
 
@@ -13,18 +14,12 @@ import pytest
 import db.menus as menus
 import db.ratings as rating
 import db.restaurants as rest
+import db.categories as category
 
 
 import server.endpoints as ep
 
 TEST_CLIENT = ep.app.test_client()
-
-def test_hello():
-    resp = TEST_CLIENT.get(ep.HELLO_EP)
-    print(f'{resp=}')
-    resp_json = resp.get_json()
-    print(f'{resp_json=}')
-    assert ep.HELLO_RESP in resp_json
 
 # Restaurants #
 
@@ -259,3 +254,55 @@ def test_hello():
 # def test_bad_update_hour(mock_update):
 #     resp = TEST_CLIENT.put(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
 #     assert resp.status_code == NOT_FOUND
+
+
+def test_get_category_name():
+    resp = TEST_CLIENT.get(ep.Category_EP)
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    assert isinstance(resp_json, dict)
+
+
+@patch('db.categories.addCategory', return_value=category.MOCK_ID, autospec=True)
+def test_category_add(mock_add):
+    """
+    Testing we do the right thing with a good return from addCategory.
+    """
+    resp = TEST_CLIENT.post(ep.Category_EP, json=category.get_test_category())
+    assert resp.status_code == CREATED
+
+
+@patch('db.categories.addCategory', side_effect=ValueError(), autospec=True)
+def test_category_bad_add(mock_add):
+    """
+    Testing we do the right thing with a value error from addCategory.
+    """
+    resp = TEST_CLIENT.post(ep.Category_EP, json=category.get_test_category())
+    assert resp.status_code == NOT_ACCEPTABLE
+
+
+@patch('db.categories.addCategory', return_value=None)
+def test_category_add_db_failure(mock_add):
+    """
+    Testing we do the right thing with a null ID return from addCategory.
+    """
+    resp = TEST_CLIENT.post(ep.Category_EP, json=category.get_test_category())
+    assert resp.status_code == SERVICE_UNAVAILABLE
+
+
+@patch('db.categories.deleteCategory', autospec=True)
+def test_category_delete(mock_del):
+    """
+    Testing we do the right thing with a call to deleteCategory that succeeds.
+    """
+    resp = TEST_CLIENT.delete(f'{ep.Category_EP}/AnyName')
+    assert resp.status_code == OK
+
+
+@patch('db.categories.deleteCategory', side_effect=ValueError(), autospec=True)
+def test_category_bad_delete(mock_del):
+    """
+    Testing we do the right thing with a value error from deleteCategory.
+    """
+    resp = TEST_CLIENT.delete(f'{ep.Category_EP}/AnyName')
+    assert resp.status_code == NOT_FOUND
