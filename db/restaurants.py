@@ -21,6 +21,8 @@ HOURS = 'hours'
 OPEN = 'open'
 CLOSE = 'close'
 
+STATUS = 'status'
+
 # SCHEMA
 # {
 #     "name": fields.String,
@@ -51,7 +53,43 @@ def _get_test_rest_id() -> str:
     return _id
 
 
-def get_restuarant(restaurant_id: str):
+def get_test_restaurant():
+    test_restaurant = {}
+    test_restaurant[NAME] = 'TEST'
+    test_restaurant[ADDRESS] = 'TEST'
+    test_restaurant[ZIPCODE] = '10001'
+    test_restaurant[OWNER_ID] = 'TEST'
+    test_restaurant[IMAGE] = 'TEST'
+    test_restaurant[PHONE] = '10001'
+    test_restaurant[CUISINE] = []
+    test_restaurant[KEYWORDS] = []
+    test_restaurant[CATEGORY] = []
+    test_restaurant[HOURS] = {
+        OPEN: 'TEST',
+        CLOSE: 'TEST'
+    }
+    return test_restaurant
+
+
+def get_test_add_return():
+    test_return = {}
+    test_return[STATUS] = MOCK_ID
+    test_return[RESTAURANT_ID] = _get_test_rest_id()
+    return test_return
+
+
+def get_test_bad_add_return():
+    test_return = {}
+    test_return[STATUS] = None
+    test_return[RESTAURANT_ID] = _get_test_rest_id()
+    return test_return
+
+
+def get_test_update_hour():
+    return {OPEN: 'TEST', CLOSE: 'TEST'}
+
+
+def get_restaurant(restaurant_id: str):
     if exists(restaurant_id):
         return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})
     raise ValueError(f'Get failure: {restaurant_id} not found.')
@@ -93,6 +131,9 @@ def add_restaurant(data: dict) -> dict:
         HOURS: data.get('hours')
     }
     dbc.connect_db()
+
+    # ratings.add_restaurant_rating(restaurant_id, 1, "new_entry", 5)
+
     _id = dbc.insert_one(REST_COLLECT, restaurant)
     return {
         "status": _id is not None,
