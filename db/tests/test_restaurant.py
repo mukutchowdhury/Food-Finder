@@ -53,16 +53,16 @@ def test_get_test_rest_id():
     assert len(_id) == rest.ID_LEN
 
 
-def test_get_restuarant(temp_restaurant):
+def test_get_restaurant(temp_restaurant):
     id = temp_restaurant
-    ret = rest.get_restuarant(id)
+    ret = rest.get_restaurant(id)
     assert isinstance(ret, dict)
     assert rest.exists(id)
 
 
-def test_get_restuarant_NotFound():
+def test_get_restaurant_NotFound():
     with pytest.raises(ValueError):
-        rest.get_restuarant('0')
+        rest.get_restaurant('0')
 
 
 def test_get_restaurants_by_zipcode():
