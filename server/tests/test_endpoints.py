@@ -23,6 +23,56 @@ TEST_CLIENT = ep.app.test_client()
 
 
 # Users #
+@patch('db.users.add_user', autospec=True)
+def test_add_user(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.USER_EP}{ep.SIGN_UP}', json=user.get_test_user())
+    assert resp.status_code == OK
+
+
+@patch('db.users.add_user', side_effect=ValueError, autospec=True)
+def test_bad_add_user(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.USER_EP}{ep.SIGN_UP}', json=user.get_test_user())
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    assert isinstance(resp_json, dict)
+
+
+@patch('db.users.get_user', return_value=user.MOCK_ID, autospec=True)
+def test_get_user(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.USER_EP}{ep.LOGIN}', json=user.get_test_login_user())
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    assert isinstance(resp_json, dict)
+
+
+@patch('db.users.get_user', side_effect=ValueError, autospec=True)
+def test_bad_get_user(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.USER_EP}{ep.LOGIN}', json=user.get_test_login_user())
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    assert isinstance(resp_json, dict)
+
+
+@patch('db.users.get_userdata', return_value={}, autospec=True)
+def test_get_userdata(mock_get):
+    resp = TEST_CLIENT.get(f'{ep.USER_EP}/anyId')
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    assert isinstance(resp_json, dict)
+
+
+@patch('db.users.get_userdata', side_effect=ValueError, autospec=True)
+def test_bad_get_userdata(mock_get):
+    resp = TEST_CLIENT.get(f'{ep.USER_EP}/anyId')
+    assert resp.status_code == NOT_FOUND
+
+
+def test_signup_form():
+    resp = TEST_CLIENT.get(f'{ep.USER_EP}{ep.SIGNUP_FORM}')
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    assert isinstance(resp_json, list)
+    assert isinstance(resp_json[0], dict)
 
 # Restaurants #
 @patch('db.restaurants.get_restaurant', return_value={}, autospec=True)
@@ -211,7 +261,7 @@ def test_bad_update_review(mock_update):
 
 # Category
 def test_get_category_name():
-    resp = TEST_CLIENT.get(ep.Category_EP)
+    resp = TEST_CLIENT.get(ep.CATEGORY_EP)
     assert resp.status_code == OK
     resp_json = resp.get_json()
     assert isinstance(resp_json, dict)
@@ -222,7 +272,7 @@ def test_category_add(mock_add):
     """
     Testing we do the right thing with a good return from addCategory.
     """
-    resp = TEST_CLIENT.post(ep.Category_EP, json=category.get_test_category())
+    resp = TEST_CLIENT.post(ep.CATEGORY_EP, json=category.get_test_category())
     assert resp.status_code == CREATED
 
 
@@ -231,7 +281,7 @@ def test_category_bad_add(mock_add):
     """
     Testing we do the right thing with a value error from addCategory.
     """
-    resp = TEST_CLIENT.post(ep.Category_EP, json=category.get_test_category())
+    resp = TEST_CLIENT.post(ep.CATEGORY_EP, json=category.get_test_category())
     assert resp.status_code == NOT_ACCEPTABLE
 
 
@@ -240,7 +290,7 @@ def test_category_add_db_failure(mock_add):
     """
     Testing we do the right thing with a null ID return from addCategory.
     """
-    resp = TEST_CLIENT.post(ep.Category_EP, json=category.get_test_category())
+    resp = TEST_CLIENT.post(ep.CATEGORY_EP, json=category.get_test_category())
     assert resp.status_code == SERVICE_UNAVAILABLE
 
 
@@ -249,7 +299,7 @@ def test_category_delete(mock_del):
     """
     Testing we do the right thing with a call to deleteCategory that succeeds.
     """
-    resp = TEST_CLIENT.delete(f'{ep.Category_EP}/AnyName')
+    resp = TEST_CLIENT.delete(f'{ep.CATEGORY_EP}/AnyName')
     assert resp.status_code == OK
 
 
@@ -258,5 +308,5 @@ def test_category_bad_delete(mock_del):
     """
     Testing we do the right thing with a value error from deleteCategory.
     """
-    resp = TEST_CLIENT.delete(f'{ep.Category_EP}/AnyName')
+    resp = TEST_CLIENT.delete(f'{ep.CATEGORY_EP}/AnyName')
     assert resp.status_code == NOT_FOUND
