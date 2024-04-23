@@ -16,7 +16,7 @@ import db.ratings as ratings
 import db.restaurants as restaurants
 import db.users as users
 
-import examples.form as fm
+import db.form as fm
 
 app = Flask(__name__)
 CORS(app)
@@ -25,6 +25,7 @@ api = Api(app)
 # USER
 SIGN_UP = '/signup'
 LOGIN = '/login'
+SIGNUP_FORM = '/signup-form'
 
 # RESTAURANT
 BY_ZIPCODE = '/by_zipcode'
@@ -33,10 +34,11 @@ REGISTER = '/register'
 
 HOUR = '/hour'
 
-Category_EP = '/category'
+CATEGORY_EP = '/category'
 REVIEW_EP = '/review'
 MENU_EP = '/menu'
 RESTAURANT_EP = '/restaurants'
+USER_EP = '/user'
 
 USER_NS = 'user'
 RESTAURANT_NS = 'restaurants'
@@ -187,11 +189,14 @@ class UserDataEP(Resource):
         """
         Gets user data.
         """
-        result = users.get_userdata(id)
-        return result
+        try:
+            result = users.get_userdata(id)
+            return result
+        except ValueError as e:
+            raise wz.NotFound(f'{str(e)}')
 
 
-@user.route('/signup-form')
+@user.route(f'{SIGNUP_FORM}')
 class UserForm(Resource):
     """
     Handles retrieving user signup form
