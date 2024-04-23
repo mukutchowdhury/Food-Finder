@@ -116,7 +116,3 @@ def fetch_all_as_dict(key, collection, db=REST_DB):
 
 def up_one(collection, filt, update, db=REST_DB):
     client[db][collection].update_one(filt, update)
-
-
-def update_doc(collection, filters, update_dict, db=REST_DB):
-    return client[db][collection].update_one(filters, {'$set': update_dict})
