@@ -1,7 +1,7 @@
 """
 Tests for examples/form.py.
 """
-import examples.form as fm
+import db.form as fm
 
 
 def test_get_form():
