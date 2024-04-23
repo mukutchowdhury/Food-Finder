@@ -73,15 +73,15 @@ def get_test_restaurant():
 
 def get_test_add_return():
     test_return = {}
-    test_return[STATUS] = MOCK_ID
-    test_return[RESTAURANT_ID] = _get_test_rest_id()
+    test_return[STATUS] = True
+    test_return[RESTAURANT_ID] = MOCK_ID
     return test_return
 
 
 def get_test_bad_add_return():
     test_return = {}
     test_return[STATUS] = None
-    test_return[RESTAURANT_ID] = _get_test_rest_id()
+    test_return[RESTAURANT_ID] = MOCK_ID
     return test_return
 
 
