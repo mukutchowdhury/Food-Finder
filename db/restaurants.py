@@ -132,8 +132,6 @@ def add_restaurant(data: dict) -> dict:
     }
     dbc.connect_db()
 
-    # ratings.add_restaurant_rating(restaurant_id, 1, "new_entry", 5)
-
     _id = dbc.insert_one(REST_COLLECT, restaurant)
     return {
         "status": _id is not None,
