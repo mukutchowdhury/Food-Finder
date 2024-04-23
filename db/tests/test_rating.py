@@ -92,3 +92,27 @@ def test_del_rating(temp_review):
 def test_del_rating_NotFound():
     with pytest.raises(ValueError):
         ratings.del_rating(0)
+
+
+def test_get_test_rating():
+        rating = ratings.get_test_rating()
+        assert (ratings.USER_ID in rating)
+        assert (ratings.TEXT in rating)
+        assert (ratings.STAR in rating)
+
+
+def test_get_test_add_return():
+    add_return = ratings.get_test_add_return()
+    assert (ratings.STATUS in add_return)
+    assert (ratings.REVIEW_ID in add_return)
+
+
+def test_get_test_bad_add_return():
+    bad_add_return = ratings.get_test_bad_add_return()
+    assert (ratings.STATUS in bad_add_return)
+    assert (ratings.REVIEW_ID in bad_add_return)
+
+
+def test_get_test_update_rating():
+    data = ratings.get_test_update_rating()
+    isinstance(data, dict)

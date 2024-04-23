@@ -104,3 +104,29 @@ def test_del_item_from_menu(temp_menu):
 def test_del_item_from_menu_NotFound():
     with pytest.raises(ValueError):
         menu.del_item_from_menu(0)
+
+
+def test_get_test_menu():
+    menuitem = menu.get_test_menu()
+    assert (menu.NAME in menuitem)
+    assert (menu.DESCRIPTION in menuitem)
+    assert (menu.PRICE in menuitem)
+    assert (menu.CATEGORY in menuitem)
+    assert (menu.IMAGE in menuitem)
+
+
+def test_get_test_add_return():
+    add_return = menu.get_test_add_return()
+    assert (menu.STATUS in add_return)
+    assert (MENUITEM_ID in add_return)
+
+
+def test_get_test_bad_add_return():
+    bad_add_return = menu.get_test_bad_add_return()
+    assert (menu.STATUS in bad_add_return)
+    assert (MENUITEM_ID in bad_add_return)
+
+
+def test_get_test_update_menuitem():
+    update_menuitem = menu.get_test_update_menuitem()
+    assert (menu.NEW_PRICE in update_menuitem)

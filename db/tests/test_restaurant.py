@@ -106,3 +106,35 @@ def test_update_restaurant_time(temp_restaurant):
 def test_update_restaurant_time_NotFound():
     with pytest.raises(ValueError):
         rest.update_restaurant_time('0', TEST_OPEN, TEST_CLOSE)
+
+
+def test_get_test_restaurant():
+    restaurant = rest.get_test_restaurant()
+    assert (rest.NAME in restaurant)
+    assert (rest.ADDRESS in restaurant)
+    assert (rest.ZIPCODE in restaurant)
+    assert (rest.OWNER_ID in restaurant)
+    assert (rest.IMAGE in restaurant)
+    assert (rest.PHONE in restaurant)
+    assert (rest.CUISINE in restaurant)
+    assert (rest.KEYWORDS in restaurant)
+    assert (rest.CATEGORY in restaurant)
+    assert (rest.HOURS in restaurant)
+
+
+def test_get_test_add_return():
+    add_return = rest.get_test_add_return()
+    assert (rest.STATUS in add_return)
+    assert (rest.RESTAURANT_ID in add_return)
+
+
+def test_get_test_bad_add_return():
+    bad_add_return = rest.get_test_bad_add_return()
+    assert (rest.STATUS in bad_add_return)
+    assert (rest.RESTAURANT_ID in bad_add_return)
+
+
+def test_get_test_update_hour():
+    update_hour = rest.get_test_update_hour()
+    assert (rest.OPEN in update_hour)
+    assert (rest.CLOSE in update_hour)

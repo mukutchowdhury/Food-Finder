@@ -58,6 +58,11 @@ def test_get_userdata(temp_user):
     assert users._id_exists(id)
 
 
+def test_get_userdata_NotFound():
+    with pytest.raises(ValueError):
+        users.get_userdata(0)
+
+
 def test_add_user():
     ret = users.add_user(test_obj[users.EMAIL], test_obj[users.PASSWORD],
                           test_obj[users.FNAME], test_obj[users.LNAME],
@@ -86,3 +91,19 @@ def test_del_user_not_there():
     id = users._gen_user_id()
     with pytest.raises(ValueError):
         users.delete_user(id)
+
+
+def test_get_test_user():
+    user = users.get_test_user()
+    assert (users.EMAIL in user)
+    assert (users.PASSWORD in user)
+    assert (users.FNAME in user)
+    assert (users.LNAME in user)
+    assert (users.PIMAGE in user)
+    assert (users.PRIVILEGE in user)
+
+
+def test_get_test_login_user():
+    login_user = users.get_test_login_user()
+    assert (users.EMAIL in login_user)
+    assert (users.PASSWORD in login_user)

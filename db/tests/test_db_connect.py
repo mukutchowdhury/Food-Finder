@@ -33,3 +33,8 @@ def test_up_one(temp_rec):
     dbc.up_one(TEST_COLLECT, {TEST_NAME: TEST_NAME}, {'$set': {TEST_NAME: UPDATE}})
     ret = dbc.fetch_one(TEST_COLLECT, {TEST_NAME: UPDATE})
     assert ret is not None
+
+
+def test_fetch_all(temp_rec):
+    ret = dbc.fetch_all(TEST_COLLECT)
+    assert ret is not None
