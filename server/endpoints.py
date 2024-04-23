@@ -35,6 +35,8 @@ HOUR = '/hour'
 
 Category_EP = '/category'
 REVIEW_EP = '/review'
+MENU_EP = '/menu'
+RESTAURANT_EP = '/restaurants'
 
 USER_NS = 'user'
 RESTAURANT_NS = 'restaurants'
@@ -56,11 +58,11 @@ api.add_namespace(category)
 
 
 menu_item_data = api.model('menu', {
-    "item_name": fields.String,
-    "item_description": fields.String,
-    "item_price": fields.Float,
-    "item_category": fields.String,
-    "item_image": fields.String,
+    "name": fields.String,
+    "description": fields.String,
+    "price": fields.Float,
+    "category": fields.String,
+    "image": fields.String,
 })
 
 login_data = api.model('Authentication', {
@@ -210,7 +212,7 @@ class RestaurantEP(Resource):
         Gets a restaurant by restaurant id.
         """
         try:
-            rest_data = restaurants.get_restuarant(restaurant_id)
+            rest_data = restaurants.get_restaurant(restaurant_id)
             return rest_data
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
@@ -245,8 +247,6 @@ class AddRestaurant(Resource):
             rest_id = restaurants.add_restaurant(data)
             if rest_id['status'] is None:
                 raise wz.ServiceUnavailable('We have a technical problem.')
-            ratings.add_restaurant_rating(rest_id['restaurant_id'],
-                                          1, "new_entry", 5)
             return {'restaurant_id': rest_id['restaurant_id']}
         except ValueError as e:
             raise wz.NotAcceptable(f'{str(e)}')
@@ -265,7 +265,7 @@ class GetRestaurants(Resource):
         return rest_data
 
 
-@restaurant.route(f'{BY_ZIPCODE}/<int:zipcode>')
+@restaurant.route(f'{BY_ZIPCODE}/<string:zipcode>')
 class GetRestaurantsByZipcode(Resource):
     """
     Handles get on nearby restaurants
@@ -301,7 +301,7 @@ class RestaurantHoursEP(Resource):
             raise wz.NotFound(f'{str(e)}')
 
 
-@menu.route('/<int:restaurant_id>')
+@menu.route('/<string:restaurant_id>')
 class MenuEP(Resource):
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
@@ -324,11 +324,11 @@ class MenuEP(Resource):
         """
         try:
             data = request.json
-            item_name = data['item_name']
-            item_description = data['item_description']
-            item_price = data['item_price']
-            item_category = data['item_category']
-            item_image = data['item_image']
+            item_name = data['name']
+            item_description = data['description']
+            item_price = data['price']
+            item_category = data['category']
+            item_image = data['image']
 
             menu_data = menus.add_item_to_menu(restaurant_id, {
                 'name': item_name,
@@ -346,7 +346,7 @@ class MenuEP(Resource):
             raise wz.NotAcceptable(f'{str(e)}')
 
 
-@menu.route('/<int:menuitem_id>')
+@menu.route('/<string:menuitem_id>')
 class MenuItemEP(Resource):
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
@@ -358,7 +358,7 @@ class MenuItemEP(Resource):
         try:
             data = request.json
             item_price = data['new_price']
-            menus.update_item_price(menuitem_id, item_price)
+            menus.update_price(menuitem_id, item_price)
             return {'menuitem': f'Updated {menuitem_id}'}
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
