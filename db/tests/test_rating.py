@@ -25,8 +25,8 @@ STAR = 5
 @pytest.fixture(scope='function')
 def temp_review():
     restaurantid = rest.add_restaurant(TEST_RESTAURANT)[RESTAURANT_ID]
-    reviewid = ratings.add_restaurant_rating(restaurantid, TEST_USER_ID, TEXT, STAR )
-    yield restaurantid, reviewid[REVIEW_ID]
+    reviewid = ratings.add_restaurant_rating(restaurantid, TEST_USER_ID, TEXT, STAR)[REVIEW_ID]
+    yield restaurantid, reviewid
     if ratings.restaurant_exists(restaurantid):
         rest.del_restaurant(restaurantid)
     if ratings.review_exists(reviewid):
@@ -59,6 +59,7 @@ def test_add_restaurant_rating(temp_review):
     ret = ratings.add_restaurant_rating(restaurantid, TEST_USER_ID, TEXT, STAR)
     assert isinstance(ret, dict)
     assert ratings.review_exists(ret[ratings.REVIEW_ID])
+    ratings.del_rating(ret[ratings.REVIEW_ID])
 
 
 def test_add_restaurant_rating_Blank(temp_review):

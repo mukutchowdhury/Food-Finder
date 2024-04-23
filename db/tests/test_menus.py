@@ -31,8 +31,8 @@ TEST_UPDATE_PRICE = 11.99
 @pytest.fixture(scope='function')
 def temp_menu():
     restaurantid = rest.add_restaurant(TEST_RESTAURANT)[RESTAURANT_ID]
-    menuitemid = menu.add_item_to_menu(restaurantid, TEST_MENUITEM)
-    yield restaurantid, menuitemid[MENUITEM_ID]
+    menuitemid = menu.add_item_to_menu(restaurantid, TEST_MENUITEM)[MENUITEM_ID]
+    yield restaurantid, menuitemid
     if menu.restaurant_exists(restaurantid):
         rest.del_restaurant(restaurantid)
     if menu.menu_exists(menuitemid):
@@ -65,9 +65,10 @@ def test_add_item_to_menu(temp_menu):
     ret = menu.add_item_to_menu(restaurantid, TEST_MENUITEM)
     assert isinstance(ret, dict)
     assert menu.menu_exists(ret[menu.MENUITEM_ID])
+    menu.del_item_from_menu(ret[menu.MENUITEM_ID])
 
 
-def test_add_item_to_menu_NotFound(temp_menu):
+def test_add_item_to_menu_NotFound():
     with pytest.raises(ValueError):
         menu.add_item_to_menu(1, TEST_MENUITEM)
 

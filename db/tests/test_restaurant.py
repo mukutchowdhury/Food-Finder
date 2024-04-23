@@ -74,6 +74,7 @@ def test_add_restaurant():
     ret = rest.add_restaurant(TEST_RESTAURANT)
     assert isinstance(ret, dict)
     assert rest.exists(ret[rest.RESTAURANT_ID])
+    rest.del_restaurant(ret[rest.RESTAURANT_ID])
 
 
 def test_add_restaurant_Blank():
