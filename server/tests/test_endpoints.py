@@ -14,134 +14,143 @@ import pytest
 import db.menus as menus
 import db.ratings as rating
 import db.restaurants as rest
+import db.users as user
 import db.categories as category
-
 
 import server.endpoints as ep
 
 TEST_CLIENT = ep.app.test_client()
 
+
+# Users #
+
 # Restaurants #
+@patch('db.restaurants.get_restaurant', return_value={}, autospec=True)
+def test_get_restaurant(mock_get):
+    resp = TEST_CLIENT.get(f'{ep.RESTAURANT_EP}/AnyId')
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    assert isinstance(resp_json, dict)
 
 
-# @pytest.mark.skip('This test is failing, but it is just an example of using '
-#                    + 'skip')
-# @patch('db.restaurants.add_restaurant', return_value=rest.MOCK_ID, autospec=True)
-# def test_add_restaurant(mock_add):
-#     resp = TEST_CLIENT.post(ep.ADD_RESTAURANT, json=rest.get_test_restaurant())
-#     assert resp.status_code == OK
+@patch('db.restaurants.get_restaurant', side_effect=ValueError, autospec=True)
+def test_bad_get_restaurant(mock_get):
+    resp = TEST_CLIENT.get(f'{ep.RESTAURANT_EP}/AnyId')
+    assert resp.status_code == NOT_FOUND
 
 
-
-# @patch('db.restaurants.add_restaurant', side_effect=ValueError, autospec=True)
-# def test_bad_add_restaurant(mock_add):
-#     resp = TEST_CLIENT.post(ep.ADD_RESTAURANT, json=rest.get_test_restaurant())
-#     assert resp.status_code == NOT_ACCEPTABLE
-
-
-# @patch('db.restaurants.add_restaurant', return_value=None)
-# def test_restaurant_add_db_failure(mock_add):
-#     resp = TEST_CLIENT.post(ep.ADD_RESTAURANT, json=rest.get_test_restaurant())
-#     assert resp.status_code == SERVICE_UNAVAILABLE
+@patch('db.restaurants.del_restaurant', autospec=True)
+def test_del_restaurant(mock_delete):
+    resp = TEST_CLIENT.delete(f'{ep.RESTAURANT_EP}/AnyId')
+    assert resp.status_code == OK
 
 
-
-# @pytest.mark.skip('This test is failing, but it is just an example of using '
-#                    + 'skip')
-# @patch('db.restaurants.get_restuarant', return_value=None, autospec=True)
-# def test_get_restaurant(mock_get):
-#     resp = TEST_CLIENT.get(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
-#     assert resp.status_code == OK
+@patch('db.restaurants.del_restaurant', side_effect=ValueError, autospec=True)
+def test_bad_del_restaurant(mock_delete):
+    resp = TEST_CLIENT.delete(f'{ep.RESTAURANT_EP}/AnyId')
+    assert resp.status_code == NOT_FOUND
 
 
-
-# @pytest.mark.skip('This test is failing, but it is just an example of using '
-#                    + 'skip')
-# @patch('db.restaurants.get_restuarant', side_effect=ValueError, autospec=True)
-# def test_bad_get_restaurant(mock_get):
-#     resp = TEST_CLIENT.get(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
-#     assert resp.status_code == NOT_FOUND
+@patch('db.restaurants.add_restaurant', return_value=rest.get_test_add_return(), autospec=True)
+def test_add_restaurant(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.RESTAURANT_EP}{ep.REGISTER}', json=rest.get_test_restaurant())
+    assert resp.status_code == OK
 
 
-
-# @pytest.mark.skip('This test is failing, but it is just an example of using '
-#                    + 'skip')
-# @patch('db.restaurants.del_restaurant', return_value=None, autospec=True)
-# def test_del_restaurant(mock_get):
-#     resp = TEST_CLIENT.delete(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
-#     assert resp.status_code == OK
+@patch('db.restaurants.add_restaurant', side_effect=ValueError, autospec=True)
+def test_bad_restaurant_add(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.RESTAURANT_EP}{ep.REGISTER}', json=rest.get_test_restaurant())
+    assert resp.status_code == NOT_ACCEPTABLE
 
 
-
-# @pytest.mark.skip('This test is failing, but it is just an example of using '
-#                    + 'skip')
-# @patch('db.restaurants.del_restaurant', side_effect=ValueError, autospec=True)
-# def test_bad_del_restaurant(mock_get):
-#     resp = TEST_CLIENT.delete(f'{ep.RESTAURANT_EP}/{rest.MOCK_ID}')
-#     assert resp.status_code == NOT_FOUND
+@patch('db.restaurants.add_restaurant', return_value=rest.get_test_bad_add_return(), autospec=True)
+def test_restaurant_add_db_failure(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.RESTAURANT_EP}{ep.REGISTER}', json=rest.get_test_restaurant())
+    assert resp.status_code == SERVICE_UNAVAILABLE
 
 
-# def test_get_all_restaurant():
-#     resp = TEST_CLIENT.get(ep.RESTAURANT_ALL)
-#     assert resp.status_code == OK
-#     resp_json = resp.get_json()
-#     assert isinstance(resp_json, dict)
-
-# Menus #
-# @patch('db.menus.get_restuarant_menu', return_value=None, autospec=True)
-# def test_get_menu(mock_get):
-#     resp = TEST_CLIENT.get(f'{ep.Menu_EP}/123')
-#     assert resp.status_code == OK
+def test_get_all_restaurants():
+    resp = TEST_CLIENT.get(f'{ep.RESTAURANT_EP}{ep.ALL}')
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    assert isinstance(resp_json, dict)
 
 
-# @patch('db.menus.get_restuarant_menu', side_effect=ValueError, autospec=True)
-# def test_bad_get_menu(mock_get):
-#     resp = TEST_CLIENT.get(f'{ep.Menu_EP}/123')
-#     assert resp.status_code == NOT_FOUND
+def test_get_restaurants_by_zipcode():
+    resp = TEST_CLIENT.get(f'{ep.RESTAURANT_EP}{ep.BY_ZIPCODE}/anyZipcode')
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    assert isinstance(resp_json, dict)
 
 
-# @pytest.mark.skip('This test is failing, but it is just an example of using '
-#                    + 'skip')
-# @patch('db.menus.add_item_to_menu', return_value=rest.MOCK_ID, autospec=True)
-# def test_add_menu(mock_add):
-#     resp = TEST_CLIENT.post(f'{ep.Menu_EP}/123', json=menus.get_test_menu())
-#     assert resp.status_code == OK
+@patch('db.restaurants.update_restaurant_time', autospec=True)
+def test_update_restaurant_hour(mock_update):
+    resp = TEST_CLIENT.put(f'{ep.RESTAURANT_EP}{ep.HOUR}/anyId', json=rest.get_test_update_hour())
+    assert resp.status_code == OK
 
 
-# @patch('db.menus.add_item_to_menu', side_effect=ValueError, autospec=True)
-# def test_bad_add_menu(mock_add):
-#     resp = TEST_CLIENT.post(f'{ep.Menu_EP}/123', json=menus.get_test_menu())
-#     assert resp.status_code == NOT_ACCEPTABLE
+@patch('db.restaurants.update_restaurant_time', side_effect=ValueError, autospec=True)
+def test_bad_update_restaurant_hour(mock_update):
+    resp = TEST_CLIENT.put(f'{ep.RESTAURANT_EP}{ep.HOUR}/anyId', json=rest.get_test_update_hour())
+    assert resp.status_code == NOT_FOUND
 
 
-# @patch('db.menus.add_item_to_menu', return_value=None)
-# def test_menu_add_db_failure(mock_add):
-#     resp = TEST_CLIENT.post(f'{ep.Menu_EP}/123', json=menus.get_test_menu())
-#     assert resp.status_code == SERVICE_UNAVAILABLE
+# Menus
+@patch('db.menus.get_restuarant_menu', return_value=[], autospec=True)
+def test_get_menu(mock_get):
+    resp = TEST_CLIENT.get(f'{ep.MENU_EP}/AnyId')
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    assert isinstance(resp_json, list)
+
+
+@patch('db.menus.get_restuarant_menu', side_effect=ValueError, autospec=True)
+def test_bad_get_menu(mock_get):
+    resp = TEST_CLIENT.get(f'{ep.MENU_EP}/AnyId')
+    assert resp.status_code == NOT_FOUND
+
+
+@patch('db.menus.add_item_to_menu', return_value=menus.get_test_add_return(), autospec=True)
+def test_add_menu(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.MENU_EP}/AnyId', json=menus.get_test_menu())
+    assert resp.status_code == OK
+
+
+@patch('db.menus.add_item_to_menu', side_effect=ValueError, autospec=True)
+def test_bad_add_menu(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.MENU_EP}/AnyId', json=menus.get_test_menu())
+    assert resp.status_code == NOT_ACCEPTABLE
+
+
+@patch('db.menus.add_item_to_menu', return_value=menus.get_test_bad_add_return())
+def test_menu_add_db_failure(mock_add):
+    resp = TEST_CLIENT.post(f'{ep.MENU_EP}/AnyId', json=menus.get_test_menu())
+    assert resp.status_code == SERVICE_UNAVAILABLE
     
 
-# @patch('db.menus.del_item_from_menu', return_value=None, autospec=True)
-# def test_del_menu(mock_delete):
-#     resp = TEST_CLIENT.delete(f'{ep.Menu_EP}/123')
-#     assert resp.status_code == OK
+@patch('db.menus.del_item_from_menu', autospec=True)
+def test_del_menu(mock_delete):
+    resp = TEST_CLIENT.delete(f'{ep.MENU_EP}/AnyId')
+    assert resp.status_code == OK
 
 
-# @patch('db.menus.del_item_from_menu', side_effect=ValueError, autospec=True)
-# def test_bad_del_menu(mock_delete):
-#     resp = TEST_CLIENT.delete(f'{ep.Menu_EP}/123')
-#     assert resp.status_code == NOT_FOUND
+@patch('db.menus.del_item_from_menu', side_effect=ValueError, autospec=True)
+def test_bad_del_menu(mock_delete):
+    resp = TEST_CLIENT.delete(f'{ep.MENU_EP}/AnyId')
+    assert resp.status_code == NOT_FOUND
 
 
-# @patch('db.menus.update_item_price', return_value=None, autospec=True)
-# def test_update_menu(mock_update):
-#     resp = TEST_CLIENT.put(f'{ep.Menu_EP}/123', json={'new_price': 1.59})
-#     assert resp.status_code == OK
+@patch('db.menus.update_price', autospec=True)
+def test_update_menu(mock_update):
+    resp = TEST_CLIENT.put(f'{ep.MENU_EP}/AnyId', json=menus.get_test_update_menuitem())
+    assert resp.status_code == OK
 
 
-# @patch('db.menus.update_item_price', side_effect=ValueError, autospec=True)
-# def test_bad_update_menus(mock_update):
-#     resp = TEST_CLIENT.put(f'{ep.Menu_EP}/123', json={'new_price': 1.59})
-#     assert resp.status_code == NOT_FOUND
+@patch('db.menus.update_price', side_effect=ValueError, autospec=True)
+def test_bad_update_menus(mock_update):
+    resp = TEST_CLIENT.put(f'{ep.MENU_EP}/AnyId', json=menus.get_test_update_menuitem())
+    assert resp.status_code == NOT_FOUND
+
 
 # Review #
 @patch('db.ratings.get_restaurant_ratings', return_value=[], autospec=True)
@@ -200,61 +209,7 @@ def test_bad_update_review(mock_update):
     assert resp.status_code == NOT_FOUND
 
 
-# Hours #
-# @patch('db.options.get_restaurant_hour', return_value=None, autospec=True)
-# def test_get_rhour(mock_get):
-#     resp = TEST_CLIENT.get(f'{ep.HOUR_EP}/123')
-#     assert resp.status_code == OK
-
-
-# @patch('db.options.get_restaurant_hour', side_effect=ValueError, autospec=True)
-# def test_bad_get_hour(mock_get):
-#     resp = TEST_CLIENT.get(f'{ep.HOUR_EP}/123')
-#     assert resp.status_code == NOT_FOUND
-
-
-# @patch('db.options.insert_restaurant_hour', return_value=rest.MOCK_ID, autospec=True)
-# def test_add_hour(mock_add):
-#     resp = TEST_CLIENT.post(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
-#     assert resp.status_code == OK
-
-
-# @patch('db.options.insert_restaurant_hour', side_effect=ValueError, autospec=True)
-# def test_bad_add_hour(mock_add):
-#     resp = TEST_CLIENT.post(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
-#     assert resp.status_code == NOT_ACCEPTABLE
-
-
-# @patch('db.options.insert_restaurant_hour', return_value=None)
-# def test_hour_add_db_failure(mock_add):
-#     resp = TEST_CLIENT.post(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
-#     assert resp.status_code == SERVICE_UNAVAILABLE
-
-
-# @patch('db.options.delete_restaurant_time', return_value=None, autospec=True)
-# def test_del_hour(mock_delete):
-#     resp = TEST_CLIENT.delete(f'{ep.HOUR_EP}/123')
-#     assert resp.status_code == OK
-
-
-# @patch('db.options.delete_restaurant_time', side_effect=ValueError, autospec=True)
-# def test_bad_del_hour(mock_delete):
-#     resp = TEST_CLIENT.delete(f'{ep.HOUR_EP}/123')
-#     assert resp.status_code == NOT_FOUND
-
-
-# @patch('db.options.update_restaurant_time', return_value=None, autospec=True)
-# def test_update_hour(mock_update):
-#     resp = TEST_CLIENT.put(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
-#     assert resp.status_code == OK
-
-
-# @patch('db.options.update_restaurant_time', side_effect=ValueError, autospec=True)
-# def test_bad_update_hour(mock_update):
-#     resp = TEST_CLIENT.put(f'{ep.HOUR_EP}/123', json=options.get_test_hour())
-#     assert resp.status_code == NOT_FOUND
-
-
+# Category
 def test_get_category_name():
     resp = TEST_CLIENT.get(ep.Category_EP)
     assert resp.status_code == OK
