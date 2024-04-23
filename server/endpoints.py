@@ -398,9 +398,9 @@ class ReviewEP(Resource):
         try:
             data = ratings.get_restaurant_ratings(restaurant_id)[1:]
             total_star = 4.5
-            if (len(data) != 0):
+            if (len(data) > 0):
                 total_star = sum(int(singleData['star'])
-                                 for singleData in data[1:]) / len(data)
+                                 for singleData in data) / len(data)
             return {'review': data, 'total': total_star}
         except ValueError as e:
             raise wz.NotFound(f'{str(e)}')
