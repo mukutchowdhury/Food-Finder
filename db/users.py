@@ -23,6 +23,24 @@ PIMAGE = 'pimage'
 PRIVILEGE = 'privilege'
 
 
+def get_test_user():
+    test_user = {}
+    test_user[EMAIL] = 'TEST'
+    test_user[PASSWORD] = 'TEST'
+    test_user[FNAME] = 'TEST'
+    test_user[LNAME] = 'TEST'
+    test_user[PIMAGE] = ''
+    test_user[PRIVILEGE] = '0'
+    return test_user
+
+
+def get_test_login_user():
+    test_user = {}
+    test_user[EMAIL] = 'TEST'
+    test_user[PASSWORD] = 'TEST'
+    return test_user
+
+
 def _email_exists(email: str) -> bool:
     dbc.connect_db()
     return dbc.fetch_one(USERS_COLLECT, {EMAIL: email})
@@ -67,8 +85,9 @@ def get_user(email: str, password: str):
 
 def get_userdata(id: str):
     dbc.connect_db()
-    result = dbc.fetch_one_as_dict(USERS_COLLECT, {USER_ID: id})
-    return result
+    if (_id_exists(id)):
+        return dbc.fetch_one_as_dict(USERS_COLLECT, {USER_ID: id})
+    raise ValueError('1D')
 
 
 def delete_user(id: str):
