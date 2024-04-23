@@ -21,6 +21,10 @@ IMAGE = 'image'
 MENU_COLLECT = 'menus'
 REST_COLLECT = 'restaurants'
 
+STATUS = 'status'
+
+NEW_PRICE = 'new_price'
+
 
 def _gen_menuitemId() -> str:
     _id = random.randint(0, BIG_NUM)
@@ -29,24 +33,52 @@ def _gen_menuitemId() -> str:
     return _id
 
 
-def menu_exists(menuitem_id: int) -> bool:
+def get_test_menu():
+    test_menu = {}
+    test_menu[NAME] = 'TEST'
+    test_menu[DESCRIPTION] = 'TEST'
+    test_menu[PRICE] = 5.49
+    test_menu[CATEGORY] = 'TEST'
+    test_menu[IMAGE] = 'TEST'
+    return test_menu
+
+
+def get_test_add_return():
+    test_return = {}
+    test_return[STATUS] = MOCK_ID
+    test_return[MENUITEM_ID] = _gen_menuitemId()
+    return test_return
+
+
+def get_test_bad_add_return():
+    test_return = {}
+    test_return[STATUS] = None
+    test_return[MENUITEM_ID] = _gen_menuitemId()
+    return test_return
+
+
+def get_test_update_menuitem():
+    return {NEW_PRICE: 9.99}
+
+
+def menu_exists(menuitem_id: str) -> bool:
     dbc.connect_db()
     return dbc.fetch_one(MENU_COLLECT, {MENUITEM_ID: menuitem_id})
 
 
-def restaurant_exists(restaurant_id: int) -> bool:
+def restaurant_exists(restaurant_id: str) -> bool:
     dbc.connect_db()
     return dbc.fetch_one(REST_COLLECT, {RESTAURANT_ID: restaurant_id})
 
 
-def get_restuarant_menu(restaurant_id: int) -> dict:
+def get_restuarant_menu(restaurant_id: str) -> dict:
     if restaurant_exists(restaurant_id):
         return dbc.fetch_all_by_key(MENU_COLLECT,
                                     {RESTAURANT_ID: restaurant_id})
     raise ValueError(f'Get failure: {restaurant_id} not found.')
 
 
-def add_item_to_menu(restaurant_id: int, item_info: dict):
+def add_item_to_menu(restaurant_id: str, item_info: dict):
     if not restaurant_exists(restaurant_id):
         raise ValueError(f'Post failure: {restaurant_id} not found.')
     if not (item_info[NAME] and item_info[PRICE]):
@@ -71,7 +103,7 @@ def add_item_to_menu(restaurant_id: int, item_info: dict):
     }
 
 
-def del_item_from_menu(menuitem_id: int):
+def del_item_from_menu(menuitem_id: str):
     if menu_exists(menuitem_id):
         return dbc.del_one(
             MENU_COLLECT,
@@ -80,7 +112,7 @@ def del_item_from_menu(menuitem_id: int):
     raise ValueError(f'Delete failure: MenuID: {menuitem_id} not in database.')
 
 
-def update_price(menuitem_id: int, new_price: float):
+def update_price(menuitem_id: str, new_price: float):
     if menu_exists(menuitem_id):
         return dbc.up_one(
             MENU_COLLECT,
