@@ -76,6 +76,7 @@ def add_restaurant_rating(restaurant_id: str, user_id: str,
     if not (restaurant_id and user_id and text and star):
         raise ValueError("All attributes must be filled out")
     review_Id = _gen_reviewId()
+    star = int(star)
     star_adjusted = min(max(star, 1), 5)
     rating = {
         REVIEW_ID: review_Id,
