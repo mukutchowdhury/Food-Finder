@@ -87,7 +87,7 @@ restaurant_data = api.model('restaurant_ep_post', {
     "name": fields.String,
     "address": fields.String,
     "zipcode": fields.String,
-    "owner_id": fields.Integer,
+    "owner_id": fields.String,
     "image": fields.String,
     "phone": fields.String,
     "cuisine": fields.List(fields.String),
