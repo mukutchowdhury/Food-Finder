@@ -1,12 +1,8 @@
 # **FOOD FINDER**
 
----
-<<<<<<< HEAD
-## ProgressAndGoals Link
 
-https://github.com/mukutchowdhury/Food-Finder/blob/master/ProgressAndGoals.md#tasks-completed
-=======
 ## Front-End Link
+
 https://github.com/mukutchowdhury/Food-Finder-Front-End 
 
 
@@ -14,12 +10,10 @@ https://github.com/mukutchowdhury/Food-Finder-Front-End
 
 [Our Progress and Goals](https://github.com/mukutchowdhury/Food-Finder/blob/master/ProgressAndGoals.md)
 
----
->>>>>>> 1e3c1048b7cd09d1c734e8fec509e9b768842bfd
 
 ## Project Description
 
-Food Finder is a platform designed to help users discover and explore local restaurants and food establishments. It promises to provide a great user experience by offering up-to-date menus and establishment ratings. Users are also able to create an account for themselves to keep track of restaurants, ratings, dashboards, bookings, and more!
+Food Finder is a platform designed to help users discover and explore local restaurants and food establishments. It promises to provide a great user experience by offering up-to-date menus and establishment ratings. Users are also able to create an account for themselves to keep track of restaurants, menus, ratings, and more!
 
 ---
 
@@ -32,11 +26,8 @@ Food Finder is a platform designed to help users discover and explore local rest
 - **Business Exposure**: Offer local establishments exposure through front-page and food category advertisements. 
 - **User support**: Create a feedback mechanism within the app for users to report issues or suggest improvements. Offer customer support channels to address user inquiries and concerns.
 - **Restaurant Dashboard**: Provide restaurant owners with a dashboard where they can update their menus, respond to customer reviews, and manage their business information.
-- **Reservations & Booking**: Incorporate a reservation and booking system to allow users to reserve tables or order food for pick-up or delivery directly through the app. Partner with local restaurants to facilitate online reservations.
-- **Personalization**: Personalized restaurant recommendations based on user preferences and past interactions. Machine learning algorithms to improve recommendations over time.
 - **Search & filter**: Keyword search for restaurant names or cuisines. Filter options for location, price range, ratings, and dietary preferences (e.g., vegetarian, vegan, gluten-free). Sorting options for distance, popularity, ratings, and price.
-- **Timing**: Breaks down into Breakfast, Lunch, Dinner, and other special categories. User is able to select the preferred timing and the list of options in Brooklyn.
-- **Payment Integration**: Secure payment processing for in-app purchases, reservations, and food orders.
+- **Icon Filter**: Breaks down into Breakfast, Lunch, Dinner, and other special categories.
 
 ## System Features and Design: [Low-level]
 - **Database Integration**: Setting up a Database system with MongoDB to store restaurant information like data, menu items, user accounts, user sessions, and reviews.
