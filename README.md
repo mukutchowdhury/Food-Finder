@@ -55,4 +55,4 @@ Stripe API for secure and easy payments.
 
 ## CREDIT
 
-![Afanc0](https://github.com/Afanc0)
+![Afanc0 - API Developer](https://github.com/Afanc0)
