@@ -46,24 +46,18 @@
 
     USER_MENU_EP = '/user_menu'
     MAIN_MENU_EP = '/MainMenu'
-(put down the endpoints later)
 
 - Created and connected our REST API server to MongoDB Cloud
 and hosted our server on PythonAnywhere
 @@ -56,9 +12,6 @@ MongoDB Cloud integration
-## Goals 
-<<<<<<< HEAD
-- Develop an interactive frontend -> using good practices and testing procedures as part
-  of our automated testing requirement
-- Regularly update README files, document code, and provide clearer updates for developers involved with the project.
+
+- Developed an interactive frontend for both people looking for restaurants as well as restaurant owners -> used good practices and testing procedures as part of our automated testing requirement
+- Maked sure that the design is user centric and easy to navigate
+- Included features such as maps, looking up restuarants, writing reviews, reading reviews, checking restaurant information, menu items and suggest restaurants.
+- Included pages such as home page with recommended restaurant, home page for each different restaurant, profile page, review page, menu page and more.
+- Regularly updated README files, document code, and provide clearer updates for developers involved with the project.
   This will be done using feedback from constant testing of the application.
-- Communicate more with the individuals involved in the group, which will help us achive our milestones.
-=======
-- Develop an interactive frontend for both people looking for restaurants as well as restaurant owners -> using good practices and testing procedures as part of our automated testing requirement
-- Making sure that the design is user centric and easy to navigate
-- Include possible features such as maps, looking up restuarants, writing reviews, reading reviews, checking restaurant information, menu items and suggest restaurants.
-- Include possible pages such as home page with recommended restaurant, home page for each different restaurant, profile page, review page, menu page and more.
-- Regularly update README files, document code, and provide clearer updates for developers involved with the project.
-  This will be done using feedback from constant testing of the application.
-- Communicate more with the individuals involved in the group, which will help us achive our milestones.
->>>>>>> 1e3c1048b7cd09d1c734e8fec509e9b768842bfd
+- Communicated frequentyly with individuals involved in the group, which helped us achive our milestones.
+
+
+Goals have been completed on 05/07/2023
